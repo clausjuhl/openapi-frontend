@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div role="main">
+  <div class="">
+    <div class="">
+      <h1 class="">Index.html</h1>
+      <p>Homepage</p>
+      <dl>
+        {% for k, v in request.items() %}
+            <dt>{{k}}</dt>
+            <dd>{{v}}</dd>
+        {% endfor %}
+      </dl>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,2 +1,4 @@
 # openapi-frontend
-Simple frontend for an openapi-backend
+Simple frontend for an openapi-backend.
+
+Modelled on endoce/hostedapi
