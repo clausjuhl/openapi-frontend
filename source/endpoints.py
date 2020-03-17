@@ -1,7 +1,7 @@
 from source.templates import templates
 
 
-async def homepage(request):
+async def index(request):
     template = "index.html"
     context = {"request": request}
     return templates.TemplateResponse(template, context)
