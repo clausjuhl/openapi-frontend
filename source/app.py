@@ -7,26 +7,28 @@ from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from source import endpoints, settings, routes
+from source.views import error
+from source.routes import routes
+from source import configuration
 
 allowed_hosts = ["*"]
 middleware = [
     Middleware(
         SessionMiddleware,
-        secret_key=settings.SECRET_KEY,
+        secret_key=configuration.SECRET_KEY,
         same_site="Lax",  # default
-        https_only=settings.HTTPS_ONLY,
+        https_only=configuration.HTTPS_ONLY,
     ),
     Middleware(GZipMiddleware),
     Middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts),
 ]
-if settings.HTTPS_ONLY:
+if configuration.HTTPS_ONLY:
     middleware += [Middleware(HTTPSRedirectMiddleware)]
 
-exception_handlers = {404: endpoints.error(404), 500: endpoints.error(500)}
+exception_handlers = {404: error(404), 500: error(500)}
 
 app = Starlette(
-    debug=settings.DEBUG,
+    debug=configuration.DEBUG,
     routes=routes.routes,
     middleware=middleware,
     exception_handlers=exception_handlers,
