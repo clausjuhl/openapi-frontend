@@ -58,7 +58,7 @@ async def resource(request: Request):
 
 # async def error(req: Request):
 #     """
-#     An example error. Switch the `debug` setting to see tracebacks or 500 pages.
+#     An example error. Switch the debug setting to see tracebacks or 500 page.
 #     """
 #     raise RuntimeError("Oh no")
 
