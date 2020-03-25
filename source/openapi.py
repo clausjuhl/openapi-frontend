@@ -6,54 +6,65 @@ from starlette.datastructures import URL, QueryParams
 from source import settings, http
 
 
-    # def _api_request(self, path, method="get", params=None, data=None):
-    #     # Always returns a dict with 'status_code' plus 'result' or 'status_msg'
-    #     if method == "get":
-    #         r = requests.get("/".join([self.host, path]), params=params)
-    #     else:
-    #         r = requests.post("/".join([self.host, path]), data=data)
+# def _api_request(self, path, method="get", params=None, data=None):
+#     # Always returns a dict with 'status_code' plus 'result' or 'status_msg'
+#     if method == "get":
+#         r = requests.get("/".join([self.host, path]), params=params)
+#     else:
+#         r = requests.post("/".join([self.host, path]), data=data)
 
-    #     try:
-    #         r_to_dict = json.loads(r.content)
-    #         return r_to_dict
-    #     except ValueError as e:
-    #         return {"status_code": 5, "status_msg": str(e)}
+#     try:
+#         r_to_dict = json.loads(r.content)
+#         return r_to_dict
+#     except ValueError as e:
+#         return {"status_code": 5, "status_msg": str(e)}
 
-# async def error_response(code, message):
+
+async def _error_response(code: int, msg: str, id_: int = None) -> Dict:
+    error = dict()
+    error["code"] = code
+    error["msg"] = msg
+    if id_:
+        error["id"] = id_
+
+    return {"errors": [error]}
+
+
+async def _response(response: Dict) -> Dict:
+    # forward any error-responses from httpx
+    if response.get("errors"):
+        return response
+
+    # parse response from openaws and aarhusiana
+    data = response.get("data")
+    if data.get("status_code") == 0:
+        return data.get("result")
+
+    elif data.get("status_code") == 1:
+        return _error_response(404, "The resource does not exist", id=resource)
+
+    elif data.get("status_code") == 2:
+        return _error_response(
+            400, "The resource has been deleted", id=resource
+        )
+
+    else:
+        return _error_response(
+            data.get("status_code"), data.get("status_msg"), id=resource
+        )
 
 
 async def get_resource(collection: str, item: int):
     if collection not in settings.resource_endpoints:
-        
-    url = f"{settings.resource_host}/{settings.resource_endpoints[collection]}/{item}"
-    res = http.get_request(url)
-    if res.get("errors"):
-        return res
-    
+        return _error_response(
+            404, "BAD REQUEST. No such collection: " + collection
+        )
 
-    if r.get("status_code") == 0:
-        return r.get("result")
+    url = f"{settings.resource_host}/{settings.resource_endpoints[collection]}/{str(item)}"
+    r = http.get_request(url)
 
-    elif r.get("status_code") == 1:
-        return {
-            "errors": [
-                {"code": 404, "msg": "Resourcen eksisterer ikke", "id": resource}
-            ]
-        }
-    elif r.get("status_code") == 2:
-        return {
-            "errors": [{"code": 404, "msg": "Resourcen er slettet", "id": resource}]
-        }
-    else:
-        return {
-            "errors": [
-                {
-                    "code": r.get("status_code"),
-                    "msg": r.get("status_msg"),
-                    "id": resource,
-                }
-            ]
-        }
+    return _response(r.get("data"))
+
 
 # 'batch_records' from ClientInterface reformatted
 def multi_get_records(self, id_list=None):
@@ -68,8 +79,11 @@ def multi_get_records(self, id_list=None):
 
     else:
         return {
-            "errors": [{"code": r.get("status_code"), "msg": r.get("status_msg")}]
+            "errors": [
+                {"code": r.get("status_code"), "msg": r.get("status_msg")}
+            ]
         }
+
 
 # 'resolve_params'
 def get_entity_labels(self, resource_list):
@@ -85,10 +99,7 @@ def get_entity_labels(self, resource_list):
         return {"result": output}
     else:
         return {
-            "errors": [{"code": r.get("status_code"), "msg": r.get("status_msg")}]
+            "errors": [
+                {"code": r.get("status_code"), "msg": r.get("status_msg")}
+            ]
         }
-
-async def _response(argument):
-    return argument
-
-async def get_resource(collection: str, item: str, query_params: QueryParams = None):

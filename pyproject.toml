@@ -2,7 +2,8 @@
 name = "openapi-frontend"
 version = "0.1.0"
 description = "aarhusarkivet 2.0"
-authors = ["Claus Juhl Knudsen <cjk@aarhus.dk>", "Aarhus Stadsarkiv <stadsarkiv@aarhus.dk>"]
+authors = ["Claus Juhl Knudsen <cjk@aarhus.dk>"]
+maintainers = ["Aarhus Stadsarkiv <stadsarkiv@aarhus.dk>"]
 license = "GPL-3.0"
 readme = "README.md"
 homepage = "https://www.aarhusstadsarkiv.dk/"
@@ -21,9 +22,13 @@ httpx = "^0.12.0"
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
 mypy = "^0.770"
+pytest = "^5.4.1"
+flake8 = "^3.7.9"
+pytest-cov = "^2.8.1"
 
 [tool.black]
 line-length = 79
+exclude = ".venv"
 
 [build-system]
 requires = ["poetry>=0.12"]

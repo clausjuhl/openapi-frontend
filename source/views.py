@@ -4,10 +4,27 @@ from starlette.exceptions import HTTPException
 from source.templates import templates
 
 
-async def index(req: Request):
-    template = "index.html"
-    context = {"request": req}
+async def index(request: Request):
+    template = "index.jinja"
+    context = {"request": request}
     return templates.TemplateResponse(template, context)
+
+
+async def resource(request: Request):
+    if request.method == "GET":
+        template = "resource.jinja"
+        context = {"request": request}
+        structure = {
+            "str": "value",
+            "dict": {"key1": "val1", "key2": "val2"},
+            "list": [
+                {"idx0key1": "idx0val1"},
+                ["idx1idx0", "idx1idx0"],
+                "idx2",
+            ],
+        }
+        context["structure"] = structure
+        return templates.TemplateResponse(template, context)
 
 
 # async def profile(req: Request):
@@ -15,7 +32,7 @@ async def index(req: Request):
 #     Userhome
 #     """
 #     context = dict()
-#     username = req.path_params["username"]
+#     username = uestpath_params["username"]
 
 #     if req.method == "GET":
 #         status_code = 200
@@ -30,22 +47,12 @@ async def index(req: Request):
 #     else:
 #         status_code = 200
 
-#     template = "profile.html"
+#     template = "profile.jinja"
 #     context = {"request": req, "form_errors": form_errors}
 
 #     return templates.TemplateResponse(
 #         template, context, status_code=status_code
 #     )
-
-
-async def resource(req: Request):
-    """
-
-    """
-    if req.method == "GET":
-        template = "resource.html"
-        context = {"request": req}
-        return templates.TemplateResponse(template, context)
 
 
 # async def error(req: Request):
@@ -59,17 +66,17 @@ async def resource(req: Request):
 #     """
 #     Return an HTTP 404 page.
 #     """
-#     template = "404.html"
+#     template = "404.jinja"
 #     context = {"request": req}
 #     return templates.TemplateResponse(template, context, status_code=404)
 
 
-async def error(code: int, req: Request):
-    """
-    Return an HTTP Error page.
-    """
-    template = "error.html"
-    context = {"request": req, "code": code}
-    if req.app.debug:
-        raise HTTPException(code)
-    return templates.TemplateResponse(template, context, status_code=code)
+# async def error(request: Request):
+#     """
+#     Return an HTTP Error page.
+#     """
+#     template = "error.jinja"
+#     context = {"request": request}
+#     if request.app.debug:
+#         raise HTTPException(code)
+#     return templates.TemplateResponse(template, context, status_code=code)

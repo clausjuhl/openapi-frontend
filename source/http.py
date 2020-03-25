@@ -3,12 +3,18 @@ import httpx
 from starlette.datastructures import URL, QueryParams
 
 
-async def request(method: str, url: URL, params: QueryParams = None):
+async def request(method: str, url: URL, params: QueryParams = None) -> Dict:
     async with httpx.AsyncClient() as client:
-        r = await client.request(method, url)
+        req = client.build_request(method, url, params)
+        resp = await client.send(req)
 
-    if 400 <= r.status_code <= 599:
-        return
+    if not resp.is_error:
+        return {"status": resp.status_code, "data": resp.json()}
+    # if 400 <= resp.status_code <= 599:
     else:
-        return {"status_code": r.status_code, "data": r.json}
-
+        return {
+            "status": resp.status_code,
+            "errors": [
+                {"code": resp.status_code, "detail": resp.reason_phrase}
+            ],
+        }
