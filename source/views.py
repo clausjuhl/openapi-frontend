@@ -1,5 +1,6 @@
 from starlette.requests import Request
-from starlette.exceptions import HTTPException
+
+# from starlette.exceptions import HTTPException
 
 from source.templates import templates
 
@@ -57,7 +58,7 @@ async def resource(request: Request):
 
 # async def error(req: Request):
 #     """
-#     An example error. Switch the `debug` setting to see either tracebacks or 500 pages.
+#     An example error. Switch the `debug` setting to see tracebacks or 500 pages.
 #     """
 #     raise RuntimeError("Oh no")
 

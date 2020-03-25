@@ -1,7 +1,7 @@
 import json
 from typing import Dict
 
-from starlette.datastructures import URL, QueryParams
+# from starlette.datastructures import URL, QueryParams
 
 from source import settings, http
 
@@ -30,7 +30,7 @@ async def _error_response(code: int, msg: str, id_: int = None) -> Dict:
     return {"errors": [error]}
 
 
-async def _response(response: Dict) -> Dict:
+async def _response(response: Dict, item: str = None) -> Dict:
     # forward any error-responses from httpx
     if response.get("errors"):
         return response
@@ -41,16 +41,14 @@ async def _response(response: Dict) -> Dict:
         return data.get("result")
 
     elif data.get("status_code") == 1:
-        return _error_response(404, "The resource does not exist", id=resource)
+        return _error_response(404, "The resource does not exist", id=item)
 
     elif data.get("status_code") == 2:
-        return _error_response(
-            400, "The resource has been deleted", id=resource
-        )
+        return _error_response(400, "The resource has been deleted", id=item)
 
     else:
         return _error_response(
-            data.get("status_code"), data.get("status_msg"), id=resource
+            data.get("status_code"), data.get("status_msg"), id=item
         )
 
 
@@ -59,11 +57,11 @@ async def get_resource(collection: str, item: int):
         return _error_response(
             404, "BAD REQUEST. No such collection: " + collection
         )
+    host = settings.resource_host
+    resource = settings.resource_endpoints[collection]
+    r = http.get_request(f"{host}/{resource}/{str(item)}")
 
-    url = f"{settings.resource_host}/{settings.resource_endpoints[collection]}/{str(item)}"
-    r = http.get_request(url)
-
-    return _response(r.get("data"))
+    return _response(r.get("data"), item)
 
 
 # 'batch_records' from ClientInterface reformatted

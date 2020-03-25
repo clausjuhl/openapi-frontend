@@ -1,3 +1,5 @@
+from typing import Dict
+
 import httpx
 
 from starlette.datastructures import URL, QueryParams
