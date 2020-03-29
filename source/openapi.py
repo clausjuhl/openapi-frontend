@@ -31,11 +31,11 @@ async def _error_response(code: int, msg: str, id_: int = None) -> Dict:
 
 
 async def _response(response: Dict, item: str = None) -> Dict:
-    # forward any error-responses from httpx
+    # forward any error-responses from httpx directly
     if response.get("errors"):
         return response
 
-    # parse response from openaws and aarhusiana
+    # parse response and status_code from openaws and aarhusiana
     data = response.get("data")
     if data.get("status_code") == 0:
         return data.get("result")
@@ -59,9 +59,10 @@ async def get_resource(collection: str, item: int):
         )
     host = settings.resource_host
     resource = settings.resource_endpoints[collection]
-    r = http.get_request(f"{host}/{resource}/{str(item)}")
-
-    return _response(r.get("data"), item)
+    http_response = await http.get_request(f"{host}/{resource}/{str(item)}")
+    # return type(r)
+    # r = await http._request("get", f"{host}/{resource}/{str(item)}")
+    return await _response(http_response, item)
 
 
 # 'batch_records' from ClientInterface reformatted

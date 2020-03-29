@@ -1,30 +1,29 @@
+import json
 from starlette.requests import Request
 
 # from starlette.exceptions import HTTPException
 
 from source.templates import templates
+from source.openapi import get_resource
 
 
 async def index(request: Request):
-    template = "index.jinja"
+    template = "index.j2"
     context = {"request": request}
     return templates.TemplateResponse(template, context)
 
 
 async def resource(request: Request):
     if request.method == "GET":
-        template = "resource.jinja"
+        template = "resource.j2"
         context = {"request": request}
-        structure = {
-            "str": "value",
-            "dict": {"key1": "val1", "key2": "val2"},
-            "list": [
-                {"idx0key1": "idx0val1"},
-                ["idx1idx0", "idx1idx0"],
-                "idx2",
-            ],
-        }
-        context["structure"] = structure
+        # template = "test.j2"
+        item = request.path_params["item"]
+        collection = request.path_params["collection"]
+        context["resource"] = await get_resource(collection, item)
+        context["data_json"] = json.dumps(
+            context["resource"], indent=4, ensure_ascii=False
+        )
         return templates.TemplateResponse(template, context)
 
 
@@ -48,7 +47,7 @@ async def resource(request: Request):
 #     else:
 #         status_code = 200
 
-#     template = "profile.jinja"
+#     template = "profile.j2"
 #     context = {"request": req, "form_errors": form_errors}
 
 #     return templates.TemplateResponse(
@@ -67,7 +66,7 @@ async def resource(request: Request):
 #     """
 #     Return an HTTP 404 page.
 #     """
-#     template = "404.jinja"
+#     template = "404.j2"
 #     context = {"request": req}
 #     return templates.TemplateResponse(template, context, status_code=404)
 
@@ -76,7 +75,8 @@ async def resource(request: Request):
 #     """
 #     Return an HTTP Error page.
 #     """
-#     template = "error.jinja"
+#     template = "error.j2"
+#     code = request.
 #     context = {"request": request}
 #     if request.app.debug:
 #         raise HTTPException(code)

@@ -35,3 +35,5 @@ app = Starlette(
     on_startup=[],
     on_shutdown=[],
 )
+
+# uvicorn  --reload --port 5000 --host 0.0.0.0 --env-file .env source.app:app

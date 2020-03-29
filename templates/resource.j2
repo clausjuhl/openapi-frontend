@@ -1,0 +1,11 @@
+{% extends "base.j2" %}
+{% import "macros.j2" as macros %}
+
+{% block content %}
+<div role="main">
+    <ul class="schema">
+        {{ macros.iterate_dict(resource) }}
+    </ul>
+    {# <pre>{{data_json}}</pre> #}
+</div>
+{% endblock %}
