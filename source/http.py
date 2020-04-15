@@ -2,7 +2,7 @@ from typing import Dict
 
 import httpx
 
-from starlette.datastructures import URL, QueryParams
+from starlette.datastructures import QueryParams
 
 
 async def _request(method: str, url: str, params: QueryParams = None) -> Dict:
