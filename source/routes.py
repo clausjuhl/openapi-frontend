@@ -12,8 +12,8 @@ routes = [
     Route("/welcome", views.welcome, name="welcome"),
     Route("/video", views.video, name="video"),
     Route("/image", views.image, name="image"),
-    Mount("/resources", routes=resources_routes, name="resources"),
-    Mount("/users", routes=users_routes, name="users"),
-    Mount("/auth", routes=auth_routes, name="auth"),
+    Mount("/resources", routes=resources_routes),
+    Mount("/users", routes=users_routes),
+    Mount("/auth", routes=auth_routes),
     Mount("/static", statics, name="static"),
 ]

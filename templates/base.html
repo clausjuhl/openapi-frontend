@@ -10,23 +10,23 @@
   </head>
 
     <body class="{% block bodyclass %}{% endblock %}">
-        <nav style="padding:5px;">
+        <nav>
             <a href="{{ url_for('home') }}">Home</a>
             <a href="{{ url_for('about') }}">About</a>
             <a href="/resources/records/191801">Record</a>
             {% if request.session.get("user") %}
-                <a href="{{ url_for('users:profile') }}">Min side</a>
-                <a href="{{ url_for('auth:logout') }}">Logout</a>
+                <a href="{{ url_for('profile') }}">Min side</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
             {% else %}
-                <a href="{{ url_for('auth:login') }}">Login</a>
+                <a href="{{ url_for('login') }}">Login</a>
             {% endif %}
         </nav>
 
-        <div style="padding:10px;">
+        <main>
             {% block content %}{% endblock content %}
-        </div>
+        </main>
 
-        <details style="padding:10px;">
+        <details>
             <summary>Request</summary>
             <dl>
             {% for k, v in request.items() %}
@@ -36,7 +36,7 @@
             </dl>
         </details>
 
-        <details style="padding:10px;">
+        <details>
             <summary>Session{% if not request.session %}. Empty{% endif %}</summary>
             <dl>
             {% for k, v in request.session.items() %}

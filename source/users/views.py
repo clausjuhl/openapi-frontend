@@ -36,7 +36,7 @@ async def profile(request: Request):
         # await queries.update_user(user["openid"], values=values)
         # else redirect to profile-page
         return RedirectResponse(
-            url=request.url_for("users:profile"), status_code=303
+            url=request.url_for("profile"), status_code=303
         )
 
 
@@ -51,7 +51,9 @@ async def bookmarks(request: Request):
 
     if request.method == "GET":
         if bookmarks:
-            context["bookmarks"] = await api.get_records(id_list=bookmarks)
+            context["bookmarks"] = [
+                {"id": 123121, "type": "record"}
+            ]  # await api.get_records(id_list=bookmarks)
         return render("bookmarks.html", context)
 
     if request.method == "POST":

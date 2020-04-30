@@ -24,7 +24,7 @@ async def login(request):
         return RedirectResponse(url=url, status_code=303)
 
     params = {
-        "redirect_uri": request.url_for("auth:callback"),
+        "redirect_uri": request.url_for("callback"),
         "response_type": "code",
         "scope": "openid profile email",
         "client_id": AUTH0_CLIENT_ID,
@@ -56,7 +56,7 @@ async def callback(request):
         "code": request.query_params.get("code"),
         "client_id": AUTH0_CLIENT_ID,
         "client_secret": AUTH0_CLIENT_SECRET,
-        "redirect_uri": request.url_for("auth:callback"),
+        "redirect_uri": request.url_for("callback"),
         "grant_type": AUTH0_GRANT_TYPE,
     }
     headers = {"content-type": "application/json"}
@@ -72,38 +72,38 @@ async def callback(request):
     response.raise_for_status()
     data = response.json()
 
-    # Upsert user
-    query = tables.users.select("openid").where(
-        tables.users.c.openid == data["sub"]
-    )
-    user = await database.fetch_one(query)
     new_user = False
+    user = data
 
-    if user is None:
-        query = tables.users.insert()
-        values = {
-            "openid": data["sub"],
-            "name": data["name"],
-            "email": data["email"],
-            "email_verified": data["email_verified"],
-        }
-        await database.execute(query, values=values)
-        new_user = True
-    else:
-        query = tables.users.update().where(
-            tables.users.c.openid == user["openid"]
-        )
-        values = {
-            "email": data["email"],
-            "email_verified": data["email_verified"],
-        }
-        await database.execute(query, values=values)
+    # Upsert user
+    # query = tables.users.select("openid").where(
+    #     tables.users.c.openid == data["sub"]
+    # )
+    # user = await database.fetch_one(query)
+
+    # if user is None:
+    #     query = tables.users.insert()
+    #     values = {
+    #         "openid": data["sub"],
+    #         "name": data["name"],
+    #         "email": data["email"],
+    #         "email_verified": data["email_verified"],
+    #     }
+    #     await database.execute(query, values=values)
+    #     new_user = True
+    # else:
+    #     query = tables.users.update().where(
+    #         tables.users.c.openid == user["openid"]
+    #     )
+    #     values = {
+    #         "email": data["email"],
+    #         "email_verified": data["email_verified"],
+    #     }
+    #     await database.execute(query, values=values)
 
     # fetch created user
-    query = tables.users.select().where(tables.users.c.openid == data["sub"])
-    # user = upsert_login_user(data)
+    # query = tables.users.select().where(tables.users.c.openid == data["sub"])
 
-    user = data
     request.session["user"] = user
 
     # query = tables.bookmarks.select(tables.bookmarks.c.resource_id).where(

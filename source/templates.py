@@ -20,6 +20,9 @@ def render(
     headers["X-Content-Type-Options"] = "nosniff"
     headers["X-Frame-Options"] = "DENY"
     headers["X-XSS-Protection"] = "1; mode=block"
+    headers[
+        "Content-Security-Policy"
+    ] = "frame-ancestors 'none'; default-src 'none'; font-src 'self'; img-src 'self'; object-src 'none'; script-src 'self'; style-src 'self'"
 
     return templates.TemplateResponse(
         template, context, headers=headers, status_code=status_code

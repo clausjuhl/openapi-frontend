@@ -7,10 +7,21 @@ body {
     margin: 0;
 }
 nav {
-    padding: 8px;
+    padding: 10px;
     background-color: lightgray;
 }
+main {
+    padding: 12px;
+}
 footer {
-    padding: 8px;
+    padding: 12px;
     background-color: lightgray;
+}
+
+details {
+    padding: 10px;
+}
+
+.hide {
+    display: none;
 }
