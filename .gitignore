@@ -2,6 +2,8 @@
 .vscode
 .sass-cache
 .DS_store
+.mp4
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
