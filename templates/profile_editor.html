@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div role="main">
+    <h2>User - editor</h2>
+    <form class="form" action="{{ url_for('users:profile') }}" method="POST">
+        <div class="field">
+            <label for="username">
+                <span class="field-label">Brugernavn</span>
+                <span class="field-hint">Indtast nyt brugernavn</span>
+            </label>
+            <input type="text" id="username" name="username">
+        </div>
+        <input type="submit" class="primary_button" name="submit" value="Opdatér">
+    </form>
+</div>
+{% endblock %}

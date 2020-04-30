@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="{{ url_for('static', path='/css/app.css') }}" rel="stylesheet">
+    <title>OpenAPI frontend template</title>
+  </head>
+
+    <body class="{% block bodyclass %}{% endblock %}">
+        <nav style="padding:5px;">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="/resources/records/191801">Record</a>
+            {% if request.session.get("user") %}
+                <a href="{{ url_for('users:profile') }}">Min side</a>
+                <a href="{{ url_for('auth:logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('auth:login') }}">Login</a>
+            {% endif %}
+        </nav>
+
+        <div style="padding:10px;">
+            {% block content %}{% endblock content %}
+        </div>
+
+        <details style="padding:10px;">
+            <summary>Request</summary>
+            <dl>
+            {% for k, v in request.items() %}
+                <dt>{{k}}</dt>
+                <dd>{{v}}</dd>
+            {% endfor %}
+            </dl>
+        </details>
+
+        <details style="padding:10px;">
+            <summary>Session{% if not request.session %}. Empty{% endif %}</summary>
+            <dl>
+            {% for k, v in request.session.items() %}
+                <dt>{{k}}</dt>
+                <dd>{{v}}</dd>
+            {% endfor %}
+            </dl>
+        </details>
+    </body>
+</html>

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% import "macros.html" as macros %}
+
+{% block bodyclass %}userpage{% endblock %}
+
+{% block content %}
+<div role="main">
+    <h2>User</h2>
+    <ul class="schema">
+        {{ macros.iterate_dict(user) }}
+    </ul>
+    <div><a href="/users/me:edit">Redigér brugernavn</a></div>
+</div>
+{% endblock %}
