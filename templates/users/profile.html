@@ -5,11 +5,15 @@
 {% block bodyclass %}userpage{% endblock %}
 
 {% block content %}
-<div role="main">
+<main>
     <h2>User</h2>
+    <ul>
+        <li><a href="/users/me/bookmarks">Mine bogmærker</a></li>
+        <li><a href="/users/me/searches">Gemte søgninger</a></li>
+        <li><a href="/users/me:edit">Redigér brugernavn</a></li>
+    </ul>
     <ul class="schema">
         {{ macros.iterate_dict(user) }}
     </ul>
-    <div><a href="/users/me:edit">Redigér brugernavn</a></div>
-</div>
+</main>
 {% endblock %}

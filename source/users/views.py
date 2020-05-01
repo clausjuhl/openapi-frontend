@@ -19,7 +19,7 @@ async def profile(request: Request):
         if request.url.path.endswith("edit"):
             return render("profile_editor.html", context)
         else:
-            return render("profile.html", context)
+            return render("users/profile.html", context)
 
     if request.method == "POST":
         form_values = await request.form()
@@ -46,38 +46,64 @@ async def bookmarks(request: Request):
         raise HTTPException(404)
 
     user = request.session["user"]
-    context = {"request": request, "user": user}
     bookmarks = user.get("bookmarks", [])
 
     if request.method == "GET":
+        context = {"request": request, "user": user}
         if bookmarks:
-            context["bookmarks"] = [
-                {"id": 123121, "type": "record"}
-            ]  # await api.get_records(id_list=bookmarks)
-        return render("bookmarks.html", context)
+            context["bookmarks"] = bookmarks
+            # fetch full records
+            # context["bookmarks"] = await api.get_records(id_list=bookmarks)
+        return render("users/bookmarks.html", context)
 
     if request.method == "POST":
-        data = request.json()
-        resource_id = data.get("resource_id")
+        bookmark = await request.json()
+        resource_id = bookmark.get("resource_id")
 
         if not resource_id:
             return JSONResponse({"error": "Manglende materialeID"})
 
-        if resource_id in user.get("bookmarks", []):
+        if resource_id in bookmarks:
             return JSONResponse({"error": "Materialet var bogmærket"})
 
         # update db
         # bookmark = {"user_id": user["openid"], "resource_id": resource_id}
-        # await queries.create_bookmark(bookmark)
+        # await queries.insert_bookmark(bookmark)
 
         # update session
-        bookmarks.append(resource_id)
-        user["bookmarks"] = bookmarks
+        user["bookmarks"] = bookmarks.extend(resource_id)
 
         # generate response
         response = JSONResponse({"msg": "Bogmærke tilføjet"})
         response.set_cookie("user", user)
-        await response
+        return response
+
+
+async def bookmark(request: Request):
+    if not request.session.get("user"):
+        raise HTTPException(404)
+
+    resource_id = request.path_params.get("resource_id")
+    user = request.session["user"]
+    bookmarks = user.get("bookmarks", [])
+
+    if request.method == "DELETE":
+
+        if resource_id not in bookmarks:
+            return JSONResponse({"error": "Materialet var ikke bogmærket"})
+
+        # update db
+        # bookmark = {"user_id": user["openid"], "resource_id": resource_id}
+        # await queries.delete_bookmark(bookmark)
+
+        # update session
+        bookmarks.remove(resource_id)
+        user["bookmarks"] = bookmarks
+
+        # generate response
+        response = JSONResponse({"msg": "Bogmærke fjernet"})
+        response.set_cookie("user", user)
+        return response
 
 
 async def searches(request: Request):
@@ -85,9 +111,32 @@ async def searches(request: Request):
         raise HTTPException(404)
 
     user = request.session["user"]
-    context = {"request": request, "user": user}
+    searches = user.get("searches", [])
 
     if request.method == "GET":
-        if user.get("searches"):
-            context["searches"] = await queries.get_searches(user["openid"])
-        return render("searches.html", context)
+        context = {"request": request, "user": user}
+        # searches = await queries.get_searches(user["openid"])
+        if searches:
+            context["searches"] = searches
+        return render("users/searches.html", context)
+
+    if request.method == "POST":
+        search = await request.json()
+        url = search.get("url")
+        if not url:
+            return JSONResponse({"error": "Manglende søgestreng"})
+
+        if url in searches:
+            return JSONResponse({"error": "Søgningen var allerede gemt"})
+
+        # update db
+        # search = {"user_id": user["openid"], "url": url, "description": search.get("description")}
+        # await queries.insert_search(search)
+
+        # update session
+        user["searches"] = searches.extend(url)
+
+        # generate response
+        response = JSONResponse({"msg": "Søgning gemt"})
+        response.set_cookie("user", user)
+        return response

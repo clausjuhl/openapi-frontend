@@ -22,8 +22,7 @@ def render(
     headers["X-XSS-Protection"] = "1; mode=block"
     headers[
         "Content-Security-Policy"
-    ] = "frame-ancestors 'none'; default-src 'none'; font-src 'self'; img-src 'self'; object-src 'none'; script-src 'self'; style-src 'self'"
-
+    ] = "frame-ancestors 'none'; default-src 'none'; img-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'"
     return templates.TemplateResponse(
         template, context, headers=headers, status_code=status_code
     )

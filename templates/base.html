@@ -22,9 +22,7 @@
             {% endif %}
         </nav>
 
-        <main>
-            {% block content %}{% endblock content %}
-        </main>
+        {% block content %}{% endblock content %}
 
         <details>
             <summary>Request</summary>
@@ -45,5 +43,6 @@
             {% endfor %}
             </dl>
         </details>
+        <script src="{{url_for('static', path='/js/bookmarks-vanilla.js')}}"></script>
     </body>
 </html>

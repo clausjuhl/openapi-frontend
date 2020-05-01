@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block bodyclass %}userpage{% endblock %}
+
+{% block content %}
+<main>
+    <h1>Gemte søgninger</h1>
+    <ul>
+    {% for search in searches %}
+        <li><h3>{{search.url}}</h3><p>{{search.description}}</p></li>
+    {% endfor %}
+    </ul>
+</main>
+{% endblock %}

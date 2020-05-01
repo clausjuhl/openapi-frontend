@@ -7,16 +7,16 @@
 {% block bodyclass %}resourcepage{% endblock %}
 
 {% block content %}
-<div role="main">
+<main>
     <h2>Resource</h2>
     {% if user %}
-        {% set booked = r.id in user.get("bookmarks", []) %}
-        <button data-resource-id="{{r.id}}" class="js-only bookmark-handler {% if booked %}hide{% endif %}" data-action="create-bookmark">Bogmærk</button>
-        <button data-resource-id="{{r.id}}" class="js-only bookmark-handler {% if not booked %}hide{% endif %}" data-action="delete-bookmark">Fjern bogmærke</button>
+        {% set already = r.id in user.get("bookmarks", []) %}
+        <button data-resource-id="{{r.id}}" class="js-only bookmark-handler{% if already %} hide{% endif %}" data-action="create-bookmark">Bogmærk</button>
+        <button data-resource-id="{{r.id}}" class="js-only bookmark-handler{% if not already %} hide{% endif %}" data-action="delete-bookmark">Fjern bogmærke</button>
     {% endif %}
 
     <ul class="schema">
         {{ macros.iterate_dict(r) }}
     </ul>
-</div>
+</main>
 {% endblock %}

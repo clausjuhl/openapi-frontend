@@ -2,9 +2,9 @@
 
 
 {% block content %}
-<div role="main">
+<main>
     <h2>User - editor</h2>
-    <form class="form" action="{{ url_for('users:profile') }}" method="POST">
+    <form class="form" action="{{ url_for('profile') }}" method="POST">
         <div class="field">
             <label for="username">
                 <span class="field-label">Brugernavn</span>
@@ -14,5 +14,5 @@
         </div>
         <input type="submit" class="primary_button" name="submit" value="Opdatér">
     </form>
-</div>
+</main>
 {% endblock %}

@@ -11,4 +11,22 @@ routes = [
         name="bookmarks",
         methods=["GET", "POST"],
     ),
+    Route(
+        "/me/bookmarks/{resource_id}",
+        views.bookmark,
+        name="bookmark",
+        methods=["DELETE"],
+    ),
+    Route(
+        "/me/searches",
+        views.searches,
+        name="searches",
+        methods=["GET", "POST"],
+    ),
+    # Route(
+    #     "/me/searches/{search_id}",
+    #     views.search,
+    #     name="search",
+    #     methods=["PUT", "DELETE"],
+    # ),
 ]

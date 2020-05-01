@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block bodyclass %}userpage{% endblock %}
+
+{% block content %}
+<main>
+    <h1>Bookmarks</h1>
+    <ul>
+    {% for bookmark in bookmarks %}
+        <li>Resource_id: {{bookmark}}</li>
+    {% endfor %}
+    </ul>
+</main>
+{% endblock %}
