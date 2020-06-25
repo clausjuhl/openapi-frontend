@@ -3,12 +3,14 @@
 {% block bodyclass %}userpage{% endblock %}
 
 {% block content %}
-<main>
     <h1>Gemte søgninger</h1>
-    <ul>
-    {% for search in searches %}
-        <li><h3>{{search.url}}</h3><p>{{search.description}}</p></li>
-    {% endfor %}
-    </ul>
-</main>
+    {% if not searches %}
+        <p>Du har ingen gemte søgninger</p>
+    {% else %}
+        <ul>
+        {% for search in searches %}
+            <li><h3>{{search.url}}</h3><p>{{search.description}}</p></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

@@ -1,0 +1,14 @@
+/* https://inclusive-components.design/tooltips-toggletips/ */
+.tooltip-wrapper {
+    position: relative;
+}
+
+[role="tooltip"] {
+    display: none;
+}
+
+input:focus + [role="tooltip"] {
+	display: block;
+	position: absolute;
+	top: 100%;
+}

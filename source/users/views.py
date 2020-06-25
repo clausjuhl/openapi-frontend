@@ -16,8 +16,8 @@ async def profile(request: Request):
     context = {"request": request, "user": user}
 
     if request.method == "GET":
-        if request.url.path.endswith("edit"):
-            return render("profile_editor.html", context)
+        if request.url.path.endswith(":edit"):
+            return render("users/profile_editor.html", context)
         else:
             return render("users/profile.html", context)
 
@@ -32,7 +32,7 @@ async def profile(request: Request):
             # render profile_editor with values and error-messages
             return render("profile_editor.html", context, status_code=400)
 
-        values = {"name": form_values.get("name")}
+        values = {"name": form_values.get("username")}
         # await queries.update_user(user["openid"], values=values)
         # else redirect to profile-page
         return RedirectResponse(
@@ -40,13 +40,22 @@ async def profile(request: Request):
         )
 
 
+# async def profile_editor(request: Request):
+#     user = request.session["user"]
+#     if not user:
+#         raise HTTPException(404)
+
+#     context = {"request": request, "user": user}
+#     render("users/profile_editor.html", context)
+
+
 # INCLUDES ajax-stuff. Only enabled when js is working. Responds with JSONResponse
 async def bookmarks(request: Request):
-    if not request.session.get("user"):
+    user = request.session["user"]
+    if not user:
         raise HTTPException(404)
 
-    user = request.session["user"]
-    bookmarks = user.get("bookmarks", [])
+    bookmarks = user.get("bookmarks") or []
 
     if request.method == "GET":
         context = {"request": request, "user": user}
@@ -64,7 +73,7 @@ async def bookmarks(request: Request):
             return JSONResponse({"error": "Manglende materialeID"})
 
         if resource_id in bookmarks:
-            return JSONResponse({"error": "Materialet var bogmærket"})
+            return JSONResponse({"error": "Materialet var allerede bogmærket"})
 
         # update db
         # bookmark = {"user_id": user["openid"], "resource_id": resource_id}
@@ -85,7 +94,7 @@ async def bookmark(request: Request):
 
     resource_id = request.path_params.get("resource_id")
     user = request.session["user"]
-    bookmarks = user.get("bookmarks", [])
+    bookmarks = user.get("bookmarks") or []
 
     if request.method == "DELETE":
 

@@ -5,15 +5,13 @@
 {% block bodyclass %}userpage{% endblock %}
 
 {% block content %}
-<main>
     <h2>User</h2>
     <ul>
-        <li><a href="/users/me/bookmarks">Mine bogmærker</a></li>
-        <li><a href="/users/me/searches">Gemte søgninger</a></li>
-        <li><a href="/users/me:edit">Redigér brugernavn</a></li>
+        <li><a href="{{ url_for('bookmarks') }}">Mine bogmærker</a></li>
+        <li><a href="{{ url_for('searches') }}">Gemte søgninger</a></li>
+        <li><a href="{{ url_for('profile_editor') }}">Redigér brugernavn</a></li>
     </ul>
     <ul class="schema">
         {{ macros.iterate_dict(user) }}
     </ul>
-</main>
 {% endblock %}

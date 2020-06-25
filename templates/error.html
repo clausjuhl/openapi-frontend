@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<main>
   <h2>Error</h2>
   <dl>
   {% for error in errors %}
@@ -11,5 +10,4 @@
       <dd>{{error.detail}}</dd>
   {% endfor %}
   </dl>
-</main>
 {% endblock %}

@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
+{% block bodyclass %}userpage{% endblock %}
 
 {% block content %}
-<main>
-    <h2>User - editor</h2>
-    <form class="form" action="{{ url_for('profile') }}" method="POST">
-        <div class="field">
-            <label for="username">
-                <span class="field-label">Brugernavn</span>
-                <span class="field-hint">Indtast nyt brugernavn</span>
-            </label>
-            <input type="text" id="username" name="username">
+<h1>User - editor</h1>
+<form class="form" action="{{ url_for('profile') }}" method="POST">
+    <fieldset>
+        <legend>Redigér brugeroplysninger</legend>
+        <div class="tooltip-wrapper">
+            <label for="username">Brugernavn</label>
+            <input type="text" id="username" name="username" aria-describedby="username-tip" />
+            <div role="tooltip" id="username-tip">Indtast nyt brugernavn</div>
         </div>
-        <input type="submit" class="primary_button" name="submit" value="Opdatér">
-    </form>
-</main>
+        <button type="submit">Opdatér</button>
+    </fieldset>
+</form>
 {% endblock %}
