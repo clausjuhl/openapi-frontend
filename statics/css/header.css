@@ -1,0 +1,110 @@
+.globalHeader {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px;
+    background-color: var(--bg-color-header);
+    color: var(--color-light);
+}
+.globalHeader-link,
+.menuButton {
+    font-weight: 400;
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 1em;
+    line-height: .8;
+    padding: 8px;
+    width: 60px;
+    text-align: center;
+    color: var(--color-light);
+}
+.menuButton:hover {
+    filter: brightness(0.8);
+}
+.globalHeader-link {
+    background-color: var(--color-green-dark);
+    text-decoration: none;
+    margin-left: .3em;
+}
+
+.menuButton {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    background-color: rgb(80, 92, 126);
+}
+
+.globalNavigation {
+    display: inline-block;
+    position: relative;
+    color: inherit;
+}
+.globalNavigation a {
+    padding: 10px;
+    text-decoration: none;
+}
+.menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 150px;
+    list-style: none;
+    margin: 0;
+    text-align: right;
+    background-color: var(--color-lightgray);
+}
+.menu li {
+    padding: 6px 10px;
+    color: var(--color-dark);
+}
+
+.globalLogo img {
+    width: 130px;
+}
+
+.globalSearchform {
+    display: grid;
+    grid-template-columns: 1fr 60px;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0;
+    margin: 13px 0 0;
+    background: slategray;
+}
+
+.globalSearchform input {
+    border: none;
+    box-shadow: none;
+    padding: 4px;
+    margin: 3px;
+    background: transparent;
+    font-size: 1rem;
+    color: rgb(61, 61, 61);
+}
+
+.globalSearchform button {
+    color: rgb(61, 61, 61);
+    border-radius: 0 3px 3px 0;
+    font-size: 1rem;
+    padding: 5px 0;
+    transition: all 200ms ease-in-out;
+}
+.globalSearchform button:hover {
+    color: #fff;
+    background-color: #8FBE00;
+}
+
+
+@media (min-width: 700px) {
+    .globalSearchform {
+        width: initial;
+        max-width: 500px;
+        flex: 1 1 auto;
+        order: 2;
+        margin: 0 20px;
+    }
+    .globalMenu {
+        order: 3
+    }
+}

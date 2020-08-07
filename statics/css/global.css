@@ -4,40 +4,42 @@ html {
     height: 100%;
 }
 body {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* header, main and footer */
     padding: 0;
     margin: 0;
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    font-family: 'helvetica neue',arial,sans-serif;
+    text-rendering: optimizeLegibility;
+    color: var(--color-dark);
 }
-main {
-    flex: 1 0 auto;
+a:visited,
+a:hover,
+a:link {
+    color: inherit;
+}
+
+[hidden] { display: none; }
+
+.globalMain {
     padding: 12px;
 }
-footer {
-    flex-shrink: 0;
+.globalFooter {
     padding: 12px;
-    background-color: lightgray;
+    background-color: var(--bg-color-footer);
 }
-header {
-    padding: 10px;
-    background-color: lightgray;
-}
+
 details {
     padding: 10px;
 }
-nav {
-    float: right;
-}
 
-#logo {
-    width: 110px;
-}
-.hide {
+.visually-hidden {
     display: none;
 }
 
-
+.sr-only {
+    visibility: hidden;
+}
 
 @keyframes slideOutUp {
     from {

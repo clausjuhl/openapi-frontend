@@ -1,0 +1,13 @@
+:root {
+    --bg-color-header: #2d3748;
+    --bg-color-footer: grey;
+    /* Basic font colors */
+    --color-light: #f7fafc;
+    --color-dark: #2d3748;
+    /* Grays from No Style System */
+    --color-lightgray: #e2e8f0;
+    --color-lightergray: #edf2f7;
+    --color-gray: #cbd5e0;
+    /* Change */
+    --color-green-dark: #4a7509;
+}
