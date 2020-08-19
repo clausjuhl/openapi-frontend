@@ -24,20 +24,21 @@
         <header class="globalHeader" role="banner">
             <a class="globalLogo" href="{{ url_for('home') }}">
                 <span class="sr-only">Aarhusarkivets forside</span>
-                <img src="{{ url_for('static', path='/images/logo_white.png') }}" alt="Gå til forsiden af Aarhusarkivet">'
+                <img src="{{ url_for('static', path='/images/logo_white.png') }}" alt="Gå til forsiden af Aarhusarkivet">
             </a>
             <div class="globalMenu">
                 <nav class="globalNavigation" aria-labelledby="globalNavigation-label">
-                    <span id="globalNavigation-label" hidden>Aarhusarkivets hovedmenu</span>>
-                    <button class="menuButton" aria-expanded="false" aria-controls="Hovedmenu">Menu</button>
-                    <ul id="Hovedmenu" class="menu" hidden>
+                    <span id="globalNavigation-label" hidden>Aarhusarkivets hovedmenu</span>
+                    <button class="menuButton" aria-expanded="false" aria-controls="hovedmenu">Menu</button>
+                    <ul id="hovedmenu" class="menu" hidden>
                         <li><a href="{{ url_for('about') }}">About</a></li>
                         <li><a href="/resources/records/191801">Sample Record</a></li>
                     </ul>
                 </nav>
                 {% if request.session.get("user") %}
-                    <nav class="globalNavigation">
-                        <button class="menuButton" aria-expanded="false" aria-controls="brugermenu">Menu</button>
+                    <nav class="userNavigation" aria-labbelby="userNavigation-label">
+                        <span id="userNavigation-label" hidden>Din brugermenu</span>
+                        <button class="menuButton" aria-expanded="false" aria-controls="brugermenu">User</button>
                         <ul id="brugermenu" class="menu" hidden>
                             <li><a href="{{ url_for('profile') }}">Min side</a></li>
                             <li><a href="{{ url_for('logout') }}">Logout</a></li>

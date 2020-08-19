@@ -11,8 +11,17 @@ body {
     height: 100%;
     font-family: 'helvetica neue',arial,sans-serif;
     text-rendering: optimizeLegibility;
+    font-size: 1em;
+    line-height: 1.25;
     color: var(--color-dark);
 }
+@media (min-width: 700px) {
+    body {
+        font-size: 1.125em;
+        line-height: 1.4;
+    }
+}
+
 a:visited,
 a:hover,
 a:link {
@@ -38,8 +47,8 @@ details {
 }
 
 .sr-only {
-    visibility: hidden;
-}
+    position: absolute;
+    left: -999em;}
 
 @keyframes slideOutUp {
     from {

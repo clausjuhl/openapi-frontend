@@ -34,7 +34,12 @@
     cursor: pointer;
     background-color: rgb(80, 92, 126);
 }
+.userNavigation .menuButton {
+    margin-left: .4em;
+    background-color: var(--color-green-dark);
+}
 
+.userNavigation,
 .globalNavigation {
     display: inline-block;
     position: relative;
@@ -94,7 +99,6 @@
     color: #fff;
     background-color: #8FBE00;
 }
-
 
 @media (min-width: 700px) {
     .globalSearchform {
