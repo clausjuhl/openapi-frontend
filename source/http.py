@@ -39,11 +39,12 @@ async def _request(method: str, url: str, params: QueryParams = None) -> Dict:
         if code == 2:
             return _error(400, "The resource has been deleted")
 
+        data.pop("status_code")
         # openaws-success
-        return {"data": data.get("result")}
-
+        # return {"data": data.get("result")}
+    return data
     # else non-openaws-success
-    return {"data": data}
+    # return {"data": data}
 
 
 async def get_request(url: str, params: QueryParams = None) -> Dict:

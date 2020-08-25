@@ -9,6 +9,7 @@
         <link href="{{ url_for('static', path='/css/global.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/header.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/forms.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/search.css') }}" rel="stylesheet">
         <meta property="og:image" content="{{ url_for('static', path='/images/logo.png') }}">
         <meta property="og:url" content="">
         <meta name="twitter:card" content="{% block twitter_card %}{% endblock twitter_card %}">
@@ -49,7 +50,7 @@
                 {% endif %}
             </div>
             <form class="globalSearchform" role="search" action="/search">
-                <input type="text" type="search" name="q" role="searchbox" aria-label="Indtast søgeord">
+                <input id="autoComplete" type="text" type="search" name="q" role="searchbox" aria-label="Indtast søgeord">
                 <button type="submit">Søg</button>
             </form>
         </header>
@@ -81,9 +82,10 @@
         <footer class="globalFooter" role="contentinfo">
             <div class="globalFooter"><p>Footer</p></div>
         </footer>
-
-        <script src="{{url_for('static', path='/js/menu.js')}}" defer></script>
-        <script src="{{url_for('static', path='/js/bookmarks-vanilla.js')}}" defer></script>
+        <!-- <script src="{{url_for('static', path='/js/autocomplete.min.js')}}"></script> -->
+        <!-- <script src="{{url_for('static', path='/js/index.js')}}"></script> -->
+        <script src="{{url_for('static', path='/js/menu.js')}}"></script>
+        <script src="{{url_for('static', path='/js/bookmarks-vanilla.js')}}"></script>
         {% block extra_scripts %}{% endblock extra_scripts %}
     </body>
 </html>

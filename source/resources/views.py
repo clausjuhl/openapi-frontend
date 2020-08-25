@@ -13,11 +13,11 @@ async def resource(request: Request):
 
     if request.method == "GET":
         query_params = request.query_params
-        response = await api.get_resource(collection, item, query_params)
+        resp = await api.get_resource(collection, item, query_params)
 
-        if response.get("errors"):
-            context["errors"] = response.get("errors")
+        if resp.get("errors"):
+            context["errors"] = resp.get("errors")
             return render("error.html", context)
-        else:
-            context["resource"] = response.get("data")
-            return render("resource.html", context)
+
+        context["resource"] = resp.get("data")
+        return render("resource.html", context)

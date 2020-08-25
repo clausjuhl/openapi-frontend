@@ -1,0 +1,36 @@
+.searchPage div {
+    padding: 4px;
+    border: 1px solid red;
+}
+@media (min-width: 700px) {
+
+    .searchPage {
+        display: grid;
+        grid-template-columns: 15em auto;
+        grid-template-rows: repeat(5, auto);
+    }
+    .searchFacets {
+        grid-column: 1;
+        grid-row: 1 / 5;
+    }
+    .searchAdvanced {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    .searchActions {
+        grid-column: 2;
+        grid-row: 2;
+    }
+    .searchNavigation {
+        grid-column: 2;
+        grid-row: 3;
+    }
+    .searchOptions {
+        grid-column: 2;
+        grid-row: 4;
+    }
+    .searchResults {
+        grid-column: 2;
+        grid-row: 5;    
+    }
+}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="searchPage">
+    <div class="searchAdvanced">searchAdvanced - default open if #adv is used in url
+        <form action="/search" class="searchAdvanced-form">
+        </form>
+    </div>
+    <div class="searchFacets">Angiv antal aktive søgefilter i header på mobil
+        {% if filters %}
+            <div class="filterContainer">
+                <h3 class="filterContainer-heading">Aktive søgefiltre</h3>
+                {% for f in filters %}
+                    <button class="filterButton" role="button" aria-label="Fjern filteret {{f.key}} fra søgningen">
+                        <a href="/search?{{f.remove_link}}" class="filterRemovelink">
+                            <span aria-hidden>X {{f.key}}</span>
+                        </a>
+                    </button>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="facetContainer">
+            <h3 id="facetContainer-heading" class="facetContainer-heading">Søgefiltre</h3>
+            <ul class="facetList" aria-labelledby="facetContainer-heading" role="tree">
+            {% for f in facets %}
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="searchActions">searchActions (print...)</div>
+    <div class="searchNavigation">searchNavigation
+        <div class="searchNavigation-count">searchNavigation-count</div>
+        <div class="searchNavigation-pagination">searchNavigation-pagination</div>
+    </div>
+    <div class="searchOptions">searchOptions
+        <div class="searchSort">searchSort</div>
+        <div class="searchViews">searchViews</div>
+    </div>
+    <div class="searchResults">searchResults
+    {% if result %}
+        {% for item in result %}
+            <div class="resultItem">
+                <h3 class="resultItem-title">{{item.label}}</h3>
+            </div>
+        {% endfor %}
+        <div class="searchNavigation-pagination">searchNavigation-pagination</div>
+    {% else %}
+        <div class="zeroHits">zeroHits</div>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -9,6 +9,7 @@ from source.resources.routes import routes as resources_routes
 routes = [
     Route("/", views.index, name="home"),
     Route("/about", views.about, name="about"),
+    Route("/search", views.search, name="search"),
     Route("/welcome", views.welcome, name="welcome"),
     Route("/video", views.video, name="video"),
     Route("/image", views.image, name="image"),

@@ -14,8 +14,7 @@
     display: inline-block;
     font-size: 1em;
     line-height: .8;
-    padding: 8px;
-    width: 60px;
+    padding: 8px 10px;
     text-align: center;
     color: var(--color-light);
 }
