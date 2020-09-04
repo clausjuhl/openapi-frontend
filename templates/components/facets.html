@@ -1,0 +1,79 @@
+{# Facet-tree.
+   Implements W3s treeView: https://www.w3.org/TR/wai-aria-practices-1.1/#TreeView
+#}
+
+{% set facet_labels ={"availability": "Tilgængelighed", "usability": "Brugbarhed", "content_types": "Materialetype", "subjects": "Emner", "collection": "Samlinger"} %}
+
+<ul class="facetList" aria-labelledby="facetContainer-heading" role="tree">
+    {% for k ,v in facets.items() %}
+        <li role="treeitem" aria-expanded="false">
+            <span>{{ facet_labels.get(k) }}</span>
+            <ul role="group">
+                {% for item in v recursive %}
+                    {% if item.remove_link %}
+                    <li>
+                        <a href="/search?{{item.remove_link}}" role="treeitem">
+                            <span>{{item.label}} X</span>
+                        </a>
+                    {% elif item.add_link %}
+                        {% if item.children %}
+                        <li role="treeitem" aria-expanded="false">
+                            <span>{{item.label}}</span>
+                            <ul role="group">
+                                <li>
+                                    <a href="/search?{{item.add_link}}" role="treeitem">
+                                        <span>Vælg alt herunder ({{item.count}})</span>
+                                    </a>
+                                </li>
+                                {{ loop( item.children ) }}
+                            </ul>
+                        {% else %}
+                        <li>
+                            <a href="/search?{{item.add_link}}" role="treeitem">
+                                <span>{{item.label}} ({{item.count}})</span>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+
+    {# Datefilter #}
+    <h4 class="collapsible-header" aria-labelledby="facetContainer-heading">Datering</h4>
+    <form class="collapsible-panel" role="form" method="get" action="/search">
+        <div>
+            <label for="year_from" class="cell">Tidligste dato</label>
+            <input type="number" name="year_from" value="{% if date_from %}{{date_from[0:4]}}{% endif %}" placeholder="1600" min="1500" max="2018" aria-describedby="dateFromHelp">
+            <span">-</span>
+            <input type="number" name="month_from" value="{% if date_from %}{{date_from[4:6]|int}}{% endif %}" placeholder="01" min="1" max="12">
+            <span">-</span>
+            <input type="number" name="day_from" value="{% if date_from %}{{date_from[6:8]|int}}{% endif %}" placeholder="01" min="1" max="31">
+        </div>
+        <p class="help-text" id="dateFromHelp">Indtast minimum et fire-cifret årstal</p>
+    
+        <div>
+            <label for="year_to" class="cell">Seneste dato</label>
+            <input type="number" name="year_to" value="{% if date_to %}{{date_to[0:4]}}{% endif %}" placeholder="2017" min="1500" max="2018" aria-describedby="dateToHelp">
+            <span">-</span>
+            <input type="number" name="month_to" value="{% if date_to %}{{date_to[4:6]|int}}{% endif %}" placeholder="12" min="1" max="12">
+            <span">-</span>
+            <input type="number" name="day_to" value="{% if date_to %}{{date_to[6:8]|int}}{% endif %}" placeholder="31" min="1" max="31">
+        </div>
+        <p class="help-text" id="dateToHelp">Indtast minimum et fire-cifret årstal</p>
+    
+        {% if params %}
+            {% for tup in params %}
+                {% if tup[0] != 'start' %}<input type="hidden" name="{{tup[0]}}" value="{{tup[1]}}">{% endif %}
+            {% endfor %}
+        {% endif %}
+    
+        {# TODO: If all date-fields are empty, submit must be disabled #}
+        {% if not (date_from or date_to) %}
+            <button type="submit">Søg</button>
+        {% else %}
+            <button type="submit">Opdatér</button>
+        {% endif %}
+    </form>

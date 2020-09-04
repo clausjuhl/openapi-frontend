@@ -4,6 +4,8 @@
 
 {% set r = resource %}
 
+{% block title %}Resourcepage{% endblock %}
+
 {% block bodyclass %}resourcepage{% endblock %}
 
 {% block content %}
@@ -14,7 +16,32 @@
     <button data-resource-id="{{r.id}}" class="js-only bookmark-handler{% if not already %} hide{% endif %}" data-action="delete-bookmark">Fjern bogmærke</button>
 {% endif %}
 
+{% if prev_item or next_item %}
+    <ul class="links">
+        {% if prev_item %}
+            <li><a href="/resources/records/{{prev_item}}">Forrige resultat</a></li>
+        {% endif %}
+        {% if next_item %}
+            <li><a href="/resources/records/{{next_item}}">Næste resultat</a></li>
+        {% endif %}
+    </ul>
+{% endif %}
+
+{% if current_search %}
+    <a href="/search?{{current_search}}">Tilbage til søgningen</a>
+{% endif %}
+
+<h4>Session</h4>
+<dl>
+{% for k, v in request.session.items() %}
+    <dt>{{k}}</dt>
+    <dd>{{v}}</dd>
+{% endfor %}
+</dl>
+
+<h4>Resource</h4>
 <ul class="schema">
     {{ macros.iterate_dict(r) }}
 </ul>
+
 {% endblock %}

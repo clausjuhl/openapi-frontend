@@ -1,0 +1,26 @@
+.collapsible-header button {
+  all: inherit;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.collapsible-header button:hover {
+  cursor: pointer;
+}
+
+.collapsible-header button:focus svg {
+  outline: 2px solid;
+}
+
+button svg {
+  height: 1em;
+  margin-left: 0.5em;
+}
+
+[aria-expanded="true"] .vert {
+  display: none;
+}
+
+[aria-expanded] rect {
+  fill: currentColor;
+}

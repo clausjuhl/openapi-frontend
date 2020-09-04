@@ -15,11 +15,51 @@ body {
     line-height: 1.25;
     color: var(--color-dark);
 }
+
 @media (min-width: 700px) {
     body {
         font-size: 1.125em;
         line-height: 1.4;
     }
+}
+
+h1 {
+    font-size: 2em;
+    /* margin-bottom: 25px; */
+    color: #2d3748;
+    /* max-width: 20em; */
+}
+h2 {
+    font-size: 1.7em;
+    /* margin-bottom: 20px; */
+    color: #2d3748;
+    /* max-width: 20em; */
+}
+h3 {
+    font-size: 1.4em;
+    /* margin-bottom: 15px; */
+    color: #2d3748;
+    /* max-width: 25em; */
+}
+h4 {
+    font-size: 1.1em;
+    /* margin-bottom: 10px; */
+    color: #2d3748;
+    /* max-width: 30em; */
+}
+@media (min-width: 700px) {
+    h1 {
+        font-size: 2.2em;
+        line-height: 1.04167;
+    }
+}
+[hidden] { display: none; }
+
+ul,
+li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 a:visited,
@@ -28,7 +68,34 @@ a:link {
     color: inherit;
 }
 
-[hidden] { display: none; }
+button {
+    font: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 1em;
+    line-height: 1.4em;
+    padding: 8px 14px;
+    background-color: #718096;
+    color: #f7fafc;
+    cursor: pointer;
+
+}
+
+/* button:focus {
+    outline: 0;
+    box-shadow: 0 0 1px 4px var(--color-green-dark);
+} */
+/*  Set the width and height to be 1em, which will be the font-size of its parent element.
+    Because the icon's dimensions are set with ems, we can affect it's size using font size
+    Just add an additional class to the icon to set the font-size
+*/
+.icon {
+    width: 1em;
+    height: 1em;
+}
 
 .globalMain {
     padding: 12px;
@@ -48,4 +115,5 @@ details {
 
 .sr-only {
     position: absolute;
-    left: -999em;}
+    left: -999em;
+}

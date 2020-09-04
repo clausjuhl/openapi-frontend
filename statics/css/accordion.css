@@ -1,0 +1,7 @@
+.accordion-trigger {
+  display: block;
+}
+
+.js .accordion-trigger[aria-expanded="false"] + .accordion-panel {
+    display: none;
+}

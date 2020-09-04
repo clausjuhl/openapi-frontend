@@ -1,17 +1,32 @@
 .searchPage div {
-    padding: 4px;
+    padding: 3px;
     border: 1px solid red;
 }
-@media (min-width: 700px) {
 
+[aria-label="Pagination"] {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.searchOptions {
+    display: flex;
+    justify-content: flex-end;
+}
+.filter,
+.filter-negated {
+    display: grid;
+    grid-template-columns: auto min-content min-content;
+}
+
+@media (min-width: 45em) {
     .searchPage {
         display: grid;
-        grid-template-columns: 15em auto;
-        grid-template-rows: repeat(5, auto);
+        grid-template-columns: 18em auto;
+        grid-template-rows: repeat(4, min-content) auto;
     }
-    .searchFacets {
+    .searchFilters {
         grid-column: 1;
-        grid-row: 1 / 5;
+        grid-row: 1 / span 5;
     }
     .searchAdvanced {
         grid-column: 2;
@@ -21,7 +36,7 @@
         grid-column: 2;
         grid-row: 2;
     }
-    .searchNavigation {
+    .searchPagination {
         grid-column: 2;
         grid-row: 3;
     }
@@ -33,4 +48,11 @@
         grid-column: 2;
         grid-row: 5;    
     }
+}
+
+.filter-optionsMenu,
+.searchNumber,
+.searchSort,
+.searchViews {
+    position: relative;
 }

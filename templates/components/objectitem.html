@@ -1,0 +1,14 @@
+{#
+    Single object-item, generated from the full recordview of a record, returned by
+    the search-service. Only used by '/search' and fetched via xhr.
+    Uses the 'record.id' from the search-template-context to fetch the full record
+    Wraps "record.html" in links tp previous and next items
+#}
+
+{% if first_result %}
+    <p>{{first_result}}</p>
+{% endif %}
+
+{#
+
+#}

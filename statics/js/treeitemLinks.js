@@ -54,7 +54,10 @@ var TreeitemLink = function (node, treeObj, group) {
       this.isExpandable = true;
       break;
     }
-
+    // if (elem.tagName.toLowerCase() == 'form') {
+    //   this.isExpandable = true;
+    //   break;
+    // }
     elem = elem.nextElementSibling;
   }
 

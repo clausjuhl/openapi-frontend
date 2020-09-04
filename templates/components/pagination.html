@@ -1,0 +1,24 @@
+<div role="navigation" aria-label="Pagination">
+    <div>
+        {% if first %}
+            <a href="/search?{{first}}">Første<span sr-only> side</span></a>
+        {% else %}
+            <span>Første<span class="sr-only"> side</span></span>
+        {% endif %}
+        {% if previous %}
+            <a href="/search?{{previous}}">Forrige<span class="sr-only"> side</span></a>
+        {% else %}
+            <span>Forrige<span class="sr-only"> side</span></span>
+        {% endif %}
+        {% if next %}
+            <a href="/search?{{next}}">Næste<span class="sr-only"> side</span></a>
+        {% else %}
+            <span>Næste<span class="sr-only"> side</span></span>
+        {% endif %}
+        {% if last %}
+            <a href="/search?{{last}}">Sidste<span class="sr-only"> side</span></a>
+        {% else %}
+            <span>Sidste<span class="sr-only"> side</span></span>
+        {% endif %}
+    </div>
+</div>

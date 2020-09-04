@@ -10,6 +10,10 @@
         <link href="{{ url_for('static', path='/css/header.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/forms.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/search.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/treeview.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/accordion.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/collapsible.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/menubutton.css') }}" rel="stylesheet">
         <meta property="og:image" content="{{ url_for('static', path='/images/logo.png') }}">
         <meta property="og:url" content="">
         <meta name="twitter:card" content="{% block twitter_card %}{% endblock twitter_card %}">
@@ -24,21 +28,20 @@
     <body class="{% block bodyclass %}{% endblock %}">
         <header class="globalHeader" role="banner">
             <a class="globalLogo" href="{{ url_for('home') }}">
-                <span class="sr-only">Aarhusarkivets forside</span>
                 <img src="{{ url_for('static', path='/images/logo_white.png') }}" alt="Gå til forsiden af Aarhusarkivet">
             </a>
             <div class="globalMenu">
-                <nav class="globalNavigation" aria-labelledby="globalNavigation-label">
-                    <span id="globalNavigation-label" hidden>Aarhusarkivets hovedmenu</span>
-                    <button class="menuButton" aria-expanded="false" aria-controls="hovedmenu">Menu</button>
-                    <ul id="hovedmenu" class="menu" hidden>
-                        <li><a href="{{ url_for('about') }}">About</a></li>
-                        <li><a href="/resources/records/191801">Sample Record</a></li>
+                <nav class="globalNavigation" aria-labelledby="globalNavigation-label" data-menu-wrapper>
+                    <h2 id="globalNavigation-label" hidden>Aarhusarkivets hovedmenu</h2>
+                    <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="hovedmenu">Menu</button>
+                    <ul id="hovedmenu" role="menu" data-menu-from="right">
+                        <li><a role="menuitem" href="{{ url_for('about') }}">About</a></li>
+                        <li><a role="menuitem" href="/resources/records/191801">Sample Record</a></li>
                     </ul>
                 </nav>
                 {% if request.session.get("user") %}
                     <nav class="userNavigation" aria-labbelby="userNavigation-label">
-                        <span id="userNavigation-label" hidden>Din brugermenu</span>
+                        <h2 id="userNavigation-label" hidden>Din brugermenu</h2>
                         <button class="menuButton" aria-expanded="false" aria-controls="brugermenu">User</button>
                         <ul id="brugermenu" class="menu" hidden>
                             <li><a href="{{ url_for('profile') }}">Min side</a></li>
@@ -50,13 +53,13 @@
                 {% endif %}
             </div>
             <form class="globalSearchform" role="search" action="/search">
-                <input id="autoComplete" type="text" type="search" name="q" role="searchbox" aria-label="Indtast søgeord">
+                <input id="autoComplete" type="text" type="search" name="q" role="searchbox" aria-label="Indtast søgeord" value="{{query}}">
                 <button type="submit">Søg</button>
             </form>
         </header>
 
-        <main id="main" class="globalMain" role="main">
-            <div class="content">{% block content %}{% endblock content %}</div>
+        <main class="globalMain">
+            {% block content %}{% endblock content %}
             <aside>
                 <details>
                     <summary>Request</summary>
@@ -79,13 +82,16 @@
             </aside>
         </main>
 
-        <footer class="globalFooter" role="contentinfo">
-            <div class="globalFooter"><p>Footer</p></div>
-        </footer>
+        <footer class="globalFooter"></footer>
         <!-- <script src="{{url_for('static', path='/js/autocomplete.min.js')}}"></script> -->
         <!-- <script src="{{url_for('static', path='/js/index.js')}}"></script> -->
-        <script src="{{url_for('static', path='/js/menu.js')}}"></script>
         <script src="{{url_for('static', path='/js/bookmarks-vanilla.js')}}"></script>
+        <script src="{{url_for('static', path='/js/treeLinks.js')}}"></script>
+        <script src="{{url_for('static', path='/js/treeitemLinks.js')}}"></script>
+        <script src="{{url_for('static', path='/js/accordion.js')}}"></script>
+        <script src="{{url_for('static', path='/js/collapsible.js')}}"></script>
+        <script src="{{url_for('static', path='/js/menubutton.js')}}"></script>
+        <!-- <script src="{{url_for('static', path='/js/load.js')}}"></script> -->
         {% block extra_scripts %}{% endblock extra_scripts %}
     </body>
 </html>

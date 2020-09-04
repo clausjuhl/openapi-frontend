@@ -13,6 +13,7 @@ routes = [
     Route("/welcome", views.welcome, name="welcome"),
     Route("/video", views.video, name="video"),
     Route("/image", views.image, name="image"),
+    Route("/clear-session", views.clear, name="clear-session"),
     Mount("/resources", routes=resources_routes),
     Mount("/users", routes=users_routes),
     Mount("/auth", routes=auth_routes),

@@ -1,12 +1,10 @@
 # import json
-from typing import Dict  # List
+from typing import Dict, List
 
 from urllib.parse import urlencode
 
 from starlette.datastructures import QueryParams
-
-from source import settings, http
-from source import searchInterface
+from source import settings, http, searchInterface
 
 """
 Checks urls, permissions, requests, responses
@@ -22,7 +20,7 @@ RETURNS:
 
 
 # Adds item-id to error. Used by bookmarks, searches,
-async def _error(code: int, detail: str, item: int = None) -> Dict:
+def _error(code: int, detail: str, item: int = None) -> Dict:
     error = {"code": code, "detail": detail}
     if item:
         error["id"] = item
@@ -42,7 +40,23 @@ async def get_resource(collection: str, item: int, params: QueryParams = None):
     return {"data": resp.get("result")}
 
 
-async def list_resources(query_params: QueryParams = None):
+def get_entity_labels(resource_list: List):
+    # resource_list: [('collection', '4'), ('availability', '2')]
+    host = settings.RESOURCE_HOST
+    resp = http.get_request_sync(f"{host}/resolve_params", resource_list)
+
+    if resp.get("errors"):
+        return resp
+
+    output = []
+    for key, value in resp.get("resolved_params").items():
+        for k, v in value.items():
+            d = {"resource": key, "id": k, "label": v.get("display_label")}
+            output.append(d)
+    return {"data": output}
+
+
+def list_resources(query_params: QueryParams = None):
     def _validate_query_params(query_params):
         errors = []
         stripped_keys = []
@@ -51,16 +65,18 @@ async def list_resources(query_params: QueryParams = None):
             negated = key[0] == "-"
             stripped_key = key[1:] if negated else key
 
-            if stripped_key not in self.params:
+            if stripped_key not in settings.QUERY_PARAMS:
                 errors.append({"param": key, "msg": "Invalid query-param"})
                 continue  # no further tests needed
 
-            if negated and not self.params[stripped_key].get("negatable"):
+            if negated and not settings.QUERY_PARAMS[stripped_key].get(
+                "negatable"
+            ):
                 errors.append({"param": key, "msg": "Param not negatable"})
 
             # Check if non-repeatable stripped_key already exists
             # eg. when using "-usability" and "usability"
-            if stripped_key in stripped_keys and not self.params[
+            if stripped_key in stripped_keys and not settings.QUERY_PARAMS[
                 stripped_key
             ].get("repeatable"):
                 errors.append({"param": key, "msg": "Param not repeatable"})
@@ -99,9 +115,9 @@ async def list_resources(query_params: QueryParams = None):
 
             # get label if unresolved
             if f.get("unresolved"):
-                r = self.resourceAPI.get_entity_labels([(key, value)])
+                r = get_entity_labels([(key, value)])
                 if not r.get("errors"):
-                    el["label"] = r["result"][0].get("label")
+                    el["label"] = r["data"][0].get("label")
 
             # View-link
             # 'label' indicates an id-based filter which can be viewed
@@ -158,12 +174,12 @@ async def list_resources(query_params: QueryParams = None):
                     )
             # Creator and collector links and bools
             if key in ["people", "organisations"]:
-                api_resp = self.resourceAPI.get_resource(key, value)
-                if not api_resp.get("error"):
-                    if api_resp.get("is_creative_creator"):
+                r = get_resource(key, int(value))
+                if not r.get("errors"):
+                    if r["data"].get("is_creative_creator"):
                         el["creator_link"] = "creators=" + value
                         el["creator"] = True
-                    if api_resp.get("is_creator"):
+                    if r["data"].get("is_creator"):
                         el["creator_link"] = "collectors=" + value
                         el["collector"] = True
 
@@ -184,8 +200,8 @@ async def list_resources(query_params: QueryParams = None):
         for facet in facets:
             out = {}
             for b in facets[facet].get("buckets"):
-                active = (facet, b.get("value"))
-                if params and (active in params):
+                active = (facet, b.get("value"))  # tuple
+                if params and (active in params):  # if
                     stripped_params = [x for x in params if x != active]
                     b["remove_link"] = urlencode(stripped_params)
                 elif params:
@@ -194,6 +210,88 @@ async def list_resources(query_params: QueryParams = None):
                     b["add_link"] = urlencode([active])
                 out[b.get("value")] = b
             result[facet] = out
+        return result
+
+    def _generate_total_facets(aws_facets: Dict, params: List = None) -> Dict:
+        # TODO: Does not work when excisting negative filter is set
+        # and you click a positive facet: '-usability=4' is set, you click 'usability=2'
+
+        def _recurse(
+            facet_key: str,
+            total_facet_values: List,
+            active_facet_values: Dict,
+            params: List = None,
+        ) -> List:
+            # total_facet_values is the "content"-key from each facet in settings.FACETS
+            # active_facet_values is a dict of facet-values and facetinfo, e.g.
+            # {"1": {"value": "1", "count": 63, "link": "add_or_remove_link_url"}}
+            out = []
+            for facet in total_facet_values:
+                id_ = facet.get("id")
+                label = facet.get("label")
+
+                if id_ in active_facet_values:
+                    current_tuple = (facet_key, id_)
+                    el = {
+                        "label": label,
+                        "id": id_,
+                        "count": active_facet_values[id_].get("count"),
+                    }
+
+                    if params and (
+                        current_tuple in params
+                    ):  # if the current tuple is in the params
+                        stripped_params = [
+                            x for x in params if x != current_tuple
+                        ]
+                        el["remove_link"] = urlencode(stripped_params)
+                    elif params:
+                        el["add_link"] = urlencode(params + [current_tuple])
+                    else:
+                        el["add_link"] = urlencode([current_tuple])
+
+                    if facet.get("children"):
+                        el["children"] = _recurse(
+                            facet_key,
+                            facet.get("children"),
+                            active_facet_values,
+                            params,
+                        )
+                    out.append(el)
+            return out
+            # return list of dicts with label, link and children
+
+        # restructure aws-facets
+        active_facets = {}
+        for facet in aws_facets:
+            active_facets[facet] = {
+                b.get("value"): b for b in aws_facets[facet].get("buckets")
+            }
+
+        # remove 'start'-param from facet-links, retain all else
+        params = [x for x in params if x[0] != "start"]
+        result = {}
+
+        for k, v in settings.FACETS.items():
+            # label = facet.get("label")
+            # recursively merge labels and links from total_facets and active_facets
+            result[k] = _recurse(
+                k, v.get("content"), active_facets.get(k), params
+            )
+
+        collection_tuples = [
+            ("collection", key) for key in active_facets["collection"].keys()
+        ]
+        # result["collection_tuples"] = collection_tuples
+        collection_labels = get_entity_labels(collection_tuples)
+        # result["collection_labels"] = collection_labels
+
+        result["collection"] = _recurse(
+            "collection",
+            collection_labels.get("data"),
+            active_facets.get("collection"),
+            params,
+        )
         return result
 
     def _generate_views(params, view):
@@ -302,8 +400,7 @@ async def list_resources(query_params: QueryParams = None):
             return validated_request
 
     # Make api-call
-    searchAPI = searchInterface.SearchHandler()
-    api_resp = searchAPI.search_records(query_params)
+    api_resp = searchInterface.search_records(query_params)
 
     # If api-error
     if api_resp.get("errors"):
@@ -327,16 +424,13 @@ async def list_resources(query_params: QueryParams = None):
     resp["params"] = params
     resp["query"] = api_resp.get("query", None)
 
-    # Hint for GUI
-    resp["collection_search"] = query_params.get("collection", False)
-
     # If filters, generate links and possibly labels
     if api_resp.get("filters"):
         resp["filters"] = _generate_filters(api_resp["filters"], params)
 
     # if facets, generate links
     if api_resp.get("facets"):
-        resp["active_facets"] = _generate_facets(api_resp["facets"], params)
+        resp["facets"] = _generate_total_facets(api_resp["facets"], params)
 
     # 'non_query_params' is used to generate a remove_link for the q-param
     # on the zero-hits page
@@ -383,7 +477,7 @@ async def list_resources(query_params: QueryParams = None):
     resp["size"] = api_resp.get("size")
     resp["sort"] = api_resp.get("sort")
     resp["result"] = api_resp.get("result")
-
+    # resp["api_response"] = api_resp.get("api_response")
     return resp
 
     #####################################################################
@@ -425,22 +519,3 @@ async def list_resources(query_params: QueryParams = None):
 #             ]
 #         }
 
-
-# 'resolve_params'
-# def get_entity_labels(self, resource_list):
-#     # resource_list: [('collection', '4'), ('availability', '2')]
-#     r = self._api_request("resolve_params", params=resource_list)
-
-#     if r.get("status_code") == 0:
-#         output = []
-#         for key, value in r.get("resolved_params").items():
-#             for k, v in value.items():
-#                 d = {"resource": key, "id": k, "label": v.get("display_label")}
-#                 output.append(d)
-#         return {"result": output}
-#     else:
-#         return {
-#             "errors": [
-#                 {"code": r.get("status_code"), "msg": r.get("status_msg")}
-#             ]
-#         }

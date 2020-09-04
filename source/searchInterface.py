@@ -11,271 +11,279 @@ from source.configuration import (
 )
 
 
-class SearchHandler:
-    def __init__(self):
-        self.filters = settings.QUERY_PARAMS
-        self.search_engine = boto3.client(
-            "cloudsearchdomain",
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-            region_name=AWS_REGION_NAME,
-            endpoint_url=AWS_CLOUDSEARCH_ENDPOINT,
-        )
+# class SearchHandler:
+#     def __init__(self):
+#         self.filters = settings.QUERY_PARAMS
+#         self.search_engine = boto3.client(
+#             "cloudsearchdomain",
+#             aws_access_key_id=AWS_ACCESS_KEY_ID,
+#             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+#             region_name=AWS_REGION_NAME,
+#             endpoint_url=AWS_CLOUDSEARCH_ENDPOINT,
+#         )
 
-    def list_facets(self):
-        # lists all facet-values from the searchengine
-        facet_options = {
-            "availability": {},
-            "usability": {},
-            "content_types": {"size": 100},
-            "subjects": {"size": 100},
-        }
+# def list_facets(self):
+#     # lists all facet-values from the searchengine
+#     facet_options = {
+#         "availability": {},
+#         "usability": {},
+#         "content_types": {"size": 100},
+#         "subjects": {"size": 100},
+#     }
 
-        key_args = {}
-        key_args["facet"] = json.dumps(facet_options)
-        key_args["returnFields"] = "_no_fields"
-        key_args["size"] = 1
-        key_args["queryParser"] = "structured"
-        key_args["query"] = "matchall"
+#     key_args = {}
+#     key_args["facet"] = json.dumps(facet_options)
+#     key_args["returnFields"] = "_no_fields"
+#     key_args["size"] = 1
+#     key_args["queryParser"] = "structured"
+#     key_args["query"] = "matchall"
 
-        resp = self.search_engine.search(**key_args)
-        return resp.get("facets")
+#     resp = self.search_engine.search(**key_args)
+#     return resp.get("facets")
 
-    def list_collection_facets(self, collection_id):
-        # lists all series and collection_tags of a given collection
-        facet_options = {
-            "collection_tags": {"sort": "count", "size": 7000},
-            "series": {"sort": "count", "size": 2000},
-        }
+# def list_collection_facets(self, collection_id):
+#     # lists all series and collection_tags of a given collection
+#     facet_options = {
+#         "collection_tags": {"sort": "count", "size": 7000},
+#         "series": {"sort": "count", "size": 2000},
+#     }
 
-        key_args = {}
-        key_args["query"] = "matchall"
-        key_args["facet"] = json.dumps(facet_options)
-        key_args["returnFields"] = "_no_fields"
-        key_args["size"] = 1
-        key_args["queryParser"] = "structured"
-        key_args["query"] = "matchall"
-        key_args["filterQuery"] = "collection:'" + str(collection_id) + "'"
+#     key_args = {}
+#     key_args["query"] = "matchall"
+#     key_args["facet"] = json.dumps(facet_options)
+#     key_args["returnFields"] = "_no_fields"
+#     key_args["size"] = 1
+#     key_args["queryParser"] = "structured"
+#     key_args["query"] = "matchall"
+#     key_args["filterQuery"] = "collection:'" + str(collection_id) + "'"
 
-        resp = self.search_engine.search(**key_args)
-        return resp.get("facets")
+#     resp = self.search_engine.search(**key_args)
+#     return resp.get("facets")
 
-    def search_records(self, query_params):
-        # https://docs.aws.amazon.com/cloudsearch/latest/developerguide/search-api.html#structured-search-syntax
-        # https://docs.aws.amazon.com/cloudsearch/latest/developerguide/searching-compound-queries.html
 
-        # Kwargs to send to all bobo3-cloudsearch-calls.
-        key_args = {}
-        key_args["queryParser"] = "structured"
-        key_args["queryOptions"] = json.dumps(
-            {"fields": ["label^4", "summary^2", "description"]}
-        )
+def search_records(query_params):
+    filters = settings.QUERY_PARAMS
+    search_engine = boto3.client(
+        "cloudsearchdomain",
+        aws_access_key_id=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+        region_name=AWS_REGION_NAME,
+        endpoint_url=AWS_CLOUDSEARCH_ENDPOINT,
+    )
+    # https://docs.aws.amazon.com/cloudsearch/latest/developerguide/search-api.html#structured-search-syntax
+    # https://docs.aws.amazon.com/cloudsearch/latest/developerguide/searching-compound-queries.html
 
-        # Variables
-        date_from = query_params.get("date_from")
-        date_to = query_params.get("date_to")
-        q = query_params.get("q")
+    # Kwargs to send to all bobo3-cloudsearch-calls.
+    key_args = {}
+    key_args["queryParser"] = "structured"
+    key_args["queryOptions"] = json.dumps(
+        {"fields": ["label^4", "summary^2", "description"]}
+    )
 
-        ####################
-        # SORT + DIRECTION #
-        ####################
-        # default values
-        sort = query_params.get("sort", "date_from")
-        direction = query_params.get("direction", "asc")
-        # Override if no explicit sort is selected.
-        if not query_params.get("sort"):
-            # If fulltext-search, then rank by relevance
-            if q:
-                sort = "_score"
-                direction = "desc"
-            # If date_to is set, override relevance-sorting
-            if date_to:
-                sort = "date_to"
-                direction = "desc"
-            # If date_from is set, overrides relevance and date_to
-            if date_from:
-                sort = "date_from"
-                direction = "asc"
+    # Variables
+    date_from = query_params.get("date_from")
+    date_to = query_params.get("date_to")
+    q = query_params.get("q")
 
-        key_args["sort"] = " ".join([sort, direction])  # aws-convention
+    ####################
+    # SORT + DIRECTION #
+    ####################
+    # default values
+    sort = query_params.get("sort", "date_from")
+    direction = query_params.get("direction", "asc")
+    # Override if no explicit sort is selected.
+    if not query_params.get("sort"):
+        # If fulltext-search, then rank by relevance
+        if q:
+            sort = "_score"
+            direction = "desc"
+        # If date_to is set, override relevance-sorting
+        if date_to:
+            sort = "date_to"
+            direction = "desc"
+        # If date_from is set, overrides relevance and date_to
+        if date_from:
+            sort = "date_from"
+            direction = "asc"
 
-        ###########
-        # Q-PARAM #
-        ###########
-        # Fulltext query - wrap value in single-quotes or if empty use
-        # "matchall" to enable filtered searches without a q-param
-        if q and q.strip():
-            # tokens = q.strip().split(' ')
-            tokens = q.split(" ")
-            if tokens:
-                strs = []
-                phrase = None
-                phrase_strs = []
+    key_args["sort"] = " ".join([sort, direction])  # aws-convention
 
-                for s in tokens:
-                    # no need to bother
-                    if len(s) < 2:
-                        continue
+    ###########
+    # Q-PARAM #
+    ###########
+    # Fulltext query - wrap value in single-quotes or if empty use
+    # "matchall" to enable filtered searches without a q-param
+    if q and q.strip():
+        # tokens = q.strip().split(' ')
+        tokens = q.split(" ")
+        if tokens:
+            strs = []
+            phrase = None
+            phrase_strs = []
 
-                    # If single-word phrase
-                    if not phrase and s.startswith('"') and s.endswith('"'):
-                        strs.append("'" + s[1:-1] + "'")
+            for s in tokens:
+                # no need to bother
+                if len(s) < 2:
+                    continue
 
-                    # Elif single-word negative phrase
-                    elif not phrase and s.startswith('-"') and s.endswith('"'):
-                        strs.append("'" + s[2:-1] + "'")
+                # If single-word phrase
+                if not phrase and s.startswith('"') and s.endswith('"'):
+                    strs.append("'" + s[1:-1] + "'")
 
-                    # Elif a phrase is active, add token if not the ending
-                    elif phrase and not (s.endswith('"') or s.startswith('"')):
-                        phrase_strs.append(s)
+                # Elif single-word negative phrase
+                elif not phrase and s.startswith('-"') and s.endswith('"'):
+                    strs.append("'" + s[2:-1] + "'")
 
-                    elif s.startswith('-"') and not phrase:
-                        # start a new phrase and append string
-                        phrase = "negated"
-                        # s = re.sub('*', '', s)
-                        phrase_strs.append(s[2:])
+                # Elif a phrase is active, add token if not the ending
+                elif phrase and not (s.endswith('"') or s.startswith('"')):
+                    phrase_strs.append(s)
 
-                    elif s.startswith('"') and not phrase:
-                        # start a new phrase and append string
-                        phrase = "positive"
-                        phrase_strs.append(s[1:])
+                elif s.startswith('-"') and not phrase:
+                    # start a new phrase and append string
+                    phrase = "negated"
+                    # s = re.sub('*', '', s)
+                    phrase_strs.append(s[2:])
 
-                    elif s.endswith('"') and phrase:
-                        # append string and close phrase
-                        phrase_strs.append(s[:-1])
-                        if phrase == "positive":
-                            strs.append(
-                                "(phrase '" + " ".join(phrase_strs) + "')"
-                            )
-                        else:
-                            strs.append(
-                                "(not (phrase '"
-                                + " ".join(phrase_strs)
-                                + "'))"
-                            )
-                        # Ready for new phrase
-                        phrase = None
-                        phrase_strs = []
+                elif s.startswith('"') and not phrase:
+                    # start a new phrase and append string
+                    phrase = "positive"
+                    phrase_strs.append(s[1:])
 
-                    elif s.startswith("-"):
-                        if s.endswith("*"):
-                            strs.append("(not (prefix '" + s[:-1] + "'))")
-                        else:
-                            strs.append("(not '" + s[1:] + "')")
-
-                    elif s.endswith("*"):
-                        strs.append("(prefix '" + s[:-1] + "')")
-
+                elif s.endswith('"') and phrase:
+                    # append string and close phrase
+                    phrase_strs.append(s[:-1])
+                    if phrase == "positive":
+                        strs.append("(phrase '" + " ".join(phrase_strs) + "')")
                     else:
-                        strs.append("'" + s + "'")
+                        strs.append(
+                            "(not (phrase '" + " ".join(phrase_strs) + "'))"
+                        )
+                    # Ready for new phrase
+                    phrase = None
+                    phrase_strs = []
 
-            if len(tokens) > 1:
-                key_args["query"] = "(and " + " ".join(strs) + ")"
-            else:
-                # key_args['query'] = "'" + strs[0] + "'"
-                key_args["query"] = strs[0]
+                elif s.startswith("-"):
+                    if s.endswith("*"):
+                        strs.append("(not (prefix '" + s[:-1] + "'))")
+                    else:
+                        strs.append("(not '" + s[1:] + "')")
 
+                elif s.endswith("*"):
+                    strs.append("(prefix '" + s[:-1] + "')")
+
+                else:
+                    strs.append("'" + s + "'")
+
+        if len(tokens) > 1:
+            key_args["query"] = "(and " + " ".join(strs) + ")"
         else:
-            key_args["query"] = "matchall"
+            # key_args['query'] = "'" + strs[0] + "'"
+            key_args["query"] = strs[0]
 
-        ############
-        # FQ-PARAM #
-        ############
-        filters_to_query = (
-            []
-        )  # list of query-filters used for key_arg: "filterQuery"
-        filters_to_output = []  # list of filters used for gui-template
+    else:
+        key_args["query"] = "matchall"
 
-        # Build "filterQuery"-arg
-        for key in query_params.keys():
+    ############
+    # FQ-PARAM #
+    ############
+    filters_to_query = (
+        []
+    )  # list of query-filters used for key_arg: "filterQuery"
+    filters_to_output = []  # list of filters used for gui-template
 
-            # remove any negation
-            stripped_key = key[1:] if key.startswith("-") else key
-            filter_type = self.filters[stripped_key].get("type")
+    # Build "filterQuery"-arg
+    for key in query_params.keys():
 
-            # q-param already processed
-            if stripped_key == "q":
-                continue
+        # remove any negation
+        stripped_key = key[1:] if key.startswith("-") else key
+        filter_type = filters[stripped_key].get("type")
 
-            # Leave out non-searchfilters from filterQuery, eg. "size", "direction", "start"
-            if not self.filters[stripped_key].get("search_filter"):
-                continue
+        # q-param already processed
+        if stripped_key == "q":
+            continue
 
-            # Go back to using the full key-label before iterating query
-            for value in query_params.getlist(key):
+        # Leave out non-searchfilters from filterQuery, eg. "size", "direction", "start"
+        if not filters[stripped_key].get("search_filter"):
+            continue
 
-                if filter_type == "object":
-                    filter_str = ":".join([stripped_key, "'" + value + "'"])
-                    # if negation, update filter_str
-                    if stripped_key != key:
-                        filter_str = "(not " + filter_str + ")"
-                    filters_to_query.append(filter_str)
-                    filters_to_output.append(
-                        {
-                            "key": stripped_key,
-                            "value": value,
-                            "negated": stripped_key != key,
-                            "unresolved": True,
-                        }
-                    )
+        # Go back to using the full key-label before iterating query
+        for value in query_params.getlist(key):
 
-                elif filter_type in ["string", "integer"]:
-                    filter_str = ":".join([stripped_key, "'" + value + "'"])
-                    # if negation, update filter_str
-                    if stripped_key != key:
-                        filter_str = "(not " + filter_str + ")"
-                    filters_to_query.append(filter_str)
-                    filters_to_output.append(
-                        {
-                            "key": stripped_key,
-                            "value": value,
-                            "negated": stripped_key != key,
-                        }
-                    )
+            if filter_type == "object":
+                filter_str = ":".join([stripped_key, "'" + value + "'"])
+                # if negation, update filter_str
+                if stripped_key != key:
+                    filter_str = "(not " + filter_str + ")"
+                filters_to_query.append(filter_str)
+                filters_to_output.append(
+                    {
+                        "key": stripped_key,
+                        "value": value,
+                        "negated": stripped_key != key,
+                        "unresolved": True,
+                    }
+                )
 
-                elif key == "date_from":
-                    filters_to_query.append("date_from:[" + value + ",}")
-                    filters_to_output.append({"key": key, "value": value})
+            elif filter_type in ["string", "integer"]:
+                filter_str = ":".join([stripped_key, "'" + value + "'"])
+                # if negation, update filter_str
+                if stripped_key != key:
+                    filter_str = "(not " + filter_str + ")"
+                filters_to_query.append(filter_str)
+                filters_to_output.append(
+                    {
+                        "key": stripped_key,
+                        "value": value,
+                        "negated": stripped_key != key,
+                    }
+                )
 
-                elif key == "date_to":
-                    filters_to_query.append("date_to:{," + value + "]")
-                    filters_to_output.append({"key": key, "value": value})
+            elif key == "date_from":
+                filters_to_query.append("date_from:[" + value + ",}")
+                filters_to_output.append({"key": key, "value": value})
 
-        if filters_to_query:
-            key_args["filterQuery"] = (
-                "(and " + " ".join(filters_to_query) + ")"
-            )
+            elif key == "date_to":
+                filters_to_query.append("date_to:{," + value + "]")
+                filters_to_output.append({"key": key, "value": value})
 
-        ###############
-        # SAM-request #
-        ###############
-        if "ids" in query_params.getlist("view"):
-            # Additional request key_args
+    if filters_to_query:
+        key_args["filterQuery"] = "(and " + " ".join(filters_to_query) + ")"
+
+    ###############
+    # SAM-request #
+    ###############
+    if "ids" in query_params.getlist("view"):
+        # Additional request key_args
+        key_args["returnFields"] = "_no_fields"
+        key_args["size"] = query_params.get("size", 1000, int)
+        if query_params.get("cursor"):
+            key_args["cursor"] = query_params.get("cursor")
+        else:
+            key_args["cursor"] = "initial"
+
+        # Make request to Cloudsearch
+        api_response = search_engine.search(**key_args)
+
+        # Build simple response
+        out = {}
+        out["status_code"] = 0  # Needed for SAM
+        out["result"] = []
+        if key_args.get("size") + api_response["hits"].get(
+            "start"
+        ) < api_response["hits"].get("found"):
+            out["next_cursor"] = api_response["hits"].get("cursor")
+        for hit in api_response["hits"]["hit"]:
+            out["result"].append(hit["id"])
+        return out
+
+    ####################
+    # Standard-request #
+    ####################
+    else:
+        # if id-request used to populate session-keys, keep to minimum
+        if query_params.get("view") == "id-list":
             key_args["returnFields"] = "_no_fields"
-            key_args["size"] = query_params.get("size", 1000, int)
-            if query_params.get("cursor"):
-                key_args["cursor"] = query_params.get("cursor")
-            else:
-                key_args["cursor"] = "initial"
-
-            # Make request to Cloudsearch
-            api_response = self.search_engine.search(**key_args)
-
-            # Build simple response
-            out = {}
-            out["status_code"] = 0  # Needed for SAM
-            out["result"] = []
-            if key_args.get("size") + api_response["hits"].get(
-                "start"
-            ) < api_response["hits"].get("found"):
-                out["next_cursor"] = api_response["hits"].get("cursor")
-            for hit in api_response["hits"]["hit"]:
-                out["result"].append(hit["id"])
-            return out
-
-        ####################
-        # Standard-request #
-        ####################
+        # else make full request with facet-info and returnFields
         else:
             # Additional request key_args
             key_args["facet"] = json.dumps(
@@ -290,78 +298,77 @@ class SearchHandler:
             key_args[
                 "returnFields"
             ] = "label,summary,collection,series,content_types,thumbnail,portrait,collectors_label,date_from,date_to,created_at,availability,updated_at"
-            key_args["start"] = query_params.get("start", 0, int)
-            key_args["size"] = query_params.get("size", 20, int)
+        key_args["start"] = int(query_params.get("start", 0))
+        key_args["size"] = int(query_params.get("size", 20))
 
-            # Make request to Cloudsearch
-            api_response = self.search_engine.search(**key_args)
+        # Make request to Cloudsearch
+        api_response = search_engine.search(**key_args)
 
-            # Build response
-            out = {}
-            out["sort"] = sort
-            out["direction"] = direction
-            out["size"] = key_args["size"]
-            out["date_from"] = date_from
-            out["date_to"] = date_to
-            out["_query_string"] = key_args["query"]  # processed query-string
-            out["total"] = api_response["hits"]["found"]
-            out["start"] = api_response["hits"]["start"]
-            out["facets"] = api_response["facets"]
-            out["query"] = q or None  # original query-string
+        # if id-request to update session-values, return mimimum
 
-            # Parse hits from Cloudsearch
-            records = []
-            for hit in api_response["hits"]["hit"]:
-                item = {}
-                item["id"] = hit["id"]
+        # Build response
+        out = {}
+        # out["api_response"] = api_response
+        out["sort"] = sort
+        out["direction"] = direction
+        out["size"] = key_args["size"]
+        out["date_from"] = date_from
+        out["date_to"] = date_to
+        out["_query_string"] = key_args["query"]  # processed query-string
+        out["total"] = api_response["hits"]["found"]
+        out["start"] = api_response["hits"]["start"]
+        out["facets"] = api_response["facets"]
+        out["query"] = q or None  # original query-string
 
-                label = hit["fields"].get("label")
-                item["label"] = label[0] if label else None
+        # Parse hits from Cloudsearch
+        records = []
+        for hit in api_response["hits"]["hit"]:
+            item = {}
+            item["id"] = hit["id"]
 
-                summary = hit["fields"].get("summary")
-                item["summary"] = summary[0] if summary else None
+            label = hit["fields"].get("label")
+            item["label"] = label[0] if label else None
 
-                item["content_types"] = hit["fields"].get("content_types")
+            summary = hit["fields"].get("summary")
+            item["summary"] = summary[0] if summary else None
 
-                collection_id = hit["fields"].get("collection")
-                item["collection_id"] = (
-                    collection_id[0] if collection_id else None
-                )
+            item["content_types"] = hit["fields"].get("content_types")
 
-                collectors_label = hit["fields"].get("collectors_label")
-                item["collectors_label"] = (
-                    collectors_label[0] if collectors_label else None
-                )
+            collection_id = hit["fields"].get("collection")
+            item["collection_id"] = collection_id[0] if collection_id else None
 
-                item["series"] = hit["fields"].get("series")
+            collectors_label = hit["fields"].get("collectors_label")
+            item["collectors_label"] = (
+                collectors_label[0] if collectors_label else None
+            )
 
-                thumbnail = hit["fields"].get("thumbnail")
-                item["thumbnail"] = thumbnail[0] if thumbnail else None
+            item["series"] = hit["fields"].get("series")
 
-                portrait = hit["fields"].get("portrait")
-                item["portrait"] = portrait[0] if portrait else None
+            thumbnail = hit["fields"].get("thumbnail")
+            item["thumbnail"] = thumbnail[0] if thumbnail else None
 
-                availability = hit["fields"].get("availability")
-                item["availability"] = (
-                    availability[0] if availability else None
-                )
+            portrait = hit["fields"].get("portrait")
+            item["portrait"] = portrait[0] if portrait else None
 
-                created_at = hit["fields"].get("created_at")
-                item["created_at"] = created_at[0] if created_at else None
+            availability = hit["fields"].get("availability")
+            item["availability"] = availability[0] if availability else None
 
-                updated_at = hit["fields"].get("updated_at")
-                item["updated_at"] = updated_at[0] if updated_at else None
+            created_at = hit["fields"].get("created_at")
+            item["created_at"] = created_at[0] if created_at else None
 
-                date_from = hit["fields"].get("date_from")
-                item["date_from"] = date_from[0] if date_from else None
+            updated_at = hit["fields"].get("updated_at")
+            item["updated_at"] = updated_at[0] if updated_at else None
 
-                date_to = hit["fields"].get("date_to")
-                item["date_to"] = date_to[0] if date_to else None
+            date_from = hit["fields"].get("date_from")
+            item["date_from"] = date_from[0] if date_from else None
 
-                records.append(item)
-            out["result"] = records
+            date_to = hit["fields"].get("date_to")
+            item["date_to"] = date_to[0] if date_to else None
 
-            # Filters for gui-processing
-            out["filters"] = filters_to_output or None
+            records.append(item)
+        out["result"] = records
 
-            return out
+        # Filters for gui-processing
+        out["filters"] = filters_to_output or None
+
+        return out

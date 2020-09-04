@@ -1,52 +1,125 @@
 {% extends "base.html" %}
 
+{# Vars used by zeroHits-component #}
+{% set vars = {"date_from_dict": False, "date_to_dict": False} %}
+
+{% block title %}Søgeresultat | AarhusArkivet{% endblock %}
+
+{% block bodyclass %}searchpage{% endblock %}
+
 {% block content %}
 <div class="searchPage">
-    <div class="searchAdvanced">searchAdvanced - default open if #adv is used in url
-        <form action="/search" class="searchAdvanced-form">
-        </form>
-    </div>
-    <div class="searchFacets">Angiv antal aktive søgefilter i header på mobil
-        {% if filters %}
-            <div class="filterContainer">
-                <h3 class="filterContainer-heading">Aktive søgefiltre</h3>
-                {% for f in filters %}
-                    <button class="filterButton" role="button" aria-label="Fjern filteret {{f.key}} fra søgningen">
-                        <a href="/search?{{f.remove_link}}" class="filterRemovelink">
-                            <span aria-hidden>X {{f.key}}</span>
-                        </a>
-                    </button>
-                {% endfor %}
-            </div>
-        {% endif %}
-        <div class="facetContainer">
-            <h3 id="facetContainer-heading" class="facetContainer-heading">Søgefiltre</h3>
-            <ul class="facetList" aria-labelledby="facetContainer-heading" role="tree">
-            {% for f in facets %}
-            {% endfor %}
-            </ul>
+
+    <div class="searchAdvanced" role="region" aria-labelledby="searchAdvanced-header">
+        <h2 id="searchAdvanced-header" class="collapsible-header">Avanceret søgning</h2>
+        <div class="collapsible-panel">
+            <p>This is the place for the advanced searchform</p>
         </div>
     </div>
-    <div class="searchActions">searchActions (print...)</div>
-    <div class="searchNavigation">searchNavigation
-        <div class="searchNavigation-count">searchNavigation-count</div>
-        <div class="searchNavigation-pagination">searchNavigation-pagination</div>
+
+    <div class="searchFilters" role="region" aria-labelledby="searchFilters-header">
+        <h2 id="searchFilters-header" class="collapsible-header js-until-45">Søgefiltre {% if filters %}({{filters|length}}){% endif %}</h2>
+        <div id="searchFilters-section" class="collapsible-panel">
+            {% if filters %}
+                <h3 class="filterContainer-heading sr-only">Aktive søgefiltre</h3>
+                <p><a href="/search">Ryd alle aktive filtre</a></p>
+                {% include 'components/filters.html' %}
+            {% endif %}
+            <h3 class="facetContainer-heading sr-only">Samtlige søgefiltre</h3>
+            {% include 'components/facets.html' %}
+        </div>
     </div>
-    <div class="searchOptions">searchOptions
-        <div class="searchSort">searchSort</div>
-        <div class="searchViews">searchViews</div>
+
+    <div class="searchActions" role="region" aria-labelledby="searchActions-header">
+        <h2 id="searchActions-header" class="sr-only">Del søgning</h2>
+        <span>Print, Share...</span>
     </div>
-    <div class="searchResults">searchResults
+
     {% if result %}
-        {% for item in result %}
-            <div class="resultItem">
-                <h3 class="resultItem-title">{{item.label}}</h3>
+        <div class="searchPagination" role="region" aria-labelledby="searchPagination-header">
+            <h2 id="searchPagination-header" class="sr-only">Relaterede søgninger</h2>
+            <div class="searchPagination-count">
+                {% if total > 10000 %}
+                <span>Flere end 10.000 resultater...</span>
+                {% else %}
+                    <span>{{start + 1}} - {% if (start + size) > total %}{{total}}{% else %}{{start + size}}{% endif %} af {{total}} resultater</span>
+                {% endif %}
             </div>
-        {% endfor %}
-        <div class="searchNavigation-pagination">searchNavigation-pagination</div>
-    {% else %}
-        <div class="zeroHits">zeroHits</div>
+            {% if next or previous %}
+                <div class="searchPagination-paginator">
+                    {% include 'components/pagination.html' %}
+                </div>
+            {% endif %}
+        </div>
     {% endif %}
+
+    {% if result %}
+        <div class="searchOptions" role="region" aria-labelledby="searchOptions-header">
+            <h2 id="searchOptions-header" class="sr-only">Vælg antal, sortering og visningsformat af søgeresultaterne</h2>
+            {% if previous or next %}
+                <div class="searchNumber" data-menu-wrapper>
+                    <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="numberMenu">Antal</button>
+                    <ul id="numberMenu" role="menu" data-menu-from="right">
+                    {% for s in size_list %}
+                        {% if s.selected %}
+                            <li role="menuitem">{{s.label}}</li>
+                        {% else %}
+                            <li><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endif%}
+            <div class="searchSort" data-menu-wrapper>
+                <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="sortMenu">Sortering</button>
+                <ul id="sortMenu" role="menu" data-menu-from="right">
+                {% for s in sort_list %}
+                    {% if s.selected %}
+                        <li role="menuitem">{{s.label}}</li>
+                    {% else %}
+                        <li><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="searchViews" data-menu-wrapper>
+                <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="showMenu">Visning</button>
+                <ul id="showMenu" role="menu" data-menu-from="right">
+                {% for v in view_list %}
+                    {% if v.selected %}
+                        <li role="menuitem">{{v.label}}</li>
+                    {% else %}
+                        <li><a role="menuitem" href="/search?{{v.link}}">{{v.label}}</a></li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="searchResults" role="region" aria-labelledby="searchResults-header">
+        <h2 id="searchResults-header" class="sr-only">Søgeresultater</h2>
+        {% if result %}
+            {% if view == 'gallery' %}
+                {% for record in result %}
+                    <div data-resource-id="{{record.id}}">{% include "components/galleryitem.html" %}</div>
+                {% endfor %}
+            {% elif view == 'list' %}
+                {% for record in result %}
+                    <div data-resource-id="{{record.id}}">{% include "components/listitem.html" %}</div>
+                {% endfor %}
+            {% endif %}
+
+            {% if next or previous %}
+                <div class="searchNavigation-pagination">
+                    {% include 'components/pagination.html' %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="zeroHits">
+                {% include 'components/zero-hits.html' %}
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
