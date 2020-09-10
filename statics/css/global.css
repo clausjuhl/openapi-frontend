@@ -16,6 +16,10 @@ body {
     color: var(--color-dark);
 }
 
+div {
+    border: 1px solid red;
+}
+
 @media (min-width: 700px) {
     body {
         font-size: 1.125em;

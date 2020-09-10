@@ -101,9 +101,13 @@
         <h2 id="searchResults-header" class="sr-only">Søgeresultater</h2>
         {% if result %}
             {% if view == 'gallery' %}
+                <div class="gallery">
                 {% for record in result %}
-                    <div data-resource-id="{{record.id}}">{% include "components/galleryitem.html" %}</div>
+                    {#<div class="galleryItem" data-resource-id="{{record.id}}">#}
+                        {% include "components/galleryitem.html" %}
+                    {#</div>#}
                 {% endfor %}
+                </div>
             {% elif view == 'list' %}
                 {% for record in result %}
                     <div data-resource-id="{{record.id}}">{% include "components/listitem.html" %}</div>

@@ -22,7 +22,7 @@ async def resource(req: Request):
             return render("error.html", context)
 
         # if "traverse" and referer is search or resource-page, traversal
-        # almost always is intended
+        # is almost always intended
         if req.session.get("traverse") and (
             "/search?" or "/resources/" in req.headers.get("referer", "")
         ):
