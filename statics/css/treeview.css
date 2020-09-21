@@ -1,73 +1,33 @@
-
-ul[role="tree"] {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-ul[role="tree"] li {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-/*
-ul[role="tree"] a {
-  text-decoration: underline;
-  border-color: transparent;
-}
-*/
-[role="treeitem"] ul {
-  margin: 0;
-  padding: 0;
-  margin-left: 1em;
-}
-
-
-.js [role="treeitem"][aria-expanded="false"] > ul,
-.js [role="treeitem"][aria-expanded="false"] > form {
+/*  */
+.js [role="treeitem"][aria-expanded="false"] > ul {
     display: none;
 }
 
-[role="treeitem"][aria-expanded="true"] > ul,
-[role="treeitem"][aria-expanded="true"] > form {
+.js [role="treeitem"][aria-expanded="true"] > ul {
     display: block;
 }
-/* 
-[role="treeitem"][aria-expanded="false"] > span::before {
-  content: url(../images/right-arrow-brown.png);
-  position: relative;
-}
 
-[role="treeitem"][aria-expanded="true"] > span::before {
-  content: url(../images/down-arrow-brown.png);
-  position: relative;
-} */
-
-[role="treeitem"]:hover {
+.js [role="treeitem"]:hover {
     cursor: pointer;
 }
 
-[role="treeitem"],
-[role="treeitem"] span {
-  /* margin: 0;
-  padding: 0.125em;
-  border: 2px transparent solid; */
-  display: block;
+[role="treeitem"] span,
+[role="treeitem"] a {
+  display: flex;
+  justify-content: space-between;
 }
 
-/* disable default keyboard focus styling for treeitems
-   Keyboard focus is styled with the following CSS */
-[role="treeitem"]:focus {
-  outline: 0;
+[role="treeitem"] span svg {
+  height: 1em;
+  margin-left: 0.5em;
+  align-self: center;
 }
 
-[role="treeitem"].focus,
-[role="treeitem"] span.focus {
-  border-color: black;
-  background-color: #eee;
+/* .vert and rect are svg-shapes representing '+' and '-' */
+/* .vert is the vertical line that is hidden when the subtree is expanded */
+[role="treeitem"][aria-expanded="true"] .vert {
+  display: none;
 }
-
-[role="treeitem"].hover,
-[role="treeitem"] span.hover {
-  background-color: rgb(199, 108, 108);
+[role="treeitem"][aria-expanded="false"] rect {
+  fill: currentColor;
 }

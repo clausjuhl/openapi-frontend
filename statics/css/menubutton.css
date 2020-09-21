@@ -4,33 +4,44 @@
     https://github.com/Heydon/inclusive-menu-button/blob/master/inclusive-menu-button.css
  */
 
+/* Generic styles for all MenuButtons */
+
 [data-menu-wrapper] {
     position: relative;
-    display: inline-block;
 }
 
 .no-js [data-menu-wrapper] [role="menu"] {
     display: block;
     position: initial;
 }
-.no-js [data-menu-wrapper] [data-menu-trigger] {
-  cursor: initial; /* Nothing happens if you click anyway */
+.js [data-menu-trigger]:hover {
+    cursor: pointer;
+}
+/* 
+[data-menu-trigger][aria-expanded="false"]::after  {
+    content: "\22C1";
+    float: right;
 }
 
+[data-menu-trigger][aria-expanded="true"]::after  {
+    content: "\22C0";
+    float: right;
+}
+*/
+
 [data-menu-wrapper] [role="menu"] {
-  display: none;
-  position: absolute;
-  list-style: none;
-  top: 2.6em;
-  background-color: gold;
-  z-index: 10;
+    display: none;
+    position: absolute;
+    list-style: none;
+    background-color: white;
+    z-index: 10;
 }
 
 [data-menu-from="right"] {
     left: auto;
     right: 0;
     text-align: right;
-  }
+}
 
 [data-menu-from="left"] {
     left: 0;
@@ -43,53 +54,8 @@
     padding: .4em .6em;
 }
 
-[data-menu-wrapper] [role^="menuitem"]:focus,
-[data-menu-wrapper] [role^="menuitem"]:hover {
-    background-color: black;
-    color: white;
-}
-
+/* Currently not in use */
 [data-menu-wrapper] [role^="menuitem"][aria-checked="true"]::before {
     content: '\2713\0020';
 }
-
-/* ul[role="menu"] {
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  font-size: 110%;
-  list-style: none;
-  background-color: #eee;
-  display: none;
-} */
-
-/* ul[role="menu"] li {
-  margin: 0;
-  padding: 0;
-} */
-
-/* ul[role="menu"] a[role="menuitem"],
-ul[role="menu"] a[role="menuitem"]:visited {
-  display: block;
-  text-decoration: none;
-  padding: 0.25em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  background-color: #e0e0e0;
-  width: 22em;
-  color: black;
-} */
-
-/* focus and hover styling */
-/* a[role="button"]:focus,
-a[role="button"]:hover {
-  border: 2px solid black;
-  background-color: #f8f8f8;
-}
-
-ul[role="menu"] a[role="menuitem"]:focus,
-ul[role="menu"] a[role="menuitem"]:hover {
-  background-color: black;
-  color: white;
-} */
 

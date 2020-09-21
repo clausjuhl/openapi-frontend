@@ -292,7 +292,11 @@ def list_resources(query_params: QueryParams = None):
             active_facets.get("collection"),
             params,
         )
+        result["collection_labels"] = collection_labels
         return result
+
+    def _generate_collection_labels(col_labels):
+        return {d_.get("id"): d_.get("label") for d_ in col_labels.get("data")}
 
     def _generate_views(params, view):
         output = []
@@ -431,7 +435,9 @@ def list_resources(query_params: QueryParams = None):
     # if facets, generate links
     if api_resp.get("facets"):
         resp["facets"] = _generate_total_facets(api_resp["facets"], params)
-
+        col_labels = resp["facets"].pop("collection_labels")
+        if col_labels:
+            resp["collection_labels"] = _generate_collection_labels(col_labels)
     # 'non_query_params' is used to generate a remove_link for the q-param
     # on the zero-hits page
     if not api_resp.get("result") and api_resp.get("query"):

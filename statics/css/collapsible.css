@@ -1,26 +1,27 @@
-.collapsible-header button {
-  all: inherit;
+/*  The button and svg is added with js, as it doesn't make sense
+    to show them if the panel is not hidden
+*/
+[data-collapsible-header] button {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
-.collapsible-header button:hover {
+
+[data-collapsible-header] button:hover {
   cursor: pointer;
 }
 
-.collapsible-header button:focus svg {
-  outline: 2px solid;
-}
-
-button svg {
+/* The svg is added with js, as */
+[data-collapsible-header] button svg {
   height: 1em;
   margin-left: 0.5em;
+  align-self: center;
 }
 
-[aria-expanded="true"] .vert {
+[data-collapsible-header] button[aria-expanded="true"] .vert {
   display: none;
 }
 
-[aria-expanded] rect {
+[data-collapsible-header] button[aria-expanded] rect {
   fill: currentColor;
 }

@@ -27,9 +27,11 @@
 
     <body class="{% block bodyclass %}{% endblock %}">
         <header class="globalHeader" role="banner">
-            <a class="globalLogo" href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', path='/images/logo_white.png') }}" alt="Gå til forsiden af Aarhusarkivet">
-            </a>
+            <h1 class="globalLogo" aria-label="Forside">
+                <a href="{{ url_for('home') }}">
+                    <img src="{{ url_for('static', path='/images/logo_white.png') }}" alt="Gå til forsiden af Aarhusarkivet">
+                </a>
+            </h1>
             <div class="globalMenu">
                 <nav class="globalNavigation" aria-labelledby="globalNavigation-label" data-menu-wrapper>
                     <h2 id="globalNavigation-label" hidden>Aarhusarkivets hovedmenu</h2>
@@ -58,31 +60,32 @@
             </form>
         </header>
 
-        <main class="globalMain">
+        <main class="globalMain" role="main">
             {% block content %}{% endblock content %}
-            <aside>
-                <details>
-                    <summary>Request</summary>
-                    <dl>
-                    {% for k, v in request.items() %}
-                        <dt>{{k}}</dt>
-                        <dd>{{v}}</dd>
-                    {% endfor %}
-                    </dl>
-                </details>
-                <details>
-                    <summary>Session{% if not request.session %}. Empty{% endif %}</summary>
-                    <dl>
-                    {% for k, v in request.session.items() %}
-                        <dt>{{k}}</dt>
-                        <dd>{{v}}</dd>
-                    {% endfor %}
-                    </dl>
-                </details>
-            </aside>
         </main>
 
-        <footer class="globalFooter"></footer>
+        <aside>
+            <details>
+                <summary>Request</summary>
+                <dl>
+                {% for k, v in request.items() %}
+                    <dt>{{k}}</dt>
+                    <dd>{{v}}</dd>
+                {% endfor %}
+                </dl>
+            </details>
+            <details>
+                <summary>Session{% if not request.session %}. Empty{% endif %}</summary>
+                <dl>
+                {% for k, v in request.session.items() %}
+                    <dt>{{k}}</dt>
+                    <dd>{{v}}</dd>
+                {% endfor %}
+                </dl>
+            </details>
+        </aside>
+
+        <footer class="globalFooter" role="contentinfo"></footer>
         <!-- <script src="{{url_for('static', path='/js/autocomplete.min.js')}}"></script> -->
         <!-- <script src="{{url_for('static', path='/js/index.js')}}"></script> -->
         <script src="{{url_for('static', path='/js/bookmarks-vanilla.js')}}"></script>

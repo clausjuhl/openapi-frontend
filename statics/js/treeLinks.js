@@ -17,12 +17,22 @@
 window.addEventListener('load', function () {
 
   var trees = document.querySelectorAll('[role="tree"]');
-
   for (var i = 0; i < trees.length; i++) {
     var t = new TreeLinks(trees[i]);
     t.init();
   }
+  // Select all treeitem-span the functions as headers with subtrees
+  var subtreeHeaders = document.querySelectorAll('li[role="treeitem"] > span');
+  var stub = `<svg aria-hidden="true" focusable="false" viewBox="0 0 10 10">
+      <rect class="vert" height="7" width="1" y="1" x="4"/>
+      <rect height="1" width="7" y="4" x="1"/>
+      </svg>`
 
+  for (var i = 0; i < subtreeHeaders.length; i++) {
+    var h = subtreeHeaders[i];
+    var content = h.textContent;
+    h.innerHTML = content + stub;
+  }
 });
 
 /*

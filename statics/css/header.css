@@ -19,6 +19,11 @@
     color: var(--color-light);
 } */
 
+.globalLogo {
+    margin: 0;
+    padding: 0;
+}
+
 .globalHeader-link {
     display: inline-block;
     font-size: 1em;
@@ -27,6 +32,10 @@
     margin-left: .3em;
     background-color: var(--color-green-dark);
     text-decoration: none;
+}
+
+.globalMenu {
+    display: flex;
 }
 
 .menuButton {

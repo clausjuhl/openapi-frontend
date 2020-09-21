@@ -12,18 +12,14 @@ body {
     font-family: 'helvetica neue',arial,sans-serif;
     text-rendering: optimizeLegibility;
     font-size: 1em;
-    line-height: 1.25;
+    line-height: 1.5;
     color: var(--color-dark);
 }
 
-div {
-    border: 1px solid red;
-}
 
 @media (min-width: 700px) {
     body {
         font-size: 1.125em;
-        line-height: 1.4;
     }
 }
 
@@ -82,10 +78,7 @@ button {
     font-size: 1em;
     line-height: 1.4em;
     padding: 8px 14px;
-    background-color: #718096;
-    color: #f7fafc;
     cursor: pointer;
-
 }
 
 /* button:focus {

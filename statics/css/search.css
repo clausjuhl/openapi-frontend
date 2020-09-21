@@ -7,10 +7,162 @@
     display: flex;
     justify-content: flex-end;
 }
+
+/* Filters - implements menubutton */
+.filters-header {
+    font-size: 1.3em;
+    margin: 0 0 .4em;
+    border-bottom: 1px solid;
+}
 .filter,
 .filter-negated {
+    display: block;
+    margin-bottom: .6em;
+    border-radius: 2px;
+    /* display: grid;
+    grid-template-columns: auto min-content min-content; */
+}
+.filter-title {
+    text-transform: uppercase;
+    font-size: 75%;
+    font-weight: bold;
+    color: var(--color-dark);
+}
+.filter button {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    text-align: inherit;
+}
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow */
+.filter-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.filter ul {
+    width: 100%;
+    top: 4em; /* overrides menubutton */
+}
+
+
+/* Facets - implements collapsible section with trees, simple ul's or forms */
+.facets-header {
+    font-size: 1.3em;
+    margin: 1em 0 .4em;
+    border-bottom: 1px solid;
+}
+.facetHeader {
+    padding: 0;
+    margin: .5em 0 0;
+    border-radius: 2px 0 0 2px;
+    background-color: rgb(240, 240, 240);
+}
+.js .facetHeader:hover {
+    background-color: rgb(230, 230, 230);
+}
+/* The button is added by js */
+.facetHeader button {
+    padding: .4em;
+}
+.facetHeader button:focus,
+.facetHeader button:active {
+    outline: 2px solid;
+}
+/* Facet-panel only styled if js */
+.facetPanel {
+    border-left: 1px solid var(--color-lightgray);
+    border-right: 1px solid var(--color-lightgray);
+    border-bottom: 1px solid var(--color-lightgray);
+}
+.facetPanel a {
+    color: rgb(34, 34, 236);
+}
+/* FacetItem is  */
+.facetItem-header {
+    padding: .3em;
+    border-bottom: 1px solid rgb(240, 240, 240);
+    background-color: rgb(245, 245, 245);
+}
+/* facetItems as link always contain left text and right numbers or X */
+a.facetItem-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Indent sub-trees */
+ul[role="group"] .facetItem-header {
+    padding-left: .6em;
+}
+.facetItem-header:hover {
+    background-color: rgb(235, 235, 235);
+}
+.facetItem-header:focus,
+.facetItem-header:active {
+    outline: 1px solid;
+}
+li[aria-expanded="true"] > .facetItem-header {
+    background-color: rgb(230, 230, 230);
+}
+
+
+
+/* List-view */
+.listitem {
     display: grid;
-    grid-template-columns: auto min-content min-content;
+    grid-template-columns: minmax(6em, auto) 1fr;
+    /* grid-template-rows: auto; */
+    gap: .6em;
+    border-bottom: 1px solid var(--color-lightgray);
+    padding-bottom: .5em;
+    margin-bottom: 1em;
+}
+.listitem:hover {
+    border: 1px solid var(--color-dark);
+}
+.listitem-image {
+    grid-row: 1;
+    /* grid-column: 1; */
+}
+.listitem-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.listitem-heading {
+    grid-row: 1;
+    /* grid-column: 2; */
+    font-weight: bold;
+    margin: 0 0 .4em;
+}
+.listitem-summary {
+    margin: 0;
+    font-size: 90%;
+}
+.listitem-definitions {
+    grid-row: 2;
+    grid-column: 1/ span 2;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    column-gap: .6em;
+    align-items: center;
+}
+.listitem-definitions dt {
+    grid-column: 1;
+    margin: 0 0 .2em;
+    padding: 0;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: .7em;
+    color: #424242;
+}
+.listitem-definitions dd {
+    grid-column: 2;
+    margin: 0 0 .4em;
+    padding: 0;
+    font-size: .8em;
 }
 
 /* Gallery-view */
@@ -76,10 +228,14 @@
         display: grid;
         grid-template-columns: 18em auto;
         grid-template-rows: repeat(4, min-content) auto;
+        column-gap: 1em;
     }
     .searchFilters {
         grid-column: 1;
         grid-row: 1 / span 5;
+    }
+    #searchFilters-header {
+        display: none;
     }
     .searchAdvanced {
         grid-column: 2;

@@ -4,74 +4,85 @@
     Uses the 'record'-variable from the template-context
 #}
 
-<a href="/resources/records/{{record.id}}">
-    {% if record.thumbnail %}
-        <div>
-            {# {% if record.availability|int > 3 or readingroom or session.get('is_employee') %} #}
-            {% if record.availability|int > 3 %}
-                <img src="{{record.thumbnail}}">
-            {% else %}
-                <div>
-                    <p>Materialet kan ses på læsesalen</p>
-                </div>
-            {% endif %}
-        </div>
-    {% endif %}
-
-    <div>
-        {% if record.label %}
-            <h3 class="listitem-heading">{{record.label|truncate(200)}}</h3>
+{% if record.thumbnail %}
+    <div class="listitem-image">
+        {# {% if record.availability|int > 3 or readingroom or session.get('is_employee') %} #}
+        {% if record.availability|int > 3 %}
+            <img src="{{record.thumbnail}}" alt="{{record.label or record.summary or record.desc_notes}}">
+        {% else %}
+            <p>Materialet kan ses på læsesalen</p>
         {% endif %}
+    </div>
+{% endif %}
 
+<div class="listitem-heading">
+    {% if record.label %}
+        <a href="/resources/records/{{record.id}}">
+            <h3 class="listitem-heading">{{record.label|truncate(200)}}</h3>
+        </a>
         {% if record.summary %}
             <p class="listitem-summary">{{record.summary|truncate(300)}}</p>
         {% endif %}
 
-        {% if not (record.summary or record.label) %}
-            {% if record.desc_notes %}
+    {% elif record.summary %}
+        <a href="/resources/records/{{record.id}}">
+            <p class="listitem-summary">{{record.summary|truncate(300)}}</p>
+        </a>
+
+    {% elif record.desc_notes %}
+            <a href="/resources/records/{{record.id}}">
                 <p class="listitem-summary">{{record.desc_notes|truncate(300)}}</p>
-            {% else %}
-                <p class="listitem-summary">Materialet er ikke beskrevet</p>
-            {% endif %}
-        {% endif %}
+            </a>
+    {% else %}
+        <a href="/resources/records/{{record.id}}">
+            <p class="listitem-summary">Materialet er ikke beskrevet</p>
+        </a>
+    {% endif %}
 
+</div>
+    <dl class="listitem-definitions">
         {% if record.collectors_label %}
-            <p class="listitem-collector">{{record.collectors_label}}</p>
+            <dt>arkivskaber</dt>
+            <dd>{{record.collectors_label}}</dd>
         {% endif %}
 
-        {# TODO: Not returned by cloudsearch yet
-        {% if record.series %}
-            <p class="listitem-series">{{'/'.join(record.series)}}</p>
+        {% if record.collection_id %}
+            <dt>samling</dt>
+            <dd>{{collection_labels.get(record.collection_id)}}</dd>
         {% endif %}
-        #}
+
+        {% if record.series and record.collection_id %}
+            <dt>serie</dt>
+            <dd>{{record.series[-1]}}</dd>
+        {% endif %}
+
         {% if record.content_types %}
-            <p class="listitem-content_type">
-                <span>{{record.content_types[0]}}</span>
-            </p>
+            <dt>type</dt>
+            <dd>{{ record.content_types[0] }}</dd>
         {% endif %}
 
-        <p class="listitem-date">
         {% if record.date_from %}
+            <dt>datering</dt>
+            <dd>
             {% if record.date_to %}
                 {% if record.date_to == record.date_from %}
-                    <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}}</span>
+                    {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}}
                 {% elif record.date_from[0:6] == record.date_to[0:6] %}
-                    <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}</span>
+                    {{record.date_from[0:4]}}-{{record.date_from[4:6]}}
                 {% elif record.date_from[0:4] == record.date_to[0:4] and record.date_from[4:8] == '0101' %}
-                    <span>{{record.date_from[0:4]}}</span>
+                    {{record.date_from[0:4]}}
                 {% elif record.date_from[4:8] == '0101' and record.date_to[4:8] == '1231' %}
-                    <span>{{record.date_from[0:4]}} ~ {{record.date_to[0:4]}}</span>
+                    {{record.date_from[0:4]}} ~ {{record.date_to[0:4]}}
                 {% else %}
-                    <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}</span>
+                    {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}
                 {% endif %}
             {% else %}
-                <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~</span>
+                {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~
             {% endif %}
         {% elif record.date_to %}
-            <span>~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}</span>
+            ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}
         {% else %}
-            <span>Uden datering</span>
+            Uden datering
         {% endif %}
-        </p>
-    </div>
-</a>
+        </dd>
+    </dl>

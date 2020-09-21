@@ -9,23 +9,23 @@
 
 {% block content %}
 <div class="searchPage">
-
+    {#
     <div class="searchAdvanced" role="region" aria-labelledby="searchAdvanced-header">
-        <h2 id="searchAdvanced-header" class="collapsible-header">Avanceret søgning</h2>
+        <h2 id="searchAdvanced-header" data-collapsible-header>Avanceret søgning</h2>
         <div class="collapsible-panel">
             <p>This is the place for the advanced searchform</p>
         </div>
     </div>
+    #}
 
     <div class="searchFilters" role="region" aria-labelledby="searchFilters-header">
-        <h2 id="searchFilters-header" class="collapsible-header js-until-45">Søgefiltre {% if filters %}({{filters|length}}){% endif %}</h2>
+        <h2 id="searchFilters-header" class="js-until-45" data-collapsible-header>Søgefiltre {% if filters %}({{filters|length}}){% endif %}</h2>
         <div id="searchFilters-section" class="collapsible-panel">
             {% if filters %}
-                <h3 class="filterContainer-heading sr-only">Aktive søgefiltre</h3>
-                <p><a href="/search">Ryd alle aktive filtre</a></p>
+                <h3 class="filters-header">Aktive søgefiltre</h3>
                 {% include 'components/filters.html' %}
             {% endif %}
-            <h3 class="facetContainer-heading sr-only">Samtlige søgefiltre</h3>
+            <h3 class="facets-header"><span class="sr-only">Samtlige </span>Søgefiltre</h3>
             {% include 'components/facets.html' %}
         </div>
     </div>
@@ -64,7 +64,7 @@
                         {% if s.selected %}
                             <li role="menuitem">{{s.label}}</li>
                         {% else %}
-                            <li><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
+                            <li role="none"><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
                         {% endif %}
                     {% endfor %}
                     </ul>
@@ -77,7 +77,7 @@
                     {% if s.selected %}
                         <li role="menuitem">{{s.label}}</li>
                     {% else %}
-                        <li><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
+                        <li role="none"><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
                     {% endif %}
                 {% endfor %}
                 </ul>
@@ -89,7 +89,7 @@
                     {% if v.selected %}
                         <li role="menuitem">{{v.label}}</li>
                     {% else %}
-                        <li><a role="menuitem" href="/search?{{v.link}}">{{v.label}}</a></li>
+                        <li role="none"><a role="menuitem" href="/search?{{v.link}}">{{v.label}}</a></li>
                     {% endif %}
                 {% endfor %}
                 </ul>
@@ -110,7 +110,7 @@
                 </div>
             {% elif view == 'list' %}
                 {% for record in result %}
-                    <div data-resource-id="{{record.id}}">{% include "components/listitem.html" %}</div>
+                    <div class="listitem" data-resource-id="{{record.id}}">{% include "components/listitem.html" %}</div>
                 {% endfor %}
             {% endif %}
 

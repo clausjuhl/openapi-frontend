@@ -1,8 +1,6 @@
 /*  WAI Menubutton
     Combined script of all three elements
     https://www.w3.org/TR/wai-aria-practices-1.2/examples/menu-button/js/Menubutton2.js
-
-
 */
 
 /*
@@ -15,20 +13,13 @@
 */
 
 
-/**
- * ARIA Treeview example
- * @function onload
- * @desc  after page has loaded initialize all treeitems based on the role=treeitem
- */
-
 window.addEventListener('load', function () {
-
     var menus = document.querySelectorAll('[data-menu-trigger]');
     for (var i = 0; i < menus.length; i++) {
         var m = new Menubutton(menus[i]);
         m.init();
-      }
-  });
+    }
+});
 
 /*
 *   @constructor MenubuttonItem
@@ -84,8 +75,8 @@ Menubutton.prototype.init = function () {
   this.domNode.addEventListener('click',      this.handleClick.bind(this));
   this.domNode.addEventListener('focus',      this.handleFocus.bind(this));
   this.domNode.addEventListener('blur',       this.handleBlur.bind(this));
-  this.domNode.addEventListener('mouseover',  this.handleMouseover.bind(this));
-  this.domNode.addEventListener('mouseout',   this.handleMouseout.bind(this));
+  // this.domNode.addEventListener('mouseover',  this.handleMouseover.bind(this));
+  // this.domNode.addEventListener('mouseout',   this.handleMouseout.bind(this));
 
   // initialize pop up menus
 
@@ -151,11 +142,14 @@ Menubutton.prototype.handleBlur = function (event) {
 Menubutton.prototype.handleMouseover = function (event) {
   this.hasHover = true;
   this.popupMenu.open();
+  // my addition
+  // setTimeout(this.popupMenu.open.bind(this.popupMenu, false), 400);
+
 };
 
 Menubutton.prototype.handleMouseout = function (event) {
   this.hasHover = false;
-  setTimeout(this.popupMenu.close.bind(this.popupMenu, false), 300);
+  setTimeout(this.popupMenu.close.bind(this.popupMenu, false), 100);
 };
 
 
@@ -249,8 +243,9 @@ var PopupMenuLinks = function (domNode, controllerObj) {
       this.domNode.setAttribute('aria-label', label);
     }
   
-    this.domNode.addEventListener('mouseover', this.handleMouseover.bind(this));
-    this.domNode.addEventListener('mouseout',  this.handleMouseout.bind(this));
+    // NOTE: My Deletions
+    // this.domNode.addEventListener('mouseover', this.handleMouseover.bind(this));
+    // this.domNode.addEventListener('mouseout',  this.handleMouseout.bind(this));
   
     // Traverse the element children of domNode: configure each with
     // menuitem role behavior and store reference in menuitems array.
@@ -281,11 +276,14 @@ var PopupMenuLinks = function (domNode, controllerObj) {
   
   PopupMenuLinks.prototype.handleMouseover = function (event) {
     this.hasHover = true;
+    // my addition
+    // setTimeout(this.open.bind(this, false), 400);
+
   };
   
   PopupMenuLinks.prototype.handleMouseout = function (event) {
     this.hasHover = false;
-    setTimeout(this.close.bind(this, false), 300);
+    setTimeout(this.close.bind(this, false), 100);
   };
   
   /* FOCUS MANAGEMENT METHODS */
@@ -394,7 +392,9 @@ var PopupMenuLinks = function (domNode, controllerObj) {
   
     if (force || (!this.hasFocus && !this.hasHover && !this.controller.hasHover)) {
       this.domNode.style.display = 'none';
-      this.controller.domNode.removeAttribute('aria-expanded');
+      // My removal
+      // this.controller.domNode.removeAttribute('aria-expanded');
+      this.controller.domNode.setAttribute('aria-expanded', 'false');
     }
   };
   
@@ -456,8 +456,9 @@ var MenuItemLinks = function (domNode, menuObj) {
     this.domNode.addEventListener('click',      this.handleClick.bind(this));
     this.domNode.addEventListener('focus',      this.handleFocus.bind(this));
     this.domNode.addEventListener('blur',       this.handleBlur.bind(this));
-    this.domNode.addEventListener('mouseover',  this.handleMouseover.bind(this));
-    this.domNode.addEventListener('mouseout',   this.handleMouseout.bind(this));
+    // My deletions
+    // this.domNode.addEventListener('mouseover',  this.handleMouseover.bind(this));
+    // this.domNode.addEventListener('mouseout',   this.handleMouseout.bind(this));
   
   };
   
@@ -543,22 +544,25 @@ var MenuItemLinks = function (domNode, menuObj) {
   
   MenuItemLinks.prototype.handleFocus = function (event) {
     this.menu.hasFocus = true;
+    // my addition
+    // setTimeout(this.menu.open.bind(this.menu, false), 400);
   };
   
   MenuItemLinks.prototype.handleBlur = function (event) {
     this.menu.hasFocus = false;
-    setTimeout(this.menu.close.bind(this.menu, false), 300);
+    setTimeout(this.menu.close.bind(this.menu, false), 100);
   };
   
   MenuItemLinks.prototype.handleMouseover = function (event) {
     this.menu.hasHover = true;
     this.menu.open();
-  
+    // my addition
+    // setTimeout(this.menu.open.bind(this.menu, false), 400);
   };
   
   MenuItemLinks.prototype.handleMouseout = function (event) {
     this.menu.hasHover = false;
-    setTimeout(this.menu.close.bind(this.menu, false), 300);
+    setTimeout(this.menu.close.bind(this.menu, false), 100);
   };
   
   

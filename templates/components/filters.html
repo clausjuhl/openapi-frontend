@@ -9,29 +9,33 @@
     </svg>
 #}
 
+{% set filter_labels ={"availability": "Tilgængelighed", "usability": "Brugbarhed", "content_types": "Materialetype", "subjects": "Emne", "collection": "Samling"} %}
+
 {% for f in filters %}
     <div class="filter{% if f.negated %}-negated{% endif %}" data-menu-wrapper>
-        <button id="filter-optionsTrigger-{{loop.index}}" class="filter-optionsButton" data-menu-trigger aria-expanded="false" aria-controls="filterOptions_{{loop.index}}">
-            {% if f.key == 'date_from' %}
-                {% if f.value[-1:-5] == '0101' %}
-                    {{f.value[0:4]}} og senere
+        <span class="filter-title">{{f.key}}</span>
+        <button id="filter-optionsTrigger-{{loop.index}}" data-menu-trigger aria-expanded="false" aria-controls="filterOptions_{{loop.index}}">
+            <span class="filter-text">
+                {% if f.key == 'date_from' %}
+                    {% if f.value[-1:-5] == '0101' %}
+                        {{f.value[0:4]}} og senere
+                    {% else %}
+                        {{f.value[0:4]}}-{{f.value[4:6]}}-{{f.value[6:8]}} og senere
+                    {% endif %}
+                {% elif f.key == 'date_to' %}
+                    {% if f.value[-1:-5] == '1231' %}
+                        {{f.value[0:4]}} og tidligere
+                    {% else %}
+                        {{f.value[0:4]}}-{{f.value[4:6]}}-{{f.value[6:8]}} og tidligere
+                    {% endif %}
                 {% else %}
-                    {{f.value[0:4]}}-{{f.value[4:6]}}-{{f.value[6:8]}} og senere
+                    {% if f.label %}
+                        {{f.label}}
+                    {% else %}
+                        {{f.value}}
+                    {% endif %}
                 {% endif %}
-            {% elif f.key == 'date_to' %}
-                {% if f.value[-1:-5] == '1231' %}
-                    {{f.value[0:4]}} og tidligere
-                {% else %}
-                    {{f.value[0:4]}}-{{f.value[4:6]}}-{{f.value[6:8]}} og tidligere
-                {% endif %}
-            {% else %}
-                {% if f.label %}
-                    <span>{{f.label}}</span>
-                {% else %}
-                    <span>{{f.value}}</span>
-                {% endif %}
-            {% endif %}
-            <span aria-hidden="true">&#x25be;</span>
+            </span>
         </button>
         <ul id="filterOptions_{{loop.index}}" role="menu" data-menu-from="left" aria-labelledby="filter-optionsTrigger-{{loop.index}}">
             {# Present on all filters #}
@@ -70,3 +74,6 @@
         </ul>
     </div>
 {% endfor %}
+<p>
+    <a href="/search">Ryd alle aktive filtre</a>
+</p>
