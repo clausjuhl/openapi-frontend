@@ -1,7 +1,6 @@
 // https://github.com/Heydon/inclusive-menu-button/blob/master/inclusive-menu-button.js
 
 /* global define */
-
 (function (global) {
   'use strict'
 

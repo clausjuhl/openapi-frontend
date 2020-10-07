@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>{% block title %}{% endblock title %}</title>
+        <title>{{ pagetitle }}</title>
         <meta name="description" content="{% block description %}{% endblock description %}">
         <link href="{{ url_for('static', path='/css/variables.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/global.css') }}" rel="stylesheet">
@@ -14,6 +14,7 @@
         <link href="{{ url_for('static', path='/css/accordion.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/collapsible.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/menubutton.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/menu.css') }}" rel="stylesheet">
         <meta property="og:image" content="{{ url_for('static', path='/images/logo.png') }}">
         <meta property="og:url" content="">
         <meta name="twitter:card" content="{% block twitter_card %}{% endblock twitter_card %}">
@@ -25,16 +26,28 @@
         {% block extra_head %}{% endblock extra_head %}
     </head>
 
-    <body class="{% block bodyclass %}{% endblock %}">
-        <header class="globalHeader" role="banner">
-            <h1 class="globalLogo" aria-label="Forside">
+    <body class="{{ pageclass }}">
+        <section class="skipLinks" aria-label="Skip links">
+            <a class="skipLink" href="#globalMenu">Hop til hovedmenuen</a>
+            <a class="skipLink" href="#globalSearch">Hop til søgeboks</a>
+            {% if pageclass == "searchpage" %}
+                {% if result %}
+                    <a class="skipLink" href="#searchResults-header">Hop til søgeresultaterne</a>
+                    <a class="skipLink" href="#filterregion">Hop til filtrering af søgeresultater</a>
+                {% endif %}
+            {% else %}
+                <a class="skipLink" href="#main">Hop til indhold</a>
+            {% endif %}
+        </section>
+        <header class="globalHeader" aria-label="Aarhusarkivets menubar">
+            <h1 class="globalLogo">
                 <a href="{{ url_for('home') }}">
                     <img src="{{ url_for('static', path='/images/logo_white.png') }}" alt="Gå til forsiden af Aarhusarkivet">
                 </a>
             </h1>
-            <div class="globalMenu">
+            <div id="globalMenu" class="globalMenu">
                 <nav class="globalNavigation" aria-labelledby="globalNavigation-label" data-menu-wrapper>
-                    <h2 id="globalNavigation-label" hidden>Aarhusarkivets hovedmenu</h2>
+                    <h2 id="globalNavigation-label" hidden>Hovedmenu</h2>
                     <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="hovedmenu">Menu</button>
                     <ul id="hovedmenu" role="menu" data-menu-from="right">
                         <li><a role="menuitem" href="{{ url_for('about') }}">About</a></li>
@@ -45,7 +58,7 @@
                     <nav class="userNavigation" aria-labbelby="userNavigation-label">
                         <h2 id="userNavigation-label" hidden>Din brugermenu</h2>
                         <button class="menuButton" aria-expanded="false" aria-controls="brugermenu">User</button>
-                        <ul id="brugermenu" class="menu" hidden>
+                        <ul id="brugermenu" hidden>
                             <li><a href="{{ url_for('profile') }}">Min side</a></li>
                             <li><a href="{{ url_for('logout') }}">Logout</a></li>
                         </ul>
@@ -54,16 +67,18 @@
                     <a class="globalHeader-link" href="{{ url_for('login') }}">Log ind</a>
                 {% endif %}
             </div>
-            <form class="globalSearchform" role="search" action="/search">
-                <input id="autoComplete" type="text" type="search" name="q" role="searchbox" aria-label="Indtast søgeord" value="{{query}}">
+            <form id="globalSearch" class="globalSearchform" role="search" action="/search" aria-label="Fuldtekstsøgning i Aarhusarkivets samlinger">
+                <label for="autoComplete" class="sr-only">Indtast en eller flere søgeor</label>
+                <input id="autoComplete" type="search" name="q" aria-label="Indtast søgeord" value="{{query}}">
                 <button type="submit">Søg</button>
             </form>
         </header>
 
-        <main class="globalMain" role="main">
+        <main id="main" class="globalMain">
             {% block content %}{% endblock content %}
         </main>
 
+        {#
         <aside>
             <details>
                 <summary>Request</summary>
@@ -84,16 +99,19 @@
                 </dl>
             </details>
         </aside>
+        #}
 
-        <footer class="globalFooter" role="contentinfo"></footer>
+        <footer class="globalFooter"></footer>
         <!-- <script src="{{url_for('static', path='/js/autocomplete.min.js')}}"></script> -->
         <!-- <script src="{{url_for('static', path='/js/index.js')}}"></script> -->
+        <script src="{{url_for('static', path='/js/app.js')}}"></script>
         <script src="{{url_for('static', path='/js/bookmarks-vanilla.js')}}"></script>
         <script src="{{url_for('static', path='/js/treeLinks.js')}}"></script>
         <script src="{{url_for('static', path='/js/treeitemLinks.js')}}"></script>
         <script src="{{url_for('static', path='/js/accordion.js')}}"></script>
         <script src="{{url_for('static', path='/js/collapsible.js')}}"></script>
         <script src="{{url_for('static', path='/js/menubutton.js')}}"></script>
+        <script src="{{url_for('static', path='/js/menu.js')}}"></script>
         <!-- <script src="{{url_for('static', path='/js/load.js')}}"></script> -->
         {% block extra_scripts %}{% endblock extra_scripts %}
     </body>

@@ -4,8 +4,8 @@
     https://inclusive-components.design/collapsible-sections/
 
     REQUIREMENTS
-    1) A .collapsible-header (h1-h6) with some descriptive text
-    2) A .collapsible-panel a nextElementSibling from the .collapsible-header
+    1) A data-collapsible-header (h1-h6) with some descriptive text
+    2) A block element (panel) as nextElementSibling from the data-collapsible-header
 
     TODO
     Combine with accordion.js to get optimal accordion-component as it includes
@@ -13,11 +13,11 @@
 */
 
 (function() {
-  // Get all the .collapsible headings
+  // Get all the collapsible headings
   const headings = document.querySelectorAll('[data-collapsible-header]');
   
   Array.prototype.forEach.call(headings, heading => {
-    // Width is my experiment. Not currently in use
+    // Width is my experiment.
     let width = false;
     heading.classList.forEach(className => {
       if (className.startsWith('js-until-')) {
@@ -30,13 +30,13 @@
     }
 
     let panel = heading.nextElementSibling;
-    panel.hidden = true;
+    panel.hidden = true; // hide the panel
 
-    // Give each .collapsible-header a toggle button child
+    // Give each collapsible header a toggle button child
     // with the SVG plus/minus icon
     heading.innerHTML = `
-      <button aria-expanded="false">
-        ${heading.textContent}
+      <button aria-expanded="false" data-collapsible-trigger>
+        ${heading.innerHTML}
         <svg aria-hidden="true" focusable="false" viewBox="0 0 10 10">
           <rect class="vert" height="8" width="2" y="1" x="4"/>
           <rect height="2" width="8" y="4" x="1"/>
@@ -45,7 +45,7 @@
     `;
 
     // Assign the button
-    let btn = heading.querySelector('button');
+    let btn = heading.querySelector('[data-collapsible-trigger]');
     
     btn.onclick = () => {
       // Cast the state as a boolean
@@ -62,4 +62,4 @@
     //   heading.style.outline = "none";
     // }
   })
-})()
+})();

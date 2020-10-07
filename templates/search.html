@@ -3,64 +3,92 @@
 {# Vars used by zeroHits-component #}
 {% set vars = {"date_from_dict": False, "date_to_dict": False} %}
 
-{% block title %}Søgeresultat | AarhusArkivet{% endblock %}
-
-{% block bodyclass %}searchpage{% endblock %}
+{% set title = "Søgeresultat | AarhusArkivet" %}
+{% set pageclass = "searchpage" %}
 
 {% block content %}
 <div class="searchPage">
-    {#
-    <div class="searchAdvanced" role="region" aria-labelledby="searchAdvanced-header">
+
+    <section class="searchAdvanced" aria-labelledby="searchAdvanced-header">
         <h2 id="searchAdvanced-header" data-collapsible-header>Avanceret søgning</h2>
-        <div class="collapsible-panel">
+        <div>
             <p>This is the place for the advanced searchform</p>
         </div>
-    </div>
-    #}
+    </section>
 
-    <div class="searchFilters" role="region" aria-labelledby="searchFilters-header">
-        <h2 id="searchFilters-header" class="js-until-45" data-collapsible-header>Søgefiltre {% if filters %}({{filters|length}}){% endif %}</h2>
-        <div id="searchFilters-section" class="collapsible-panel">
+    <section id="filterregion" class="searchFilters" aria-labelledby="searchFilters-header">
+        <h2 id="searchFilters-header" class="js-until-45" data-collapsible-header>Søgefiltre <span aria-hidden="true">{% if filters %}({{filters|length}}){% endif %}</span></h2>
+        <div id="searchFilters-section">
             {% if filters %}
                 <h3 class="filters-header">Aktive søgefiltre</h3>
                 {% include 'components/filters.html' %}
             {% endif %}
-            <h3 class="facets-header"><span class="sr-only">Samtlige </span>Søgefiltre</h3>
+            <h3 class="facets-header">Søgefiltre</h3>
             {% include 'components/facets.html' %}
         </div>
-    </div>
-
-    <div class="searchActions" role="region" aria-labelledby="searchActions-header">
-        <h2 id="searchActions-header" class="sr-only">Del søgning</h2>
-        <span>Print, Share...</span>
-    </div>
+    </section>
 
     {% if result %}
-        <div class="searchPagination" role="region" aria-labelledby="searchPagination-header">
-            <h2 id="searchPagination-header" class="sr-only">Relaterede søgninger</h2>
-            <div class="searchPagination-count">
+        <section class="searchPagination" aria-labelledby="searchPagination-header">
+            <h2 id="searchPagination-header" class="sr-only">Paginering</h2>
+            <p class="searchPagination-counter">
                 {% if total > 10000 %}
-                <span>Flere end 10.000 resultater...</span>
+                    <span>Over 10.000 resultater...</span>
                 {% else %}
                     <span>{{start + 1}} - {% if (start + size) > total %}{{total}}{% else %}{{start + size}}{% endif %} af {{total}} resultater</span>
                 {% endif %}
-            </div>
+            </p>
             {% if next or previous %}
-                <div class="searchPagination-paginator">
-                    {% include 'components/pagination.html' %}
-                </div>
+                {% include 'components/pagination.html' %}
             {% endif %}
-        </div>
+        </section>
     {% endif %}
 
     {% if result %}
-        <div class="searchOptions" role="region" aria-labelledby="searchOptions-header">
-            <h2 id="searchOptions-header" class="sr-only">Vælg antal, sortering og visningsformat af søgeresultaterne</h2>
-            {% if previous or next %}
-                <div class="searchNumber" data-menu-wrapper>
-                    <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="numberMenu">Antal</button>
-                    <ul id="numberMenu" role="menu" data-menu-from="right">
-                    {% for s in size_list %}
+        <section class="searchOptions" aria-labelledby="searchOptions-header">
+            <h2 id="searchOptions-header" class="sr-only">Search options</h2>
+            <div class="searchOptions-links">
+                <a href="#">Print<span class="sr-only">&nbsp;resultatlisten</span></a>
+                <a href="#">Del<span class="sr-only">&nbsp;resultatlisten</span></a>    
+            </div>
+            <div class="searchOptions-menus">
+                {% if previous or next %}
+                    <div class="searchNumber">
+                        <h3 id="searchNumber-header" class="searchOptions-header">Antal<span class="sr-only">resultater per side</span></h3>
+                        <ul id="searchNumber-list" data-menu data-menu-right>
+                        {% for s in size_list %}
+                            {% if s.selected %}
+                                <li><a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}} per side</a></li>
+                            {% else %}
+                                <li><a href="/search?{{s.link}}">{{s.label}} per side</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="searchNumber" data-menu-wrapper>
+                        <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="numberMenu">
+                            <span class="sr-only">Change the number of results</span>
+                            <span aria-hidden="true">Antal</span>
+                        </button>
+                        <ul id="numberMenu" class="menu" data-menu-from="right">
+                        {% for s in size_list %}
+                            {% if s.selected %}
+                                <li class="menuitem">{{s.label}} per side</li>
+                            {% else %}
+                                <li><a class="menuitem" href="/search?{{s.link}}">{{s.label}} per side</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div>
+                {% endif%}
+                <div class="searchSort" data-menu-wrapper>
+                    <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="sortMenu">
+                        <span class="sr-only">Change the sort order</span>
+                        <span aria-hidden="true">Sortering</span>
+                    </button>
+                    <ul id="sortMenu" role="menu" data-menu-from="right">
+                    {% for s in sort_list %}
                         {% if s.selected %}
                             <li role="menuitem">{{s.label}}</li>
                         {% else %}
@@ -69,35 +97,26 @@
                     {% endfor %}
                     </ul>
                 </div>
-            {% endif%}
-            <div class="searchSort" data-menu-wrapper>
-                <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="sortMenu">Sortering</button>
-                <ul id="sortMenu" role="menu" data-menu-from="right">
-                {% for s in sort_list %}
-                    {% if s.selected %}
-                        <li role="menuitem">{{s.label}}</li>
-                    {% else %}
-                        <li role="none"><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
-                    {% endif %}
-                {% endfor %}
-                </ul>
+                <div class="searchViews" data-menu-wrapper>
+                    <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="showMenu">
+                        <span class="sr-only">Change the display style</span>
+                        <span aria-hidden="true">Visning</span>
+                    </button>
+                    <ul id="showMenu" role="menu" data-menu-from="right">
+                    {% for v in view_list %}
+                        {% if v.selected %}
+                            <li role="menuitem">{{v.label}}</li>
+                        {% else %}
+                            <li role="none"><a role="menuitem" href="/search?{{v.link}}">{{v.label}}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                </div>
             </div>
-            <div class="searchViews" data-menu-wrapper>
-                <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="showMenu">Visning</button>
-                <ul id="showMenu" role="menu" data-menu-from="right">
-                {% for v in view_list %}
-                    {% if v.selected %}
-                        <li role="menuitem">{{v.label}}</li>
-                    {% else %}
-                        <li role="none"><a role="menuitem" href="/search?{{v.link}}">{{v.label}}</a></li>
-                    {% endif %}
-                {% endfor %}
-                </ul>
-            </div>
-        </div>
+        </section>
     {% endif %}
 
-    <div class="searchResults" role="region" aria-labelledby="searchResults-header">
+    <section class="searchResults" aria-labelledby="searchResults-header">
         <h2 id="searchResults-header" class="sr-only">Søgeresultater</h2>
         {% if result %}
             {% if view == 'gallery' %}
@@ -109,21 +128,133 @@
                 {% endfor %}
                 </div>
             {% elif view == 'list' %}
+                <ul class="searchResults-list">
                 {% for record in result %}
-                    <div class="listitem" data-resource-id="{{record.id}}">{% include "components/listitem.html" %}</div>
+                    <li class="listitem" data-resource-id="{{record.id}}">
+                        {% if record.thumbnail %}
+                            <div class="listitem-image">
+                                {# {% if record.availability|int > 3 or readingroom or session.get('is_employee') %} #}
+                                {% if record.availability|int > 3 %}
+                                    <img src="{{record.thumbnail}}" alt="" role="presentation">
+                                {% else %}
+                                    <p>Materialet kan ses på læsesalen</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        <div>
+                            {% if record.label %}
+                                <h3 class="listitem-heading">
+                                    <a href="/resources/records/{{record.id}}">
+                                        <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med overskriften.&nbsp;</span>
+                                        {{record.label|truncate(200)}}
+                                    </a>
+                                </h3>
+                                {% if record.summary %}
+                                    <p class="listitem-summary">{{record.summary|truncate(300)}}</p>
+                                {% endif %}
+
+                            {% elif record.summary %}
+                                <h3 class="listitem-summary">
+                                    <a href="/resources/records/{{record.id}}">
+                                        <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelse.&nbsp;</span>
+                                        {{record.summary|truncate(300)}}
+                                    </a>
+                                </h3>
+                                
+                            {% elif record.desc_notes %}
+                                <h3 class="listitem-summary">    
+                                    <a href="/resources/records/{{record.id}}">
+                                        <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelsesnote.&nbsp;</span>
+                                        {{record.desc_notes|truncate(300)}}
+                                    </a>
+                                </h3>
+                            {% else %}
+                                <h3 class="listitem-summary">
+                                    <a href="/resources/records/{{record.id}}">
+                                        <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede.&nbsp;</span>
+                                        <span>Materialet er ikke beskrevet</span>
+                                    </a>
+                                </h3>
+                            {% endif %}
+                        </div>
+
+                        <dl class="listitem-definitions">
+                            {% if record.collectors_label %}
+                                <dt>arkivskaber</dt>
+                                <dd>{{record.collectors_label}}</dd>
+                            {% endif %}
+
+                            {% if record.collection_id %}
+                                <dt>samling</dt>
+                                <dd>{{collection_labels.get(record.collection_id)}}</dd>
+                            {% endif %}
+
+                            {% if record.series and record.collection_id %}
+                                <dt>serie</dt>
+                                <dd>{{record.series[-1]}}</dd>
+                            {% endif %}
+
+                            {% if record.content_types %}
+                                <dt>type</dt>
+                                <dd>{{ record.content_types[0] }}</dd>
+                            {% endif %}
+
+                            {% if record.date_from %}
+                                <dt>datering</dt>
+                                <dd>
+                                {% if record.date_to %}
+                                    {% if record.date_to == record.date_from %}
+                                        {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}}
+                                    {% elif record.date_from[0:6] == record.date_to[0:6] %}
+                                        {{record.date_from[0:4]}}-{{record.date_from[4:6]}}
+                                    {% elif record.date_from[0:4] == record.date_to[0:4] and record.date_from[4:8] == '0101' %}
+                                        {{record.date_from[0:4]}}
+                                    {% elif record.date_from[4:8] == '0101' and record.date_to[4:8] == '1231' %}
+                                        {{record.date_from[0:4]}} ~ {{record.date_to[0:4]}}
+                                    {% else %}
+                                        {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}
+                                    {% endif %}
+                                {% else %}
+                                    {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~
+                                {% endif %}
+                            {% elif record.date_to %}
+                                ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}
+                            {% else %}
+                                Uden datering
+                            {% endif %}
+                            </dd>
+                        </dl>
+                    </li>
                 {% endfor %}
+                </ul>
             {% endif %}
 
             {% if next or previous %}
-                <div class="searchNavigation-pagination">
-                    {% include 'components/pagination.html' %}
-                </div>
+                <nav class="pagination" aria-label="Pagination">
+                    <a {% if first %}href="/search?{{first}}"{% endif %}>
+                        <span class="pagination-icon" aria-hidden="true"><<</span>
+                        <span class="sr-only">Første side</span>
+                    </a>
+                    <a {% if previous %}href="/search?{{previous}}"{% endif %}>
+                        <span class="pagination-icon" aria-hidden="true"><</span>
+                        <span class="sr-only">Forrige side</span>
+                    </a>
+                    <a {% if next %}href="/search?{{next}}"{% endif %}>
+                        <span class="sr-only">Næste side</span>
+                        <span class="pagination-icon" aria-hidden="true">></span>
+                    </a>
+                    <a {% if last %}href="/search?{{last}}"{% endif %}>
+                        <span class="sr-only">Sidste side</span>
+                        <span class="pagination-icon" aria-hidden="true">>></span>
+                    </a>
+                </nav>
             {% endif %}
         {% else %}
             <div class="zeroHits">
                 {% include 'components/zero-hits.html' %}
             </div>
         {% endif %}
-    </div>
+    </section>
 </div>
 {% endblock %}

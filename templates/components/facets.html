@@ -96,13 +96,13 @@
 
 {# Datefilter #}
 <h4 id="facetHeader-date" class="facetHeader" data-collapsible-header>Datering</h4>
-<form class="collapsible-panel facetPanel" role="form" method="get" action="/search" aria-describedby="facetHeader-date">
+<form class="collapsible-panel facetPanel" method="get" action="/search" aria-describedby="facetHeader-date">
     <div>
         <label for="year_from" class="cell">Tidligste dato</label>
         <input type="number" name="year_from" value="{% if date_from %}{{date_from[0:4]}}{% endif %}" placeholder="1600" min="1500" max="2018" aria-describedby="dateFromHelp">
-        <span">-</span>
+        <span>-</span>
         <input type="number" name="month_from" value="{% if date_from %}{{date_from[4:6]|int}}{% endif %}" placeholder="01" min="1" max="12">
-        <span">-</span>
+        <span>-</span>
         <input type="number" name="day_from" value="{% if date_from %}{{date_from[6:8]|int}}{% endif %}" placeholder="01" min="1" max="31">
     </div>
     <p class="help-text" id="dateFromHelp">Indtast minimum et fire-cifret årstal</p>
@@ -110,9 +110,9 @@
     <div>
         <label for="year_to" class="cell">Seneste dato</label>
         <input type="number" name="year_to" value="{% if date_to %}{{date_to[0:4]}}{% endif %}" placeholder="2017" min="1500" max="2018" aria-describedby="dateToHelp">
-        <span">-</span>
+        <span>-</span>
         <input type="number" name="month_to" value="{% if date_to %}{{date_to[4:6]|int}}{% endif %}" placeholder="12" min="1" max="12">
-        <span">-</span>
+        <span>-</span>
         <input type="number" name="day_to" value="{% if date_to %}{{date_to[6:8]|int}}{% endif %}" placeholder="31" min="1" max="31">
     </div>
     <p class="help-text" id="dateToHelp">Indtast minimum et fire-cifret årstal</p>

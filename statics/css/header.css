@@ -54,7 +54,7 @@
     color: inherit;
 }
 
-.menu {
+/* .menu {
     position: absolute;
     top: 40px;
     right: 0;
@@ -65,10 +65,11 @@
     text-align: right;
     background-color: var(--color-lightgray);
 }
+
 .menu li {
     padding: 6px 10px;
     color: var(--color-dark);
-}
+} */
 
 .globalLogo img {
     width: 130px;

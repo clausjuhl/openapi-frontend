@@ -1,14 +1,48 @@
-[aria-label="Pagination"] {
+.searchPage h2 {
+    font-size: 1.3em;
+}
+
+.searchPagination {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2em;
+}
+
+/* Child of .searchPagination */
+.pagination a {
+    display: inline-block;
+    border: 1px solid;
+    border-radius: 2px;
+    padding: .4em .5em;
+    margin-left: .3em;
 }
 
 .searchOptions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2em;
+}
+/* Child of .searchOptions */
+.searchOptions-menus {
+    display: flex;
+}
+.searchOptions-header {
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+}
+.searchOptions-menus button {
+    background-color: var(--color-lightgray);
+    border: 1px solid;
+    border-radius: 2px;
+    margin-left: .3em;
 }
 
-/* Filters - implements menubutton */
+/*
+*   Filters - implements menubutton
+*/
 .filters-header {
     font-size: 1.3em;
     margin: 0 0 .4em;
@@ -35,6 +69,7 @@
     text-align: inherit;
 }
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow */
+.filter-test button,
 .filter-text {
     white-space: nowrap;
     overflow: hidden;
@@ -58,17 +93,16 @@
     border-radius: 2px 0 0 2px;
     background-color: rgb(240, 240, 240);
 }
-.js .facetHeader:hover {
-    background-color: rgb(230, 230, 230);
-}
+
 /* The button is added by js */
 .facetHeader button {
+    width: 100%;
     padding: .4em;
 }
-.facetHeader button:focus,
-.facetHeader button:active {
-    outline: 2px solid;
+.facetHeader button:hover {
+    background-color: rgb(230, 230, 230);
 }
+
 /* Facet-panel only styled if js */
 .facetPanel {
     border-left: 1px solid var(--color-lightgray);
@@ -227,35 +261,35 @@ li[aria-expanded="true"] > .facetItem-header {
     .searchPage {
         display: grid;
         grid-template-columns: 18em auto;
-        grid-template-rows: repeat(4, min-content) auto;
-        column-gap: 1em;
+        grid-template-rows: repeat(3, min-content) 1fr;
+        column-gap: 2em;
     }
     .searchFilters {
         grid-column: 1;
-        grid-row: 1 / span 5;
+        grid-row: 1 / 5;
     }
     #searchFilters-header {
         display: none;
     }
     .searchAdvanced {
         grid-column: 2;
-        grid-row: 1;
+        /* grid-row: 1; */
     }
-    .searchActions {
+    /* .searchActions {
         grid-column: 2;
         grid-row: 2;
-    }
+    } */
     .searchPagination {
         grid-column: 2;
-        grid-row: 3;
+        /* grid-row: 2; */
     }
     .searchOptions {
         grid-column: 2;
-        grid-row: 4;
+        /* grid-row: 3; */
     }
     .searchResults {
         grid-column: 2;
-        grid-row: 5;    
+        /* grid-row: 4;     */
     }
 }
 

@@ -10,17 +10,17 @@
         <div class="galleryImage">
         {% if record.availability|int > 3 or readingroom or session.get('is_employee') %}
             {% if record.portrait %}
-                <img src="{{record.portrait}}">
+                <img src="{{record.portrait}}" alt="{{record.label or record.summary or record.desc_notes}}">
             {% else %}
-                <img src="{{record.thumbnail}}">
+                <img src="{{record.thumbnail}}" alt="{{record.label or record.summary or record.desc_notes}}">
             {% endif %}
         {% elif record.availability|int == 3 %}
                 <p>Materialet kan ses på læsesalen</p>
         {% elif record.availability|int == 2 and session.get('is_employee') %}
             {% if record.portrait %}
-                <img src="{{record.portrait}}">
+                <img src="{{record.portrait}}" alt="{{record.label or record.summary or record.desc_notes}}">
             {% else %}
-                <img src="{{record.thumbnail}}">
+                <img src="{{record.thumbnail}}" alt="{{record.label or record.summary or record.desc_notes}}">
             {% endif %}
         {% endif %}
         </div>
@@ -40,7 +40,7 @@
 
     <div class="galleryDescription">
         {% if record.label %}
-            <h4 class="galleryItem-label">{{record.label|truncate(1200)}}</h4>
+            <h3 class="galleryItem-label">{{record.label|truncate(1200)}}</h3>
         {% endif %}
 
         {% if record.summary %}

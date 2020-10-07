@@ -1,0 +1,56 @@
+/*  Inspired by, but not using menu-roles, WAI MenuButton
+    https://www.w3.org/TR/wai-aria-practices-1.2/examples/menu-button/css/MenubuttonLinks.css
+    https://github.com/Heydon/inclusive-menu-button/blob/master/inclusive-menu-button.css
+*/
+
+/*  The 'data-menu-button'-button and svg is added with js */
+[data-menu-button] {
+    display: flex;
+    justify-content: space-between;
+}
+
+[data-menu-button]:hover {
+    cursor: pointer;
+}
+
+/* When in focus, the menu opens with an absolute position */
+[data-menu-button]:focus {
+    position: relative;
+}
+
+[data-menu-button] svg {
+    height: 1em;
+    margin-left: 0.5em;
+    align-self: center;
+}
+
+[data-menu-button][aria-expanded="true"] .vert {
+    display: none;
+}
+
+[data-menu-button][aria-expanded] rect {
+    fill: currentColor;
+}
+
+/* data-menu */
+[data-menu] {
+    position: absolute;
+    z-index: 10;
+    /* background-color: white; */
+}
+[data-menu-right] {
+    left: auto;
+    right: 0;
+    text-align: right;
+}
+[data-menu-left] {
+    left: 0;
+}
+
+/* Sensible defaults */
+[data-menu] li:not(:last-child) {
+    border-bottom: 1px solid var(--color-lightgray);
+}
+[data-menu] a:not([aria-current]):hover {
+    background-color: var(--color-lightgray);
+}

@@ -10,10 +10,12 @@
     position: relative;
 }
 
+.no-js [data-menu-wrapper] .menu,
 .no-js [data-menu-wrapper] [role="menu"] {
     display: block;
     position: initial;
 }
+
 .js [data-menu-trigger]:hover {
     cursor: pointer;
 }
@@ -28,7 +30,7 @@
     float: right;
 }
 */
-
+[data-menu-wrapper] .menu,
 [data-menu-wrapper] [role="menu"] {
     display: none;
     position: absolute;
@@ -47,6 +49,7 @@
     left: 0;
 }
 
+[data-menu-wrapper] .menuitem,
 [data-menu-wrapper] [role^="menuitem"] {
     display: block;
     white-space: nowrap;
@@ -55,7 +58,9 @@
 }
 
 /* Currently not in use */
+/*
 [data-menu-wrapper] [role^="menuitem"][aria-checked="true"]::before {
     content: '\2713\0020';
 }
+*/
 

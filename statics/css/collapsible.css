@@ -1,27 +1,44 @@
 /*  The button and svg is added with js, as it doesn't make sense
-    to show them if the panel is not hidden
+    to show them if the panel is not collapsible with js
 */
-[data-collapsible-header] button {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+/* Reset all values for the heading-element. No, don't */
+/* [data-collapsible-header] {
+    all: inherit;
+} */
+
+/* The js-inserted button */
+[data-collapsible-trigger] {
+    display: flex;
+    justify-content: space-between;
 }
 
-[data-collapsible-header] button:hover {
-  cursor: pointer;
+[data-collapsible-trigger]:hover {
+    cursor: pointer;
 }
 
-/* The svg is added with js, as */
-[data-collapsible-header] button svg {
-  height: 1em;
-  margin-left: 0.5em;
-  align-self: center;
+/* When in focus, the panels opens with an absolute position */
+[data-collapsible-trigger]:focus {
+    position: relative;
 }
 
-[data-collapsible-header] button[aria-expanded="true"] .vert {
-  display: none;
+[data-collapsible-trigger] svg {
+    height: 1em;
+    margin-left: 0.5em;
+    align-self: center;
 }
 
-[data-collapsible-header] button[aria-expanded] rect {
-  fill: currentColor;
+/* the vertical line in the svg */
+[data-collapsible-trigger][aria-expanded="true"] .vert {
+    display: none;
+}
+
+/* enables high contrast color */
+[data-collapsible-trigger][aria-expanded] rect {
+    fill: currentColor;
+}
+
+/* no matter the content, position under the heading */
+[data-collapsible-panel] {
+    position: absolute;
+    z-index: 10;
 }

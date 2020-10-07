@@ -8,7 +8,6 @@
 *   https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
 *
 *   File:   Menubutton.js
-*
 *   Desc:   Menubutton Menuitem widget that implements ARIA Authoring Practices
 */
 

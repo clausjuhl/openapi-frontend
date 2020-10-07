@@ -56,28 +56,38 @@ h4 {
 [hidden] { display: none; }
 
 ul,
+ol,
 li {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-a:visited,
-a:hover,
-a:link {
-    color: inherit;
+
+a[aria-current] {
+    text-decoration: none;
+}
+a[aria-current]:hover,
+a[aria-current]:focus {
+    /* background-color: inherit; */
+    cursor: initial;
 }
 
 button {
     font: inherit;
     font-size: inherit;
     line-height: inherit;
-    border: none;
     appearance: none;
     -webkit-appearance: none;
     font-size: 1em;
     line-height: 1.4em;
-    padding: 8px 14px;
+    border: 0;
+    border-radius: 0.25rem;
+    background: var(--color-dark);
+    color: white;
+    white-space: nowrap;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
     cursor: pointer;
 }
 
@@ -110,7 +120,15 @@ details {
     display: none;
 }
 
+.skipLinks,
 .sr-only {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
     position: absolute;
-    left: -999em;
+    white-space: nowrap;
+    width: 1px;
 }
