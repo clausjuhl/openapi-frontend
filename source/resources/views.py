@@ -1,4 +1,5 @@
 from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from starlette.datastructures import QueryParams
 
@@ -16,6 +17,9 @@ async def resource(req: Request):
     if req.method == "GET":
         query_params = req.query_params
         resp = await api.get_resource(collection, item, query_params)
+
+        if query_params.get("fmt", "") == "json":
+            return JSONResponse(resp)
 
         if resp.get("errors"):
             context["errors"] = resp.get("errors")
@@ -92,4 +96,7 @@ async def resource(req: Request):
             context["current_search"] = traverse.get("cur_results")
 
         context["resource"] = resp.get("data")
+        if collection and collection in ["creators", "collectors"]:
+            collection = resource.get("domain")
+        context["collection"] = collection
         return render("resource.html", context)

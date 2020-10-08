@@ -2,44 +2,272 @@
 
 {% import "macros.html" as macros %}
 
-{% set r = resource %}
-{% set title = "Resourcepage" %}
 {% set pageclass = "resourcepage" %}
 
+{% set r = resource %}
+{% set copyright_id = r.copyright_status.get('id') %}
+{% set legal_id = r.other_legal_restrictions.get('id') %}
+{% set contractual_id = r.contractual_status.get('id') %}
+{% set availability_id = r.availability.get('id') %}
+{% set usability_id = r.usability.get('id') %}
+{% if r.representations %}
+    {% set record_type = r.representations.get('record_type') %}
+{% endif %}
+
+{# Determine title #}
+{% if collection in ['people', 'organisations', 'events', 'locations', 'objects', 'collections'] %}
+    {% if r.display_label %}
+        {% set title = r.display_label %}
+    {% else %}
+        {% set title = "Ubeskrevet entitet" %}
+    {% endif %}
+{% else %}
+    {% if r.title %}
+        {% set label = r.title %}
+    {% elif r.heading %}
+        {% set label = r.heading %}
+    {% elif r.summary %}
+        {% set label = '[' + r.summary|truncate(200) + ']' %}
+    {% elif r.description %}
+        {% set label = '[' + r.description|truncate(200) + ']' %}
+    {% else %}
+        {% set label = 'Ubeskrevet materiale' %}
+    {% endif %}
+
+    {% if label.endswith('.') %}
+        {% set label = label[:-1] %}
+    {% endif %}
+
+    {% set title = label|truncate(70) %}
+{% endif %}
+
+{% block extra_head %}
+    <link href="{{ url_for('static', path='/css/resource.css') }}" rel="stylesheet">
+{% endblock extra_head %}
+
 {% block content %}
-<h2>Resource</h2>
-{% if user %}
-    {% set already = r.id in (user.get("bookmarks") or []) %}
-    <button data-resource-id="{{r.id}}" class="js-only bookmark-handler{% if already %} hide{% endif %}" data-action="create-bookmark">Bogmærk</button>
-    <button data-resource-id="{{r.id}}" class="js-only bookmark-handler{% if not already %} hide{% endif %}" data-action="delete-bookmark">Fjern bogmærke</button>
-{% endif %}
+<article class="resource" aria-describedby="resource-title">
+    <h1 id="resource-title" class="sr-only">Billede med titlen {{r.label}}</h1>
 
-{% if prev_item or next_item %}
-    <ul class="links">
-        {% if prev_item %}
-            <li><a href="/resources/records/{{prev_item}}">Forrige resultat</a></li>
-        {% endif %}
-        {% if next_item %}
-            <li><a href="/resources/records/{{next_item}}">Næste resultat</a></li>
-        {% endif %}
-    </ul>
-{% endif %}
+    {% if prev_item or next_item %}    
+        <nav aria-label="related search results">
+            <ul class="links">
+                {% if prev_item %}
+                    <li><a href="/resources/records/{{prev_item}}">Forrige resultat</a></li>
+                {% endif %}
+                {% if next_item %}
+                    <li><a href="/resources/records/{{next_item}}">Næste resultat</a></li>
+                {% endif %}
+                {% if current_search %}
+                    <li><a href="/search?{{current_search}}">Tilbage til søgesiden</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
 
-{% if current_search %}
-    <a href="/search?{{current_search}}">Tilbage til søgningen</a>
-{% endif %}
+    <section aria-label="resource">
+        <div class="resource-hero">
+            {% if r.portrait and legal_id == 1 and contractual_id > 2 %}
+                <div class="resource-representation">
+                {% if availability_id == 4 or session.get('is_employee') %}
+                    {% if r.representations and record_type == 'video' %}
+                        <div id="single-video">
+                            <a href="https://vimeo.com/{{r.representations.get('vimeo_id')}}">
+                                <img class="resource-portrait" src="{{r.portrait}}"/>
+                            </a>
+                        </div>
+                    {% elif r.representations and record_type == 'image' %}
+                        <div id="single-image">
+                            <a href="{{r.representations.get('large_image')}}">
+                                <img class="resource-portrait" src="{{r.portrait}}"/>
+                            </a>
+                        </div>
+                    {% elif r.representations and record_type == 'web_document' %}
+                        <div id="single-document">
+                            <a href="{{r.representations.get('web_document_url')}}">
+                                <img class="resource-portrait" src="{{r.portrait}}"/>
+                            </a>
+                        </div>
+                        <p>Klik på billedet for at hente pdf-dokumentet.</p>
+                    {% endif %}
+                {% else %}
+                    <p>Materialet kan ses på læsesalen.</p>
+                {% endif %}
+                </div>
+            {% endif %}
+            <div class="resource-core">
+                <h2 class="resource-title" aria-hidden="true">{{title}}</h2>
+                <table class="metadata-table">
+                    <caption>
+                        <h2 class="sr-only">Tabel med vigtigste informationer om materialet. Første kolonne er feltnavne, </h2>
+                    </caption>
+                    {% if r.collectors %}
+                        <tr><th scope="row">Arkivskaber</th><td><ul>
+                            {% for item in r.collectors %}
+                                <li><a href="/search?{{item.new_link}}">{{item.label}}</a></li>
+                            {% endfor %}
+                        </ul></td></tr>
+                    {% endif %}
 
-<h4>Session</h4>
-<dl>
-{% for k, v in request.session.items() %}
-    <dt>{{k}}</dt>
-    <dd>{{v}}</dd>
-{% endfor %}
-</dl>
+                    <tr><th scope="row">Materialetype</th><td><ul>
+                        {% for hierarchy in r.content_types %}
+                            {% for item in hierarchy %}
+                                <li>
+                                    <a href="/search?{{item.new_link}}" style="margin-left:{{loop.index0 * 6}}px;">
+                                        {% if not loop.first %}<span aria-hidden="true"> > </span>{% endif %}
+                                        {{item.label}}
+                                    </a>
+                                </li>                            
+                            {% endfor %}
+                        {% endfor %}
+                    </ul></td></tr>
 
-<h4>Resource</h4>
-<ul class="schema">
-    {{ macros.iterate_dict(r) }}
-</ul>
+                    {% if r.creators %}
+                        <tr><th scope="row">Kreativt ophav</th><td><ul>
+                            {% for item in r.creators %}
+                                <li><a href="/search?{{item.new_link}}">{{item.label}}</a></li>
+                            {% endfor %}
+                        </ul></td></tr>
+                    {% endif %}
 
-{% endblock %}
+                    <tr><th scope="row">Datering</th><td>
+                        {% if r.date_from %}
+                            {% if r.date_to %}
+                                {% if r.date_to == r.date_from %}
+                                    <span>{{r.date_from}}</span>
+                                {% elif r.date_from[0:7] == r.date_to[0:7] %}
+                                    <span>{{r.date_from[0:7]}}</span>
+                                {% elif r.date_from[0:4] == r.date_to[0:4] and (r.date_from[5:10] == '01-01') %}
+                                    <span>{{r.date_from[0:4]}}</span>
+                                {% elif r.date_from[5:10] == '01-01' and (r.date_to[5:10] == '12-31') %}
+                                    <span>{{r.date_from[0:4]}} ~ {{r.date_to[0:4]}}</span>
+                                {% else %}
+                                    <span>{{r.date_from}} ~ {{r.date_to}}</span>
+                                {% endif %}
+                            {% else %}
+                                <span>{{r.date_from}} ~</span>
+                            {% endif %}
+                        {% elif r.date_to %}
+                            <span>~ {{r.date_to}}</span>
+                        {% else %}
+                            <span>Udateret</span>
+                        {% endif %}
+                    </td></tr>
+
+                    <tr><th scope="row">Kurator</th><td><ul>
+                        {% for item in r.curators %}
+                            <li><a href="/search?{{item.new_link}}">{{item.label}}</a></li>
+                        {% endfor %}
+                    </ul></td></tr>
+
+                    <tr><th scope="row">Arkiv ID</th><td>{{r.id}}</td></tr>
+                </table>
+            </div>
+        </div>
+
+        {# Description #}
+        <div class="resource-description">
+            <h2 id="description">Beskrivelse<span class="sr-only">&nbsp;af materialet</span></h2>
+            <table class="metadata-table">
+                <caption>
+                    <h2 class="sr-only">Tabel med beskrivende informationer om materialet. Første kolonne er feltnavne, </h2>
+                </caption>
+                {% if r.title %}
+                    <tr><th scope="row">Titel</th><td>{{r.title}}</td></tr>
+                {% endif %}
+        
+            {% if r.heading %}
+                <tr><th scope="row">Overskrift</th><td>{{r.heading}}</td></tr>
+            {% endif %}
+
+            {% if r.summary %}
+                <tr><th scope="row">Abstrakt</th><td>{{r.summary}}</td></tr>
+            {% endif %}
+        
+            {% if r.description %}
+                <tr><th scope="row">Beskrivelse</th><td>{{r.description}}</td></tr>
+            {% endif %}
+        
+            {% if r.desc_notes %}
+                <tr><th scope="row">Deskriptiv note</th><td>{{r.desc_notes}}</td></tr>
+            {% endif %}
+        
+            {% if r.collection %}
+                <tr>
+                    <th scope="row">Samling</th>
+                    <td><a href="/search?{{r.collection.get('new_link')}}">{{r.collection.get('label')}}</a></td>
+                </tr>
+            {% endif %}
+        
+            {% if r.series %}
+                <tr>
+                    <th scope="row">Serie</th>
+                    <td><ul>
+                    {% for item in r.series %}
+                        <li>
+                            <a href="/search?{{item.new_link}}" style="margin-left:{{loop.index0 * 6}}px;">
+                            {% if not loop.first %}
+                                <span>&nbsp;>&nbsp;</span>
+                            {% endif %}
+                                {{item.label}}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul></td>
+                </tr>
+            {% endif %}
+        
+            {% if r.collection_tags and r.collection %}
+                <tr>
+                    <th scope="row">Samlingstags</th>
+                    <td><ul>
+                    {% for item in r.collection_tags recursive %}
+                        {% set child = item.path|length > item.label|length %}
+                        <li>
+                            <a href="/search?{{r.collection.get('new_link')}}&collection_tags={{item.path|urlencode}}">
+                                {% if child %}
+                                    <span class="fas fa-arrow-right fa-sm"></span>
+                                {% endif %}
+                                {{item.label}}
+                            </a>
+                            {% if item.children %}
+                                <ul style="margin-left:.5rem;">
+                                    {{ loop( item.children ) }}
+                                </ul>
+                            {% endif %}
+                            </li>
+                    {% endfor %}
+                    </ul></td>
+                </tr>
+            {% endif %}
+        
+            {% if r.subjects %}
+                <tr>
+                    <th scope="row">Emner</th>
+                    <td>
+                    {% for hierarchy in r.subjects %}
+                        {% for item in hierarchy %}
+                            <div>
+                                <a class="resource-link" href="/search?{{item.new_link}}"  style="margin-left:{{loop.index0 * 6}}px;">
+                                {% if not loop.first %}
+                                    <span class="fas fa-arrow-right fa-sm"></span>
+                                {% endif %}
+                                    {{item.label}}
+                                </a>
+                            </div>                            
+                        {% endfor %}
+                    {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+        </div>
+    </section>
+
+    {% if user %}
+        {% set already = r.id in (user.get("bookmarks") or []) %}
+        <button data-resource-id="{{r.id}}" class="js-only bookmark-handler{% if already %} hide{% endif %}" data-action="create-bookmark">Bogmærk</button>
+        <button data-resource-id="{{r.id}}" class="js-only bookmark-handler{% if not already %} hide{% endif %}" data-action="delete-bookmark">Fjern bogmærke</button>
+    {% endif %}
+
+</article>
+{% endblock content %}

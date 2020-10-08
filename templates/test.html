@@ -2,4 +2,15 @@
 
 {% block content %}
     {{response}}
+
+    <aside>
+        <h3>Session</h4>
+        <dl>
+        {% for k, v in request.session.items() %}
+            <dt>{{k}}</dt>
+            <dd>{{v}}</dd>
+        {% endfor %}
+        </dl>
+    </aside>
+    
 {% endblock content %}
