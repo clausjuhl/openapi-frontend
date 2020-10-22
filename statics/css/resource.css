@@ -1,27 +1,88 @@
+/* Resource-layout */
+.resource-representation {
+    margin-bottom: 1em;;
+}
+.resource-relations {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1em;
+}
 @media (min-width: 45em) {
     .resource-hero {
         display: grid;
-        grid-template-columns: minmax(20em, 50%) 1fr;
+        grid-template-columns: minmax(15em, 40%) 1fr;
+        grid-template-rows: auto 1fr;
+        column-gap: 2em;
+        padding-bottom: 2em;
+    }
+    .resource-representation {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+    }
+    .resource-relations {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    .resource-core {
+        grid-column: 2;
+        grid-row: 2;
     }
 }
 
-.resource-core {
-    padding-left: 1.2em; 
+/* Resource-headings */
+.resource h1 {
+    margin: 0;
+    font-size: 1.2em;
+    padding-bottom: 1em;
+    font-style: italic;
 }
-.resource-title {
+.resource h2 {
     margin: 0;
     font-size: 1.3em;
-    padding-bottom: .6em;
+    padding-bottom: .2em;
+    border-bottom: 1px solid var(--color-gray);
+    margin-bottom: .6em;
 }
-.metadata-table tr {
-    display: grid;
-    grid-template-columns: 8em 1fr;
+
+/* Metadata-tables */
+.resource table {
+    text-align: left;
+    vertical-align: baseline;
+    width: 100%;
+    padding-bottom: 2em;
+}
+.resource table caption {
     text-align: left;
 }
-.metadata-table th {
+.resource table tr {
+    position: relative;
+    vertical-align: baseline;
+}
+.resource table th {
+    width: 9em;
     white-space: nowrap;
+    overflow-x: hidden;
     text-transform: uppercase;
     font-weight: normal;
-    font-size: 80%;
-    padding: .6em .3em 0 0;
+    font-size: 85%;
+    position: absolute;
+}
+.resource table td {
+    padding-top: 1.5em;
+    padding-bottom: 2em;
+}
+
+@media (min-width: 45em) {
+    .resource table tr {
+        position: initial;
+    }
+    .resource table th {
+        font-size: 80%;
+        position: initial;
+    }
+    .resource table td {
+        padding-top: 0;
+        padding-bottom: .6em;
+    }
 }

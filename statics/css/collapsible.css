@@ -1,10 +1,13 @@
-/*  The button and svg is added with js, as it doesn't make sense
-    to show them if the panel is not collapsible with js
+/*  The button and svg that is styled here is added with js, as it
+    doesn't make sense to show them if the panel is not collapsible
+    with js.
+
+    If the collapsible panel is to float over content, instead of 
+    pushing it down, you need add position: relative to the parent-
+    element of data-collapsible-header and position:absolute to the
+    collapsible panel.
 */
-/* Reset all values for the heading-element. No, don't */
-/* [data-collapsible-header] {
-    all: inherit;
-} */
+
 
 /* The js-inserted button */
 [data-collapsible-trigger] {
@@ -16,15 +19,18 @@
     cursor: pointer;
 }
 
-/* When in focus, the panels opens with an absolute position */
-[data-collapsible-trigger]:focus {
-    position: relative;
+[data-collapsible-trigger] span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 [data-collapsible-trigger] svg {
     height: 1em;
     margin-left: 0.5em;
     align-self: center;
+    /* Prevent shrinking when text in the span inside button is overflowing */
+    flex-shrink: 0;
 }
 
 /* the vertical line in the svg */
@@ -35,10 +41,4 @@
 /* enables high contrast color */
 [data-collapsible-trigger][aria-expanded] rect {
     fill: currentColor;
-}
-
-/* no matter the content, position under the heading */
-[data-collapsible-panel] {
-    position: absolute;
-    z-index: 10;
 }

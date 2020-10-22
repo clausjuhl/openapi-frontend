@@ -10,4 +10,22 @@
     --color-gray: #cbd5e0;
     /* Change */
     --color-green-dark: #4a7509;
-}
+    /* Shade */
+    --color-shade-10: #414f67;
+    --color-shade-15: #4a5b77;
+    --color-shade-20: #546787;
+    --color-shade-25: #5e7396;
+    --color-shade-30: #6b80a3;
+    --color-shade-35: #7b8dad;
+    --color-shade-40: #8a9bb7;
+    /* Tint */
+    --color-tint-1: #2D3748;
+    --color-tint-2: #4B5362;
+    --color-tint-3: #69707C;
+    --color-tint-4: #878C96;
+    --color-tint-5: #A5A9B0;
+    --color-tint-6: #C3C5CA;
+    --color-tint-7: #E1E2E4;
+    --color-tint-8: #ececec;
+    --color-tint-9: #f1f3f5;
+    }

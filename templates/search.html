@@ -9,18 +9,20 @@
 {% block content %}
 <div class="searchPage">
 
+    {# NOT IMPLEMENTED YET 
     <section class="searchAdvanced" aria-labelledby="searchAdvanced-header">
         <h2 id="searchAdvanced-header" data-collapsible-header>Avanceret søgning</h2>
         <div>
             <p>This is the place for the advanced searchform</p>
         </div>
     </section>
+    #}
 
     <section id="filterregion" class="searchFilters" aria-labelledby="searchFilters-header">
         <h2 id="searchFilters-header" class="js-until-45" data-collapsible-header>Søgefiltre <span aria-hidden="true">{% if filters %}({{filters|length}}){% endif %}</span></h2>
         <div id="searchFilters-section">
             {% if filters %}
-                <h3 class="filters-header">Aktive søgefiltre</h3>
+                <h3 class="facets-header">Aktive søgefiltre</h3>
                 {% include 'components/filters.html' %}
             {% endif %}
             <h3 class="facets-header">Søgefiltre</h3>
@@ -54,6 +56,21 @@
             <div class="searchOptions-menus">
                 {% if previous or next %}
                     <div class="searchNumber">
+                        <h3 id="searchNumber-header" aria-label="Antal resultater per side" data-collapsible-header>Antal</h3>
+                        <ul class="searchOptions-list" aria-labelledby="searchNumber-header">
+                        {% for s in size_list %}
+                            <li role="presentation">
+                            {% if s.selected %}
+                                <a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}} per side</a>
+                            {% else %}
+                                <a href="/search?{{s.link}}">{{s.label}} per side</a>
+                            {% endif %}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+        
+                    {# UDKOMMENTERET
                         <h3 id="searchNumber-header" class="searchOptions-header">Antal<span class="sr-only">resultater per side</span></h3>
                         <ul id="searchNumber-list" data-menu data-menu-right>
                         {% for s in size_list %}
@@ -64,54 +81,75 @@
                             {% endif %}
                         {% endfor %}
                         </ul>
-                    </div>
+                    #}
+    
+                {% endif%}
 
-                    <div class="searchNumber" data-menu-wrapper>
-                        <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="numberMenu">
-                            <span class="sr-only">Change the number of results</span>
-                            <span aria-hidden="true">Antal</span>
+                <div class="searchSort">
+                    <h3 id="searchSort-header" aria-label="Sortér søgeresultaterne" data-collapsible-header>Sortering</h3>
+                    <ul class="searchOptions-list" aria-labelledby="searchSort-header">
+                    {% for s in sort_list %}
+                        <li role="presentation">
+                        {% if s.selected %}
+                            <a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}}</a>
+                        {% else %}
+                            <a href="/search?{{s.link}}">{{s.label}}</a>
+                        {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+
+                {# UDKOMMENTERET
+                    <div class="searchSort" data-menu-wrapper>
+                        <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="sortMenu">
+                            <span class="sr-only">Change the sort order</span>
+                            <span aria-hidden="true">Sortering</span>
                         </button>
-                        <ul id="numberMenu" class="menu" data-menu-from="right">
-                        {% for s in size_list %}
+                        <ul id="sortMenu" role="menu" data-menu-from="right">
+                        {% for s in sort_list %}
                             {% if s.selected %}
-                                <li class="menuitem">{{s.label}} per side</li>
+                                <li role="menuitem">{{s.label}}</li>
                             {% else %}
-                                <li><a class="menuitem" href="/search?{{s.link}}">{{s.label}} per side</a></li>
+                                <li role="none"><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
                             {% endif %}
                         {% endfor %}
                         </ul>
                     </div>
-                {% endif%}
-                <div class="searchSort" data-menu-wrapper>
-                    <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="sortMenu">
-                        <span class="sr-only">Change the sort order</span>
-                        <span aria-hidden="true">Sortering</span>
-                    </button>
-                    <ul id="sortMenu" role="menu" data-menu-from="right">
-                    {% for s in sort_list %}
+                #}
+
+                <div class="searchViews">
+                    <h3 id="searchviews-header" aria-label="Visning af søgeresultaterne" data-collapsible-header>Visning</h3>
+                    <ul class="searchOptions-list" aria-labelledby="searchviews-header">
+                    {% for s in view_list %}
+                        <li role="presentation">
                         {% if s.selected %}
-                            <li role="menuitem">{{s.label}}</li>
+                            <a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}}</a>
                         {% else %}
-                            <li role="none"><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
+                            <a href="/search?{{s.link}}">{{s.label}}</a>
                         {% endif %}
+                        </li>
                     {% endfor %}
                     </ul>
                 </div>
-                <div class="searchViews" data-menu-wrapper>
-                    <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="showMenu">
-                        <span class="sr-only">Change the display style</span>
-                        <span aria-hidden="true">Visning</span>
-                    </button>
-                    <ul id="showMenu" role="menu" data-menu-from="right">
-                    {% for v in view_list %}
-                        {% if v.selected %}
-                            <li role="menuitem">{{v.label}}</li>
-                        {% else %}
-                            <li role="none"><a role="menuitem" href="/search?{{v.link}}">{{v.label}}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                    </ul>
-                </div>
+
+                {# UDKOMMENTERET
+                    <div class="searchViews" data-menu-wrapper>
+                        <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="showMenu">
+                            <span class="sr-only">Change the display style</span>
+                            <span aria-hidden="true">Visning</span>
+                        </button>
+                        <ul id="showMenu" role="menu" data-menu-from="right">
+                        {% for v in view_list %}
+                            {% if v.selected %}
+                                <li role="menuitem">{{v.label}}</li>
+                            {% else %}
+                                <li role="none"><a role="menuitem" href="/search?{{v.link}}">{{v.label}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div>
+                #}
             </div>
         </section>
     {% endif %}

@@ -1,10 +1,10 @@
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-
 from starlette.datastructures import QueryParams
 
 import source.openapi as api
 from source.templates import render
+from source.resources.helpers import format_record
 
 
 async def resource(req: Request):
@@ -95,8 +95,9 @@ async def resource(req: Request):
 
             context["current_search"] = traverse.get("cur_results")
 
-        context["resource"] = resp.get("data")
+        context["resource"] = format_record(resp.get("data"))
         if collection and collection in ["creators", "collectors"]:
             collection = resource.get("domain")
         context["collection"] = collection
+
         return render("resource.html", context)

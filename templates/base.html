@@ -15,6 +15,7 @@
         <link href="{{ url_for('static', path='/css/collapsible.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/menubutton.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/menu.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/details.css') }}" rel="stylesheet">
         <meta property="og:image" content="{{ url_for('static', path='/images/logo.png') }}">
         <meta property="og:url" content="">
         <meta name="twitter:card" content="{% block twitter_card %}{% endblock twitter_card %}">
@@ -27,59 +28,61 @@
     </head>
 
     <body class="{{ pageclass }}">
-        <section class="skipLinks" aria-label="Skip links">
-            <a class="skipLink" href="#globalMenu">Hop til hovedmenuen</a>
-            <a class="skipLink" href="#globalSearch">Hop til søgeboks</a>
-            {% if pageclass == "searchpage" %}
-                {% if result %}
-                    <a class="skipLink" href="#searchResults-header">Hop til søgeresultaterne</a>
-                    <a class="skipLink" href="#filterregion">Hop til filtrering af søgeresultater</a>
-                {% endif %}
-            {% else %}
-                <a class="skipLink" href="#main">Hop til indhold</a>
-            {% endif %}
-        </section>
         <header class="globalHeader" aria-label="Aarhusarkivets menubar">
-            <h1 class="globalLogo">
+            <h1 id="globalLogo">
                 <a href="{{ url_for('home') }}">
                     <img src="{{ url_for('static', path='/images/logo_white.png') }}" alt="Gå til forsiden af Aarhusarkivet">
                 </a>
             </h1>
-            <div id="globalMenu" class="globalMenu">
-                <nav class="globalNavigation" aria-labelledby="globalNavigation-label" data-menu-wrapper>
-                    <h2 id="globalNavigation-label" hidden>Hovedmenu</h2>
-                    <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="hovedmenu">Menu</button>
-                    <ul id="hovedmenu" role="menu" data-menu-from="right">
-                        <li><a role="menuitem" href="{{ url_for('about') }}">About</a></li>
-                        <li><a role="menuitem" href="/resources/records/191801">Sample Record</a></li>
-                    </ul>
-                </nav>
-                {% if request.session.get("user") %}
-                    <nav class="userNavigation" aria-labbelby="userNavigation-label">
-                        <h2 id="userNavigation-label" hidden>Din brugermenu</h2>
-                        <button class="menuButton" aria-expanded="false" aria-controls="brugermenu">User</button>
-                        <ul id="brugermenu" hidden>
-                            <li><a href="{{ url_for('profile') }}">Min side</a></li>
-                            <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                        </ul>
-                    </nav>
-                {% else %}
-                    <a class="globalHeader-link" href="{{ url_for('login') }}">Log ind</a>
-                {% endif %}
-            </div>
-            <form id="globalSearch" class="globalSearchform" role="search" action="/search" aria-label="Fuldtekstsøgning i Aarhusarkivets samlinger">
+
+            <nav id="globalMenu" aria-label="Hovedmenu">
+                <details class="menu">
+                    <summary>Menu</summary>
+                    <div class="menu-content">
+                        <a href="{{ url_for('about') }}">About</a>
+                        <a href="/resources/records/191801">Sample Record</a>
+                        {% if request.session.get("user") %}
+                            <a href="{{ url_for('profile') }}">Min side</a>
+                        {% else %}
+                            <a href="{{ url_for('login') }}">Log ind</a>
+                        {% endif %}
+                    </div>
+                </details>
+
+                {#
+                <h2 id="globalNavigation-label" data-collapsible-header>Menu</h2>
+                <ul id="globalNavigation-list" aria-labelledby="globalNavigation-label">
+                    <li role="presentation">
+                        <a href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="/resources/records/191801">Sample Record</a>
+                    </li>
+                    {% if request.session.get("user") %}
+                        <li role="presentation">
+                            <a href="{{ url_for('profile') }}">Min side</a>
+                        </li>
+                    {% else %}
+                        <li role="presentation">
+                            <a href="{{ url_for('login') }}">Log ind</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                #}
+            </nav>
+            
+            <form id="globalSearchform" role="search" action="/search" aria-label="Fuldtekstsøgning i Aarhusarkivets samlinger">
                 <label for="autoComplete" class="sr-only">Indtast en eller flere søgeor</label>
-                <input id="autoComplete" type="search" name="q" aria-label="Indtast søgeord" value="{{query}}">
+                <input id="autoComplete" type="search" name="q" aria-label="Indtast søgeord" value="{% if query %}{{query}}{% endif %}">
                 <button type="submit">Søg</button>
             </form>
         </header>
 
-        <main id="main" class="globalMain">
+        <main id="main" aria-label="Sidens indhold">
             {% block content %}{% endblock content %}
         </main>
 
-
-        <footer class="globalFooter"></footer>
+        <footer class="globalFooter">Footer</footer>
         <!-- <script src="{{url_for('static', path='/js/autocomplete.min.js')}}"></script> -->
         <!-- <script src="{{url_for('static', path='/js/index.js')}}"></script> -->
         <script src="{{url_for('static', path='/js/app.js')}}"></script>
@@ -90,7 +93,6 @@
         <script src="{{url_for('static', path='/js/collapsible.js')}}"></script>
         <script src="{{url_for('static', path='/js/menubutton.js')}}"></script>
         <script src="{{url_for('static', path='/js/menu.js')}}"></script>
-        <!-- <script src="{{url_for('static', path='/js/load.js')}}"></script> -->
         {% block extra_scripts %}{% endblock extra_scripts %}
     </body>
 </html>

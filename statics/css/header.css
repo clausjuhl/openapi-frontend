@@ -7,24 +7,17 @@
     background-color: var(--bg-color-header);
     color: var(--color-light);
 }
-/* .globalHeader-link,
-.menuButton {
-    font-weight: 400;
-    border-radius: 4px;
-    display: inline-block;
-    font-size: 1em;
-    line-height: .8;
-    padding: 8px 10px;
-    text-align: center;
-    color: var(--color-light);
-} */
 
-.globalLogo {
+#globalLogo {
     margin: 0;
     padding: 0;
 }
+#globalLogo img {
+    width: 130px;
+}
 
-.globalHeader-link {
+
+/* .globalHeader-link {
     display: inline-block;
     font-size: 1em;
     line-height: .8;
@@ -32,90 +25,105 @@
     margin-left: .3em;
     background-color: var(--color-green-dark);
     text-decoration: none;
-}
-
-.globalMenu {
-    display: flex;
-}
-
-.menuButton {
-    padding: 8px 10px;
-    background-color: rgb(80, 92, 126);
-}
-
-.userNavigation .menuButton {
-    margin-left: .4em;
-    background-color: var(--color-green-dark);
-}
-
-.userNavigation {
-    display: inline-block;
-    position: relative;
-    color: inherit;
-}
-
-/* .menu {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    width: max-content;
-    max-width: 300px;
-    list-style: none;
-    margin: 0;
-    text-align: right;
-    background-color: var(--color-lightgray);
-}
-
-.menu li {
-    padding: 6px 10px;
-    color: var(--color-dark);
 } */
 
-.globalLogo img {
-    width: 130px;
+/* Global menu */
+#globalMenu {
+    position: relative;
 }
 
-.globalSearchform {
+#globalNavigation-label {
+    margin: 0;
+    margin-left: .5em;
+    padding: 0;
+    font-size: 1em;
+    font-weight: 400;
+}
+#globalNavigation-label button {
+    width: 100%;
+    padding: .3em .7em;
+    background-color: var(--color-shade-20);
+    color: var(--color-light);
+    border: 2px solid var(--color-tint-5);
+}
+#globalNavigation-label svg {
+    display: none;
+}
+
+#globalNavigation-list {
+    position: absolute;
+    z-index: 10;
+    white-space: nowrap;
+    right: 0;
+    left: auto;
+    margin-top: .3em;
+    text-align: right;
+    background-color: var(--color-lightergray);
+    border-radius: .25em;
+    border-left: 1px solid var(--color-lightgray);
+    border-right: 1px solid var(--color-lightgray);
+    border-bottom: 1px solid var(--color-lightgray);
+}
+#globalNavigation-list a {
+    display: block;
+    padding: .3em;
+    border-bottom: 1px solid rgb(240, 240, 240);
+}
+#globalNavigation-list a:not([aria-current="page"]):hover {
+    background-color: rgb(235, 235, 235);
+}
+#globalNavigation-list a:focus,
+#globalNavigation-list a:active {
+    outline: 1px solid;
+}
+
+/* Searchform */
+#globalSearchform {
     display: grid;
     grid-template-columns: 1fr 60px;
     width: 100%;
     border-radius: 3px;
+    border: 1px solid var(--color-tint-2);
     padding: 0;
     margin: 13px 0 0;
-    background: slategray;
+    background: slategray; /* #6b7381 */
 }
 
-.globalSearchform input {
+#globalSearchform input {
     border: none;
     box-shadow: none;
     padding: 4px;
     margin: 3px;
     background: transparent;
     font-size: 1rem;
-    color: rgb(61, 61, 61);
+    color: var(--color-light);
 }
+/* #globalSearchform input:focus {
+    outline: 2px solid var(--color-tint-6);
+} */
 
-.globalSearchform button {
-    color: rgb(61, 61, 61);
+#globalSearchform button {
+    color: var(--color-light);
+    background-color: var(--color-shade-20);
     border-radius: 0 3px 3px 0;
     font-size: 1rem;
     padding: 5px 0;
-    transition: all 200ms ease-in-out;
+    transition: backgroundColor 200ms ease-in-out;
 }
-.globalSearchform button:hover {
-    color: #fff;
-    background-color: #8FBE00;
+#globalSearchform button:hover {
+    /* color: #fff; */
+    background-color: #80A01D;
 }
 
 @media (min-width: 700px) {
-    .globalSearchform {
+    #globalSearchform {
         width: initial;
         max-width: 500px;
         flex: 1 1 auto;
         order: 2;
         margin: 0 20px;
     }
-    .globalMenu {
+    #globalMenu {
         order: 3
     }
 }

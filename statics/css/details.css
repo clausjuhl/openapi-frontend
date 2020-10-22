@@ -1,0 +1,53 @@
+details.menu {
+    position: relative
+}
+
+details.menu .menu-content {
+    /* minimum */
+    position: absolute;
+    /* extra */
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    padding-top: .3em;
+    padding-bottom: .3em;
+    margin-top: .2em;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px #e1e4e8 solid;
+    border-radius: 3px;
+    box-shadow: 0 8px 24px rgba(149,157,165,0.2);
+}
+details.menu .menu-content a {
+    display: block;
+    padding: 4px 8px 4px 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+details.menu > summary {
+    /* minimum requirements */
+    cursor: pointer;
+    list-style: none; /* hide triangle */
+    position: relative;
+    display: inline-block;
+}
+/* button-like summary */
+details.menu .menu-button {
+    padding: .3em .7em;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid;
+    border-radius: 3px;
+    appearance: none;
+}
+/* link-like summary */
+details.menu .menu-link {
+
+}
+
+/* Chrome */
+details > summary::-webkit-details-marker {
+    display: none; /* hide triangle */
+}

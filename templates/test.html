@@ -3,6 +3,19 @@
 {% block content %}
     {{response}}
 
+    <section class="skipLinks" aria-label="Skip links">
+        <a class="skipLink" href="#globalMenu">Hop til hovedmenuen</a>
+        <a class="skipLink" href="#globalSearch">Hop til søgeboks</a>
+        {% if pageclass == "searchpage" %}
+            {% if result %}
+                <a class="skipLink" href="#searchResults-header">Hop til søgeresultaterne</a>
+                <a class="skipLink" href="#filterregion">Hop til filtrering af søgeresultater</a>
+            {% endif %}
+        {% else %}
+            <a class="skipLink" href="#main">Hop til indhold</a>
+        {% endif %}
+    </section>
+
     <aside>
         <h3>Session</h4>
         <dl>

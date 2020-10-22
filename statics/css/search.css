@@ -12,10 +12,18 @@
 /* Child of .searchPagination */
 .pagination a {
     display: inline-block;
-    border: 1px solid;
-    border-radius: 2px;
-    padding: .4em .5em;
+    border: 2px solid;
+    border-radius: .25em;
+    width: 1.2em;
+    padding: .25em .5em;
     margin-left: .3em;
+    text-align: center;
+}
+.pagination a[aria-disabled="true"] {
+    color: var(--color-tint-6);
+    border: 1px solid;
+    cursor: initial;
+    text-decoration: none;
 }
 
 .searchOptions {
@@ -28,83 +36,80 @@
 .searchOptions-menus {
     display: flex;
 }
-.searchOptions-header {
+.searchOptions-menus h3 {
     margin: 0;
+    margin-left: .5em;
     padding: 0;
     font-size: 1em;
+    font-weight: 400;
 }
 .searchOptions-menus button {
-    background-color: var(--color-lightgray);
-    border: 1px solid;
-    border-radius: 2px;
-    margin-left: .3em;
+    width: 100%;
+    padding: .4em;
+    color: var(--color-dark);
+    background-color: var(--color-tint-9);
+    border: 1px solid var(--color-tint-6);
 }
 
-/*
-*   Filters - implements menubutton
-*/
-.filters-header {
+.searchOptions-list {
+    position: absolute;
+    z-index: 10;
+    white-space: nowrap;
+    right: 0;
+    left: auto;
+    margin-top: .3em;
+    text-align: right;
+    background-color: var(--color-lightergray);
+    border-radius: .25em;
+    border-left: 1px solid var(--color-lightgray);
+    border-right: 1px solid var(--color-lightgray);
+    border-bottom: 1px solid var(--color-lightgray);
+}
+.searchOptions-list a {
+    display: block;
+    padding: .3em;
+    border-bottom: 1px solid rgb(240, 240, 240);
+    background-color: rgb(245, 245, 245);
+}
+.searchOptions-list a:not([aria-current="page"]):hover {
+    background-color: rgb(235, 235, 235);
+}
+.searchOptions-list a:focus,
+.searchOptions-list a:active {
+    outline: 1px solid;
+}
+
+/* Facets and filters - implements collapsible section with trees, simple ul's or forms */
+.facets-header {
     font-size: 1.3em;
     margin: 0 0 .4em;
     border-bottom: 1px solid;
 }
-.filter,
-.filter-negated {
-    display: block;
-    margin-bottom: .6em;
-    border-radius: 2px;
-    /* display: grid;
-    grid-template-columns: auto min-content min-content; */
-}
-.filter-title {
-    text-transform: uppercase;
-    font-size: 75%;
-    font-weight: bold;
-    color: var(--color-dark);
-}
-.filter button {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    text-align: inherit;
-}
-/* https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow */
-.filter-test button,
-.filter-text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.filter ul {
-    width: 100%;
-    top: 4em; /* overrides menubutton */
-}
 
-
-/* Facets - implements collapsible section with trees, simple ul's or forms */
-.facets-header {
-    font-size: 1.3em;
-    margin: 1em 0 .4em;
-    border-bottom: 1px solid;
-}
 .facetHeader {
     padding: 0;
     margin: .5em 0 0;
-    border-radius: 2px 0 0 2px;
-    background-color: rgb(240, 240, 240);
 }
 
 /* The button is added by js */
 .facetHeader button {
     width: 100%;
     padding: .4em;
+    color: var(--color-dark);
+    background-color: var(--color-tint-8);
+    border: 1px solid var(--color-tint-6);
 }
 .facetHeader button:hover {
-    background-color: rgb(230, 230, 230);
+    background-color: var(--color-tint-7);
+}
+.facetHeader button[aria-expanded="true"] {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0; 
 }
 
 /* Facet-panel only styled if js */
 .facetPanel {
+    background-color: var(--color-lightergray);
     border-left: 1px solid var(--color-lightgray);
     border-right: 1px solid var(--color-lightgray);
     border-bottom: 1px solid var(--color-lightgray);
@@ -147,13 +152,20 @@ li[aria-expanded="true"] > .facetItem-header {
     grid-template-columns: minmax(6em, auto) 1fr;
     /* grid-template-rows: auto; */
     gap: .6em;
-    border-bottom: 1px solid var(--color-lightgray);
+    padding-top: .5em;
     padding-bottom: .5em;
-    margin-bottom: 1em;
+    /* border: 1px solid transparent; */
+    border-bottom: 1px solid var(--color-lightgray);
+}
+@media (min-width: 45em) {
+    .listitem {
+        padding: .5em;
+    }
 }
 .listitem:hover {
-    border: 1px solid var(--color-dark);
+    background-color: var(--color-tint-9);
 }
+
 .listitem-image {
     grid-row: 1;
     /* grid-column: 1; */
@@ -261,12 +273,12 @@ li[aria-expanded="true"] > .facetItem-header {
     .searchPage {
         display: grid;
         grid-template-columns: 18em auto;
-        grid-template-rows: repeat(3, min-content) 1fr;
+        grid-template-rows: repeat(2, min-content) 1fr;
         column-gap: 2em;
     }
     .searchFilters {
         grid-column: 1;
-        grid-row: 1 / 5;
+        grid-row: 1 / 4;
     }
     #searchFilters-header {
         display: none;
@@ -275,16 +287,14 @@ li[aria-expanded="true"] > .facetItem-header {
         grid-column: 2;
         /* grid-row: 1; */
     }
-    /* .searchActions {
-        grid-column: 2;
-        grid-row: 2;
-    } */
     .searchPagination {
         grid-column: 2;
+        padding-left: .5em; /* to align vertically with listitems */
         /* grid-row: 2; */
     }
     .searchOptions {
         grid-column: 2;
+        padding-left: .5em; /* to align vertically with listitems */
         /* grid-row: 3; */
     }
     .searchResults {
@@ -293,7 +303,6 @@ li[aria-expanded="true"] > .facetItem-header {
     }
 }
 
-.filter-optionsMenu,
 .searchNumber,
 .searchSort,
 .searchViews {

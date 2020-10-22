@@ -62,16 +62,17 @@ li {
     padding: 0;
     list-style: none;
 }
-
-
+/* 
+a:hover {
+    cursor: pointer;
+} */
 a[aria-current] {
     text-decoration: none;
 }
-a[aria-current]:hover,
+/* a[aria-current]:hover,
 a[aria-current]:focus {
-    /* background-color: inherit; */
     cursor: initial;
-}
+} */
 
 img {
     width: 100%;
@@ -109,16 +110,21 @@ button {
     height: 1em;
 }
 
-.globalMain {
-    padding: 12px;
+#main {
+    /* margin: 0 auto;
+    max-width: 1280px; */
+    padding: 1.2em;
 }
+@media (min-width: 45em) {
+    main {
+        padding: 2em;
+    }
+}
+
+
 .globalFooter {
     padding: 12px;
     background-color: var(--bg-color-footer);
-}
-
-details {
-    padding: 10px;
 }
 
 .visually-hidden {
