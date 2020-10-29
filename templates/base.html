@@ -11,11 +11,10 @@
         <link href="{{ url_for('static', path='/css/forms.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/search.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', path='/css/treeview.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static', path='/css/accordion.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static', path='/css/collapsible.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static', path='/css/menubutton.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static', path='/css/menu.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static', path='/css/details.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/field.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/listitem.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/gallery.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/disclosure.css') }}" rel="stylesheet">
         <meta property="og:image" content="{{ url_for('static', path='/images/logo.png') }}">
         <meta property="og:url" content="">
         <meta name="twitter:card" content="{% block twitter_card %}{% endblock twitter_card %}">
@@ -29,16 +28,14 @@
 
     <body class="{{ pageclass }}">
         <header class="globalHeader" aria-label="Aarhusarkivets menubar">
-            <h1 id="globalLogo">
-                <a href="{{ url_for('home') }}">
-                    <img src="{{ url_for('static', path='/images/logo_white.png') }}" alt="Gå til forsiden af Aarhusarkivet">
-                </a>
-            </h1>
+            <a id="globalLogo" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', path='/images/logo_white.png') }}" alt="Gå til forsiden af Aarhusarkivet">
+            </a>
 
             <nav id="globalMenu" aria-label="Hovedmenu">
-                <details class="menu">
-                    <summary>Menu</summary>
-                    <div class="menu-content">
+                <details class="disclosure dropdown">
+                    <summary class="button" aria-haspopup="true">Menu</summary>
+                    <div class="content right singleline">
                         <a href="{{ url_for('about') }}">About</a>
                         <a href="/resources/records/191801">Sample Record</a>
                         {% if request.session.get("user") %}
@@ -48,32 +45,11 @@
                         {% endif %}
                     </div>
                 </details>
-
-                {#
-                <h2 id="globalNavigation-label" data-collapsible-header>Menu</h2>
-                <ul id="globalNavigation-list" aria-labelledby="globalNavigation-label">
-                    <li role="presentation">
-                        <a href="{{ url_for('about') }}">About</a>
-                    </li>
-                    <li role="presentation">
-                        <a href="/resources/records/191801">Sample Record</a>
-                    </li>
-                    {% if request.session.get("user") %}
-                        <li role="presentation">
-                            <a href="{{ url_for('profile') }}">Min side</a>
-                        </li>
-                    {% else %}
-                        <li role="presentation">
-                            <a href="{{ url_for('login') }}">Log ind</a>
-                        </li>
-                    {% endif %}
-                </ul>
-                #}
             </nav>
             
             <form id="globalSearchform" role="search" action="/search" aria-label="Fuldtekstsøgning i Aarhusarkivets samlinger">
-                <label for="autoComplete" class="sr-only">Indtast en eller flere søgeor</label>
-                <input id="autoComplete" type="search" name="q" aria-label="Indtast søgeord" value="{% if query %}{{query}}{% endif %}">
+                <label for="autoComplete" class="sr-only">Indtast en eller flere søgeord</label>
+                <input id="autoComplete" type="search" name="q" value="{% if query %}{{query}}{% endif %}">
                 <button type="submit">Søg</button>
             </form>
         </header>
@@ -89,10 +65,10 @@
         <script src="{{url_for('static', path='/js/bookmarks-vanilla.js')}}"></script>
         <script src="{{url_for('static', path='/js/treeLinks.js')}}"></script>
         <script src="{{url_for('static', path='/js/treeitemLinks.js')}}"></script>
-        <script src="{{url_for('static', path='/js/accordion.js')}}"></script>
-        <script src="{{url_for('static', path='/js/collapsible.js')}}"></script>
-        <script src="{{url_for('static', path='/js/menubutton.js')}}"></script>
-        <script src="{{url_for('static', path='/js/menu.js')}}"></script>
+        <!-- <script src="{{url_for('static', path='/js/accordion.js')}}"></script> -->
+        <!-- <script src="{{url_for('static', path='/js/collapsible.js')}}"></script> -->
+        <!-- <script src="{{url_for('static', path='/js/menubutton.js')}}"></script> -->
+        <!-- <script src="{{url_for('static', path='/js/menu.js')}}"></script> -->
         {% block extra_scripts %}{% endblock extra_scripts %}
     </body>
 </html>

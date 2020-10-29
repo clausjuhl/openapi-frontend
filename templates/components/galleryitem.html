@@ -4,101 +4,103 @@
     Uses the 'record'-variable from the template-context
 #}
 
-<a class="galleryItem" href="/resources/records/{{record.id}}">
+<div class="galleryItem" data-resource-id="{{record.id}}">
+    <a class="galleryItem" href="/resources/records/{{record.id}}">
 
-    {% if record.thumbnail %}
-        <div class="galleryImage">
-        {% if record.availability|int > 3 or readingroom or session.get('is_employee') %}
-            {% if record.portrait %}
-                <img src="{{record.portrait}}" alt="{{record.label or record.summary or record.desc_notes}}">
-            {% else %}
-                <img src="{{record.thumbnail}}" alt="{{record.label or record.summary or record.desc_notes}}">
-            {% endif %}
-        {% elif record.availability|int == 3 %}
-                <p>Materialet kan ses på læsesalen</p>
-        {% elif record.availability|int == 2 and session.get('is_employee') %}
-            {% if record.portrait %}
-                <img src="{{record.portrait}}" alt="{{record.label or record.summary or record.desc_notes}}">
-            {% else %}
-                <img src="{{record.thumbnail}}" alt="{{record.label or record.summary or record.desc_notes}}">
-            {% endif %}
-        {% endif %}
-        </div>
-    {% endif %}
-
-    <div class="galleryLabel">
-        {% if record.label %}
-            <span>{{record.label|truncate(80)}}</span>
-        {% elif record.summary %}
-            <span>{{record.summary|truncate(80)}}</span>
-        {% elif record.description %}
-            <span>{{record.description|truncate(80)}}</span>
-        {% else %}
-            <span>Materialet er ikke beskrevet</span>
-        {% endif %}        
-    </div>
-
-    <div class="galleryDescription">
-        {% if record.label %}
-            <h3 class="galleryItem-label">{{record.label|truncate(1200)}}</h3>
-        {% endif %}
-
-        {% if record.summary %}
-            <p class="galleryItem-summary">{{record.summary|truncate(120)}}</p>
-        {% endif %}
-
-        {% if not (record.summary or record.label) %}
-            {% if record.desc_notes %}
-                <p class="galleryItem-notes">{{record.desc_notes|truncate(120)}}</p>
-            {% else %}
-                <p class="galleryItem-notes">Materialet er ikke beskrevet</p>
-            {% endif %}
-        {% endif %}
-
-        <dl class="galleryItem-list">
-            {% if record.collectors_label %}
-                <dt>arkivskaber</dt>
-                <dd>{{record.collectors_label}}</dd>
-            {% endif %}
-
-            {% if record.series %}
-                <dt>serie</dt>
-                <dd>
-                    {% for level in record.series %}
-                        <span>{{level}} </span>
-                    {% endfor %}
-                </dd>
-            {% endif %}
-
-            {% if record.content_types %}
-                <dt>type</dt>
-                <dd>{{record.content_types[0]}}</dd>
-            {% endif %}
-
-            <dt>datering</dt>
-            <dd>
-                {% if record.date_from %}
-                    {% if record.date_to %}
-                        {% if record.date_to == record.date_from %}
-                            <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}}</span>
-                        {% elif record.date_from[0:6] == record.date_to[0:6] %}
-                            <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}</span>
-                        {% elif record.date_from[0:4] == record.date_to[0:4] and record.date_from[4:8] == '0101' %}
-                            <span>{{record.date_from[0:4]}}</span>
-                        {% elif record.date_from[4:8] == '0101' and record.date_to[4:8] == '1231' %}
-                            <span>{{record.date_from[0:4]}} ~ {{record.date_to[0:4]}}</span>
-                        {% else %}
-                            <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}</span>
-                        {% endif %}
-                    {% else %}
-                        <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~</span>
-                    {% endif %}
-                {% elif record.date_to %}
-                    <span>~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}</span>
+        {% if record.thumbnail %}
+            <div class="galleryImage">
+            {% if record.availability|int > 3 or readingroom or session.get('is_employee') %}
+                {% if record.portrait %}
+                    <img src="{{record.portrait}}" alt="{{record.label or record.summary or record.desc_notes}}">
                 {% else %}
-                    <span>Uden datering</span>
+                    <img src="{{record.thumbnail}}" alt="{{record.label or record.summary or record.desc_notes}}">
                 {% endif %}
-            </dd>
-        </dl>
-    </div>
-</a>
+            {% elif record.availability|int == 3 %}
+                    <p>Materialet kan ses på læsesalen</p>
+            {% elif record.availability|int == 2 and session.get('is_employee') %}
+                {% if record.portrait %}
+                    <img src="{{record.portrait}}" alt="{{record.label or record.summary or record.desc_notes}}">
+                {% else %}
+                    <img src="{{record.thumbnail}}" alt="{{record.label or record.summary or record.desc_notes}}">
+                {% endif %}
+            {% endif %}
+            </div>
+        {% endif %}
+
+        <div class="galleryLabel">
+            {% if record.label %}
+                <span>{{record.label|truncate(80)}}</span>
+            {% elif record.summary %}
+                <span>{{record.summary|truncate(80)}}</span>
+            {% elif record.description %}
+                <span>{{record.description|truncate(80)}}</span>
+            {% else %}
+                <span>Materialet er ikke beskrevet</span>
+            {% endif %}        
+        </div>
+
+        <div class="galleryDescription">
+            {% if record.label %}
+                <h3 class="galleryItem-label">{{record.label|truncate(1200)}}</h3>
+            {% endif %}
+
+            {% if record.summary %}
+                <p class="galleryItem-summary">{{record.summary|truncate(120)}}</p>
+            {% endif %}
+
+            {% if not (record.summary or record.label) %}
+                {% if record.desc_notes %}
+                    <p class="galleryItem-notes">{{record.desc_notes|truncate(120)}}</p>
+                {% else %}
+                    <p class="galleryItem-notes">Materialet er ikke beskrevet</p>
+                {% endif %}
+            {% endif %}
+
+            <dl class="galleryItem-list">
+                {% if record.collectors_label %}
+                    <dt>arkivskaber</dt>
+                    <dd>{{record.collectors_label}}</dd>
+                {% endif %}
+
+                {% if record.series %}
+                    <dt>serie</dt>
+                    <dd>
+                        {% for level in record.series %}
+                            <span>{{level}} </span>
+                        {% endfor %}
+                    </dd>
+                {% endif %}
+
+                {% if record.content_types %}
+                    <dt>type</dt>
+                    <dd>{{record.content_types[0]}}</dd>
+                {% endif %}
+
+                <dt>datering</dt>
+                <dd>
+                    {% if record.date_from %}
+                        {% if record.date_to %}
+                            {% if record.date_to == record.date_from %}
+                                <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}}</span>
+                            {% elif record.date_from[0:6] == record.date_to[0:6] %}
+                                <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}</span>
+                            {% elif record.date_from[0:4] == record.date_to[0:4] and record.date_from[4:8] == '0101' %}
+                                <span>{{record.date_from[0:4]}}</span>
+                            {% elif record.date_from[4:8] == '0101' and record.date_to[4:8] == '1231' %}
+                                <span>{{record.date_from[0:4]}} ~ {{record.date_to[0:4]}}</span>
+                            {% else %}
+                                <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}</span>
+                            {% endif %}
+                        {% else %}
+                            <span>{{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~</span>
+                        {% endif %}
+                    {% elif record.date_to %}
+                        <span>~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}</span>
+                    {% else %}
+                        <span>Uden datering</span>
+                    {% endif %}
+                </dd>
+            </dl>
+        </div>
+    </a>
+</div>

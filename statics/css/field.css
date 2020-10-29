@@ -1,0 +1,24 @@
+/* Metadata-field */
+/* Based on https://css-tricks.com/how-to-make-a-media-query-less-card-component/ */
+.field {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+.field-key {
+    flex-grow: 0; /* default */
+    flex-shrink: 1; /* default */
+    width: 16ch;
+    overflow-x: hidden;
+    text-transform: uppercase;
+    font-weight: normal;
+    font-size: 80%;
+    margin-right: .8em;
+}
+.field-value {
+    flex-grow: 10;
+    flex-shrink: 1;
+    flex-basis: 50ch;
+    padding-top: .2em;
+    padding-bottom: .8em;
+}

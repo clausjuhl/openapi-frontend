@@ -5,6 +5,63 @@
 {% set facet_labels = {"availability": "Tilgængelighed", "usability": "Brugbarhed", "content_types": "Materialetype", "subjects": "Emner", "collection": "Samlinger"} %}
 
 {% for k ,v in facets.items() %}
+    <details class="disclosure facet">
+        <summary class="flex button">
+            <h4 id="facetHeader-{{k}}" class="title">{{ facet_labels.get(k) }}</h4>
+            <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
+        </summary>
+        <div class="content">
+            {% if k in ['subjects', 'content_types'] %}
+                <ul aria-labelledby="facetHeader-{{k}}" role="tree">
+                    {% for item in v recursive %}
+                        {% if item.remove_link %}
+                        <li role="none">
+                            <a class="facetItem-header" href="/search?{{item.remove_link}}" role="treeitem">
+                                <span>{{item.label}}</span><span>X</span>
+                            </a>
+                        {% elif item.add_link %}
+                            {% if item.children %}
+                            <li role="treeitem" aria-expanded="false">
+                                <span class="facetItem-header">{{item.label}}</span>
+                                <ul role="group">
+                                    <li role="none">
+                                        <a class="facetItem-header" href="/search?{{item.add_link}}" role="treeitem">
+                                            <span>Vælg alt herunder</span><span>({{item.count}})</span>
+                                        </a>
+                                    </li>
+                                    {{ loop( item.children ) }}
+                                </ul>
+                            {% else %}
+                            <li role="none">
+                                <a class="facetItem-header" href="/search?{{item.add_link}}" role="treeitem">
+                                    <span>{{item.label}}</span><span>({{item.count}})</span>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div>
+                    {% for item in v %}
+                        {% if item.remove_link %}
+                            <a class="facetItem-header" href="/search?{{item.remove_link}}">
+                                <span>{{item.label}}</span><span>X</span>
+                            </a>
+                        {% elif item.add_link %}
+                            <a class="facetItem-header" href="/search?{{item.add_link}}">
+                                <span>{{item.label}}</span><span>({{item.count}})</span>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </details>
+{% endfor %}
+
+{#
+{% for k ,v in facets.items() %}
     <h4 id="facetHeader-{{k}}" class="facetHeader" data-collapsible-header>{{ facet_labels.get(k) }}</h4>
     {% if k in ['subjects', 'content_types'] %}
         <ul class="collapsible-panel facetPanel" aria-labelledby="facetHeader-{{k}}" role="tree">
@@ -54,7 +111,7 @@
         </ul>
     {% endif %}
 {% endfor %}
-
+#}
 {#
 <ul class="facetList" aria-labelledby="facetContainer-heading" role="tree">
     {% for k ,v in facets.items() %}

@@ -49,108 +49,89 @@
     {% if result %}
         <section class="searchOptions" aria-labelledby="searchOptions-header">
             <h2 id="searchOptions-header" class="sr-only">Search options</h2>
-            <div class="searchOptions-links">
-                <a href="#">Print<span class="sr-only">&nbsp;resultatlisten</span></a>
-                <a href="#">Del<span class="sr-only">&nbsp;resultatlisten</span></a>    
-            </div>
-            <div class="searchOptions-menus">
+            <nav class="searchOptions-links" aria-label="Search actions">
+                <a href="#">
+                    <span class="sr-only">Print søgningen</span>
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M11.25 9.331V.75a.75.75 0 011.5 0v8.58l1.949-2.11A.75.75 0 1115.8 8.237l-3.25 3.52a.75.75 0 01-1.102 0l-3.25-3.52A.75.75 0 119.3 7.22l1.949 2.111z"></path>
+                        <path fill-rule="evenodd" d="M2.5 3.75a.25.25 0 01.25-.25h5.5a.75.75 0 100-1.5h-5.5A1.75 1.75 0 001 3.75v11.5c0 .966.784 1.75 1.75 1.75h6.204c-.171 1.375-.805 2.652-1.77 3.757A.75.75 0 007.75 22h8.5a.75.75 0 00.565-1.243c-.964-1.105-1.598-2.382-1.769-3.757h6.204A1.75 1.75 0 0023 15.25V3.75A1.75 1.75 0 0021.25 2h-5.5a.75.75 0 000 1.5h5.5a.25.25 0 01.25.25v11.5a.25.25 0 01-.25.25H2.75a.25.25 0 01-.25-.25V3.75zM10.463 17c-.126 1.266-.564 2.445-1.223 3.5h5.52c-.66-1.055-1.098-2.234-1.223-3.5h-3.074z"></path>
+                    </svg></a>
+                <a href="#">
+                    <span class="sr-only">Del søgningen</span>
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill-rule="evenodd" d="M20 5.5a3.5 3.5 0 01-6.062 2.385l-5.112 3.021a3.497 3.497 0 010 2.188l5.112 3.021a3.5 3.5 0 11-.764 1.29l-5.112-3.02a3.5 3.5 0 110-4.77l5.112-3.021v.001A3.5 3.5 0 1120 5.5zm-1.5 0a2 2 0 11-4 0 2 2 0 014 0zM5.5 14a2 2 0 100-4 2 2 0 000 4zm13 4.5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg></a>
+                <a href="#">
+                    <span class="sr-only">Gem søgningen</span>
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill-rule="evenodd" d="M5 3.75C5 2.784 5.784 2 6.75 2h10.5c.966 0 1.75.784 1.75 1.75v17.5a.75.75 0 01-1.218.586L12 17.21l-5.781 4.625A.75.75 0 015 21.25V3.75zm1.75-.25a.25.25 0 00-.25.25v15.94l5.031-4.026a.75.75 0 01.938 0L17.5 19.69V3.75a.25.25 0 00-.25-.25H6.75z"></path>
+                    </svg></a>
+                <a href="#">
+                    <span class="sr-only">Sæt søgningen på huskelisten</span>
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill-rule="evenodd" d="M12 .25a.75.75 0 01.673.418l3.058 6.197 6.839.994a.75.75 0 01.415 1.279l-4.948 4.823 1.168 6.811a.75.75 0 01-1.088.791L12 18.347l-6.117 3.216a.75.75 0 01-1.088-.79l1.168-6.812-4.948-4.823a.75.75 0 01.416-1.28l6.838-.993L11.328.668A.75.75 0 0112 .25zm0 2.445L9.44 7.882a.75.75 0 01-.565.41l-5.725.832 4.143 4.038a.75.75 0 01.215.664l-.978 5.702 5.121-2.692a.75.75 0 01.698 0l5.12 2.692-.977-5.702a.75.75 0 01.215-.664l4.143-4.038-5.725-.831a.75.75 0 01-.565-.41L12 2.694z"></path>
+                    </svg></a>
+            </nav>
+            <nav class="searchOptions-menus" aria-label="Search views">
                 {% if previous or next %}
-                    <div class="searchNumber">
-                        <h3 id="searchNumber-header" aria-label="Antal resultater per side" data-collapsible-header>Antal</h3>
-                        <ul class="searchOptions-list" aria-labelledby="searchNumber-header">
+                    <details class="disclosure dropdown">
+                        <summary class="flex singleline button" aria-haspopup="true">
+                            <h3>
+                                <span class="title">Antal</span>
+                                <span class="sr-only">&nbsp;resultater per side</span>
+                            </h3>
+                            <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
+                        </summary>
+                        <div class="content right singleline">    
                         {% for s in size_list %}
-                            <li role="presentation">
                             {% if s.selected %}
                                 <a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}} per side</a>
                             {% else %}
                                 <a href="/search?{{s.link}}">{{s.label}} per side</a>
                             {% endif %}
-                            </li>
                         {% endfor %}
-                        </ul>
-                    </div>
-        
-                    {# UDKOMMENTERET
-                        <h3 id="searchNumber-header" class="searchOptions-header">Antal<span class="sr-only">resultater per side</span></h3>
-                        <ul id="searchNumber-list" data-menu data-menu-right>
-                        {% for s in size_list %}
-                            {% if s.selected %}
-                                <li><a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}} per side</a></li>
-                            {% else %}
-                                <li><a href="/search?{{s.link}}">{{s.label}} per side</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
-                    #}
-    
-                {% endif%}
+                        </div>
+                    </details>
+                {% endif %}
 
-                <div class="searchSort">
-                    <h3 id="searchSort-header" aria-label="Sortér søgeresultaterne" data-collapsible-header>Sortering</h3>
-                    <ul class="searchOptions-list" aria-labelledby="searchSort-header">
+                <details class="disclosure dropdown">
+                    <summary class="flex singleline button" aria-haspopup="true">
+                        <h3>
+                            <span class="title">Sortering</span>
+                            <span class="sr-only">&nbsp;af resultater</span>
+                        </h3>
+                        <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
+                    </summary>
+                    <div class="content right singleline">
                     {% for s in sort_list %}
-                        <li role="presentation">
                         {% if s.selected %}
                             <a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}}</a>
                         {% else %}
                             <a href="/search?{{s.link}}">{{s.label}}</a>
                         {% endif %}
-                        </li>
                     {% endfor %}
-                    </ul>
-                </div>
-
-                {# UDKOMMENTERET
-                    <div class="searchSort" data-menu-wrapper>
-                        <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="sortMenu">
-                            <span class="sr-only">Change the sort order</span>
-                            <span aria-hidden="true">Sortering</span>
-                        </button>
-                        <ul id="sortMenu" role="menu" data-menu-from="right">
-                        {% for s in sort_list %}
-                            {% if s.selected %}
-                                <li role="menuitem">{{s.label}}</li>
-                            {% else %}
-                                <li role="none"><a role="menuitem" href="/search?{{s.link}}">{{s.label}}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
                     </div>
-                #}
+                </details>
 
-                <div class="searchViews">
-                    <h3 id="searchviews-header" aria-label="Visning af søgeresultaterne" data-collapsible-header>Visning</h3>
-                    <ul class="searchOptions-list" aria-labelledby="searchviews-header">
+                <details class="disclosure dropdown">
+                    <summary class="flex singleline button" aria-haspopup="true">
+                        <h3>
+                            <span class="title">Visning</span>
+                            <span class="sr-only">&nbsp;af resultater</span>
+                        </h3>
+                        <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
+                    </summary>
+                    <div class="content right singleline">
                     {% for s in view_list %}
-                        <li role="presentation">
                         {% if s.selected %}
                             <a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}}</a>
                         {% else %}
                             <a href="/search?{{s.link}}">{{s.label}}</a>
                         {% endif %}
-                        </li>
                     {% endfor %}
-                    </ul>
-                </div>
-
-                {# UDKOMMENTERET
-                    <div class="searchViews" data-menu-wrapper>
-                        <button class="menuButton" data-menu-trigger aria-expanded="false" aria-controls="showMenu">
-                            <span class="sr-only">Change the display style</span>
-                            <span aria-hidden="true">Visning</span>
-                        </button>
-                        <ul id="showMenu" role="menu" data-menu-from="right">
-                        {% for v in view_list %}
-                            {% if v.selected %}
-                                <li role="menuitem">{{v.label}}</li>
-                            {% else %}
-                                <li role="none"><a role="menuitem" href="/search?{{v.link}}">{{v.label}}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
                     </div>
-                #}
-            </div>
+                </details>
+            </nav>
         </section>
     {% endif %}
 
@@ -160,133 +141,19 @@
             {% if view == 'gallery' %}
                 <div class="gallery">
                 {% for record in result %}
-                    {#<div class="galleryItem" data-resource-id="{{record.id}}">#}
-                        {% include "components/galleryitem.html" %}
-                    {#</div>#}
+                    {% include "components/galleryitem.html" %}
                 {% endfor %}
                 </div>
             {% elif view == 'list' %}
-                <ul class="searchResults-list">
+                <div class="list">
                 {% for record in result %}
-                    <li class="listitem" data-resource-id="{{record.id}}">
-                        {% if record.thumbnail %}
-                            <div class="listitem-image">
-                                {# {% if record.availability|int > 3 or readingroom or session.get('is_employee') %} #}
-                                {% if record.availability|int > 3 %}
-                                    <img src="{{record.thumbnail}}" alt="" role="presentation">
-                                {% else %}
-                                    <p>Materialet kan ses på læsesalen</p>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-
-                        <div>
-                            {% if record.label %}
-                                <h3 class="listitem-heading">
-                                    <a href="/resources/records/{{record.id}}">
-                                        <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med overskriften.&nbsp;</span>
-                                        {{record.label|truncate(200)}}
-                                    </a>
-                                </h3>
-                                {% if record.summary %}
-                                    <p class="listitem-summary">{{record.summary|truncate(300)}}</p>
-                                {% endif %}
-
-                            {% elif record.summary %}
-                                <h3 class="listitem-summary">
-                                    <a href="/resources/records/{{record.id}}">
-                                        <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelse.&nbsp;</span>
-                                        {{record.summary|truncate(300)}}
-                                    </a>
-                                </h3>
-                                
-                            {% elif record.desc_notes %}
-                                <h3 class="listitem-summary">    
-                                    <a href="/resources/records/{{record.id}}">
-                                        <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelsesnote.&nbsp;</span>
-                                        {{record.desc_notes|truncate(300)}}
-                                    </a>
-                                </h3>
-                            {% else %}
-                                <h3 class="listitem-summary">
-                                    <a href="/resources/records/{{record.id}}">
-                                        <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede.&nbsp;</span>
-                                        <span>Materialet er ikke beskrevet</span>
-                                    </a>
-                                </h3>
-                            {% endif %}
-                        </div>
-
-                        <dl class="listitem-definitions">
-                            {% if record.collectors_label %}
-                                <dt>arkivskaber</dt>
-                                <dd>{{record.collectors_label}}</dd>
-                            {% endif %}
-
-                            {% if record.collection_id %}
-                                <dt>samling</dt>
-                                <dd>{{collection_labels.get(record.collection_id)}}</dd>
-                            {% endif %}
-
-                            {% if record.series and record.collection_id %}
-                                <dt>serie</dt>
-                                <dd>{{record.series[-1]}}</dd>
-                            {% endif %}
-
-                            {% if record.content_types %}
-                                <dt>type</dt>
-                                <dd>{{ record.content_types[0] }}</dd>
-                            {% endif %}
-
-                            {% if record.date_from %}
-                                <dt>datering</dt>
-                                <dd>
-                                {% if record.date_to %}
-                                    {% if record.date_to == record.date_from %}
-                                        {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}}
-                                    {% elif record.date_from[0:6] == record.date_to[0:6] %}
-                                        {{record.date_from[0:4]}}-{{record.date_from[4:6]}}
-                                    {% elif record.date_from[0:4] == record.date_to[0:4] and record.date_from[4:8] == '0101' %}
-                                        {{record.date_from[0:4]}}
-                                    {% elif record.date_from[4:8] == '0101' and record.date_to[4:8] == '1231' %}
-                                        {{record.date_from[0:4]}} ~ {{record.date_to[0:4]}}
-                                    {% else %}
-                                        {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}
-                                    {% endif %}
-                                {% else %}
-                                    {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~
-                                {% endif %}
-                            {% elif record.date_to %}
-                                ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}
-                            {% else %}
-                                Uden datering
-                            {% endif %}
-                            </dd>
-                        </dl>
-                    </li>
+                    {% include 'components/listitem.html' %}
                 {% endfor %}
-                </ul>
+                </div>
             {% endif %}
 
             {% if next or previous %}
-                <nav class="pagination" aria-label="Pagination">
-                    <a {% if first %}href="/search?{{first}}"{% endif %}>
-                        <span class="pagination-icon" aria-hidden="true"><<</span>
-                        <span class="sr-only">Første side</span>
-                    </a>
-                    <a {% if previous %}href="/search?{{previous}}"{% endif %}>
-                        <span class="pagination-icon" aria-hidden="true"><</span>
-                        <span class="sr-only">Forrige side</span>
-                    </a>
-                    <a {% if next %}href="/search?{{next}}"{% endif %}>
-                        <span class="sr-only">Næste side</span>
-                        <span class="pagination-icon" aria-hidden="true">></span>
-                    </a>
-                    <a {% if last %}href="/search?{{last}}"{% endif %}>
-                        <span class="sr-only">Sidste side</span>
-                        <span class="pagination-icon" aria-hidden="true">>></span>
-                    </a>
-                </nav>
+                {% include 'components/pagination.html' %}
             {% endif %}
         {% else %}
             <div class="zeroHits">

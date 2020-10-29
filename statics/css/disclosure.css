@@ -1,0 +1,87 @@
+/* the details-wrapper */
+.disclosure {
+    display: block;
+    position: relative;
+}
+
+/* summary */
+.disclosure summary {
+    cursor: pointer;
+    list-style: none; /* hide triangle */
+}
+.disclosure summary::-webkit-details-marker {
+    display: none; /* hide triangle for chrome */
+}
+.disclosure summary.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.disclosure summary.inline {
+    display: inline-block;
+}
+
+/* text-part of summary */
+.disclosure .title.singleline {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* icon-part of summary */
+.disclosure .icon {
+    fill: currentColor;
+    margin-left: .25em;
+    /* Prevent shrinking when text in the span inside button is overflowing */
+    flex-shrink: 0;
+}
+.disclosure[open] .icon {
+    transform: rotate(180deg);
+}
+/* button-like summary */
+.disclosure .button {
+    border: 1px solid var(--color-tint-7);
+    border-radius: 3px;
+    padding: .3em .7em;
+    appearance: none;
+}
+.disclosure .button:focus {
+    outline: 1px dotted transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(3,102,214,0.3);
+}
+
+/* Disclosure-content */
+
+/* elements inside content */
+.disclosure .content a {
+    display: block;
+    padding: .25em .5em .25em 1em;
+    /* color: rgb(34, 34, 236); */
+}
+.disclosure .content.singleline a,
+.disclosure .content.singleline span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* dropdown-content. Left- and right-aligned */
+.dropdown .content {
+    position: absolute;
+    top: 100%;
+    margin-top: .3em;
+    left: 0;
+    /* min-width: 100%; */
+    z-index: 100;
+    background-color: var(--color-tint-7);
+    padding-top: .3em;
+    padding-bottom: .3em;
+    /* background-clip: padding-box; */
+    box-shadow: 0 8px 24px rgba(149,157,165,0.2);
+    border-radius: .25em;
+}
+.dropdown .content.right {
+    right: 0;
+    left: auto;
+    text-align: right;
+}

@@ -1,60 +1,120 @@
 {#
     Single listitem, generated from the minimal listview of a record, returned by
-    the search-service. Only used by '/search'
-    Uses the 'record'-variable from the template-context
+    the search-service. Used by '/search'
+
+    Params:
+    'session' - global context
+    'record' - gobal context
+    NOT WORKING 'loop' - from the for-loop that iterates the searchresults
 #}
 
-{% set index = "2" %}
-{% set per_page = size|string %}
+<div class="listitem" data-resource-id="{{record.id}}">
+    {% if record.thumbnail %}
+        <div class="listitem-image">
+            {# {% if record.availability|int > 3 or readingroom or session.get('is_employee') %} #}
+            {% if record.availability|int > 3 %}
+                <img src="{{record.thumbnail}}" alt="" role="presentation">
+            {% else %}
+                <p>Materialet kan ses på læsesalen</p>
+            {% endif %}
+        </div>
+    {% endif %}
 
-{% if record.thumbnail %}
-    <div class="listitem-image">
-        {# {% if record.availability|int > 3 or readingroom or session.get('is_employee') %} #}
-        {% if record.availability|int > 3 %}
-            <img src="{{record.thumbnail}}" alt="" role="presentation">
+    <div class="listitem-heading">
+        {% if record.label %}
+            <h3 class="listitem-label">
+                <a href="/resources/records/{{record.id}}">
+                    {# <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med overskriften.&nbsp;</span> #}
+                    {{record.label|truncate(200)}}
+                </a>
+            </h3>
+            {% if record.summary %}
+                <p class="listitem-summary">{{record.summary|truncate(300)}}</p>
+            {% endif %}
+        {% elif record.summary %}
+            <h3 class="listitem-summary">
+                <a href="/resources/records/{{record.id}}">
+                    {# <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelse.&nbsp;</span> #}
+                    {{record.summary|truncate(300)}}
+                </a>
+            </h3>
+        {% elif record.desc_notes %}
+            <h3 class="listitem-summary">    
+                <a href="/resources/records/{{record.id}}">
+                    {# <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelsesnote.&nbsp;</span> #}
+                    {{record.desc_notes|truncate(300)}}
+                </a>
+            </h3>
         {% else %}
-            <p>Materialet kan ses på læsesalen</p>
+            <h3 class="listitem-summary">
+                <a href="/resources/records/{{record.id}}">
+                    {# <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede.&nbsp;</span> #}
+                    <span>Materialet er ikke beskrevet</span>
+                </a>
+            </h3>
         {% endif %}
     </div>
-{% endif %}
 
-<div>
-    {% if record.label %}
-        <h3 class="listitem-heading">
-            <a href="/resources/records/{{record.id}}">
-                <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med overskriften.&nbsp;</span>
-                {{record.label|truncate(200)}}
-            </a>
-        </h3>
-        {% if record.summary %}
-            <p class="listitem-summary">{{record.summary|truncate(300)}}</p>
-        {% endif %}
+    <table class="metadata-table">
+        <caption class="sr-only">Beskrivelse af materialet</caption>
+        <tbody>
+            {% if record.collectors_label %}
+                <tr>
+                    <th scope="row">arkivskaber</th>
+                    <td>{{record.collectors_label}}</td>
+                </tr>
+            {% endif %}
 
-    {% elif record.summary %}
-        <h3 class="listitem-summary">
-            <a href="/resources/records/{{record.id}}">
-                <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelse.&nbsp;</span>
-                {{record.summary|truncate(300)}}
-            </a>
-        </h3>
-        
-    {% elif record.desc_notes %}
-        <h3 class="listitem-summary">    
-            <a href="/resources/records/{{record.id}}">
-                <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelsesnote.&nbsp;</span>
-                {{record.desc_notes|truncate(300)}}
-            </a>
-        </h3>
-    {% else %}
-        <h3 class="listitem-summary">
-            <a href="/resources/records/{{record.id}}">
-                <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede.&nbsp;</span>
-                <span>Materialet er ikke beskrevet</span>
-            </a>
-        </h3>
-    {% endif %}
+            {% if record.collection_id %}
+                <tr>
+                    <th scope="row">samling</th>
+                    <td>{{collection_labels.get(record.collection_id)}}</td>
+                </tr>
+            {% endif %}
+
+            {% if record.series and record.collection_id %}
+                <tr>
+                    <th scope="row">serie</th>
+                    <td>{{record.series[-1]}}</td>
+                </tr>
+            {% endif %}
+
+            {% if record.content_types %}
+                <tr>
+                    <th scope="row">type</th>
+                    <td>{{ record.content_types[0] }}</td>
+                </tr>
+            {% endif %}
+
+            <th scope="row">datering</th>
+            <td>
+                {% if record.date_from %}
+                    {% if record.date_to %}
+                        {% if record.date_to == record.date_from %}
+                            {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}}
+                        {% elif record.date_from[0:6] == record.date_to[0:6] %}
+                            {{record.date_from[0:4]}}-{{record.date_from[4:6]}}
+                        {% elif record.date_from[0:4] == record.date_to[0:4] and record.date_from[4:8] == '0101' %}
+                            {{record.date_from[0:4]}}
+                        {% elif record.date_from[4:8] == '0101' and record.date_to[4:8] == '1231' %}
+                            {{record.date_from[0:4]}} ~ {{record.date_to[0:4]}}
+                        {% else %}
+                            {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}
+                        {% endif %}
+                    {% else %}
+                        {{record.date_from[0:4]}}-{{record.date_from[4:6]}}-{{record.date_from[6:8]}} ~
+                    {% endif %}
+                {% elif record.date_to %}
+                    ~ {{record.date_to[0:4]}}-{{record.date_to[4:6]}}-{{record.date_to[6:8]}}
+                {% else %}
+                    Uden datering
+                {% endif %}
+            </td>
+        </tbody>
+    </table>
 </div>
 
+{#
 <dl class="listitem-definitions">
     {% if record.collectors_label %}
         <dt>arkivskaber</dt>
@@ -101,3 +161,4 @@
     {% endif %}
     </dd>
 </dl>
+#}

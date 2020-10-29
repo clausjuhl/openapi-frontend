@@ -2,16 +2,26 @@
 .resource-representation {
     margin-bottom: 1em;;
 }
-.resource-relations {
+.resource-pagination {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 1em;
+    border: 1px solid #e2e2e2;
+    padding: .3em .6em;
+    background-color: whitesmoke;
+    border-radius: 3px;
+    margin-bottom: 1.5em;
 }
-@media (min-width: 45em) {
+.resource-portrait {
+    /* box-shadow: 0 12px 48px rgba(15, 17, 20, 0.3); */
+    box-shadow: 0 8px 24px rgba(149,157,165,0.2);
+}
+
+
+@media (min-width: 50em) {
     .resource-hero {
         display: grid;
-        grid-template-columns: minmax(15em, 40%) 1fr;
+        grid-template-columns: minmax(15em, 45%) 1fr;
         grid-template-rows: auto 1fr;
         column-gap: 2em;
         padding-bottom: 2em;
@@ -20,7 +30,7 @@
         grid-column: 1;
         grid-row: 1 / span 2;
     }
-    .resource-relations {
+    .resource-pagination {
         grid-column: 2;
         grid-row: 1;
     }
@@ -30,59 +40,32 @@
     }
 }
 
+/* resource field-disclosures */
+.resource .field .disclosure {
+    /* display: inline-block !important; */
+}
+.resource .field summary {
+    color: var(--link-color);
+    border: 1px solid lightgray;
+    border-radius: 2px;
+    padding: .2em .4em;
+}
+.resource-core .field-value {
+    flex-basis: 20ch;
+}
+
 /* Resource-headings */
 .resource h1 {
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1.4em;
     padding-bottom: 1em;
+    font-weight: normal;
     font-style: italic;
 }
 .resource h2 {
-    margin: 0;
+    margin: 1em 0 .6em 0;
     font-size: 1.3em;
+    font-weight: normal;
     padding-bottom: .2em;
     border-bottom: 1px solid var(--color-gray);
-    margin-bottom: .6em;
-}
-
-/* Metadata-tables */
-.resource table {
-    text-align: left;
-    vertical-align: baseline;
-    width: 100%;
-    padding-bottom: 2em;
-}
-.resource table caption {
-    text-align: left;
-}
-.resource table tr {
-    position: relative;
-    vertical-align: baseline;
-}
-.resource table th {
-    width: 9em;
-    white-space: nowrap;
-    overflow-x: hidden;
-    text-transform: uppercase;
-    font-weight: normal;
-    font-size: 85%;
-    position: absolute;
-}
-.resource table td {
-    padding-top: 1.5em;
-    padding-bottom: 2em;
-}
-
-@media (min-width: 45em) {
-    .resource table tr {
-        position: initial;
-    }
-    .resource table th {
-        font-size: 80%;
-        position: initial;
-    }
-    .resource table td {
-        padding-top: 0;
-        padding-bottom: .6em;
-    }
 }

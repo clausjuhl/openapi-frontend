@@ -1,0 +1,42 @@
+/* Metadata-tables */
+.metadata-table {
+    text-align: left;
+    vertical-align: baseline;
+    width: 100%;
+    padding-bottom: 2em;
+}
+.metadata-table caption {
+    text-align: left;
+}
+.metadata-table tr {
+    position: relative;
+    vertical-align: baseline;
+}
+.metadata-table th {
+    max-width: 12em;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-transform: uppercase;
+    font-weight: normal;
+    font-size: 85%;
+    position: absolute;
+}
+.metadata-table td {
+    padding-top: 1.5em; /* necessary to place under the absolutely-placed th */
+    padding-bottom: 2em;
+    padding-left: .8em;
+}
+
+@media (min-width: 45em) {
+    .metadata-table tr {
+        position: initial;
+    }
+    .metadata-table th {
+        font-size: 80%;
+        position: initial;
+    }
+    .metadata-table td {
+        padding-top: 0;
+        padding-bottom: .6em;
+    }
+}

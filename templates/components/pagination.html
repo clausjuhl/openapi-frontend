@@ -1,17 +1,17 @@
 <nav class="pagination" aria-label="Pagination">
-    <a {% if first %}href="/search?{{first}}"{% else %}href="#" aria-disabled="true"{% endif %}>
+    <a class="btn" {% if first %}href="/search?{{first}}"{% else %}href="#" aria-disabled="true"{% endif %}>
         <span class="pagination-icon" aria-hidden="true"><<</span>
         <span class="sr-only">Første side</span>
     </a>
-    <a {% if previous %}href="/search?{{previous}}"{% else %}href="#" aria-disabled="true"{% endif %}>
+    <a class="btn" {% if previous %}href="/search?{{previous}}"{% else %}href="#" aria-disabled="true"{% endif %}>
         <span class="pagination-icon" aria-hidden="true"><</span>
         <span class="sr-only">Forrige side</span>
     </a>
-    <a {% if next %}href="/search?{{next}}"{% else %}href="#" aria-disabled="true"{% endif %}>
+    <a class="btn" {% if next %}href="/search?{{next}}"{% else %}href="#" aria-disabled="true"{% endif %}>
         <span class="sr-only">Næste side</span>
         <span class="pagination-icon" aria-hidden="true">></span>
     </a>
-    <a {% if last %}href="/search?{{last}}"{% else %}href="#" aria-disabled="true"{% endif %}>
+    <a class="btn" {% if last %}href="/search?{{last}}"{% else %}href="#" aria-disabled="true"{% endif %}>
         <span class="sr-only">Sidste side</span>
         <span class="pagination-icon" aria-hidden="true">>></span>
     </a>

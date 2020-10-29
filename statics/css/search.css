@@ -6,16 +6,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.2em;
 }
 
-/* Child of .searchPagination */
+/* Child of .searchPagination, also has class .btn */
 .pagination a {
-    display: inline-block;
-    border: 2px solid;
-    border-radius: .25em;
     width: 1.2em;
-    padding: .25em .5em;
     margin-left: .3em;
     text-align: center;
 }
@@ -30,53 +25,73 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.2em;
+    padding: .5em .3em;
+    background-color: whitesmoke;
+    border-top: 1px solid beige;
+    border-bottom: 1px solid beige;
+}
+.searchOptions-links {
+    display: flex;
+    column-gap: .4em;
+}
+.searchOptions-links a {
+    display: flex;
+    align-items: center;
 }
 /* Child of .searchOptions */
 .searchOptions-menus {
     display: flex;
+    align-items: center;
+    column-gap: .4em;
 }
+
 .searchOptions-menus h3 {
+    display: inline-block;
     margin: 0;
-    margin-left: .5em;
     padding: 0;
     font-size: 1em;
     font-weight: 400;
 }
-.searchOptions-menus button {
-    width: 100%;
-    padding: .4em;
-    color: var(--color-dark);
-    background-color: var(--color-tint-9);
-    border: 1px solid var(--color-tint-6);
-}
 
-.searchOptions-list {
-    position: absolute;
-    z-index: 10;
-    white-space: nowrap;
-    right: 0;
-    left: auto;
-    margin-top: .3em;
-    text-align: right;
-    background-color: var(--color-lightergray);
-    border-radius: .25em;
-    border-left: 1px solid var(--color-lightgray);
-    border-right: 1px solid var(--color-lightgray);
-    border-bottom: 1px solid var(--color-lightgray);
-}
+/* .searchOptions-menus .menu-button {
+    border-color: var(--color-tint-6);
+} */
+
 .searchOptions-list a {
     display: block;
     padding: .3em;
     border-bottom: 1px solid rgb(240, 240, 240);
     background-color: rgb(245, 245, 245);
 }
+
 .searchOptions-list a:not([aria-current="page"]):hover {
     background-color: rgb(235, 235, 235);
 }
 .searchOptions-list a:focus,
 .searchOptions-list a:active {
     outline: 1px solid;
+}
+
+/* Facets and filters as details */
+.searchFilters .filter-title {
+    margin: .8em 0 0;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 85%;
+}
+.searchFilters .disclosure .content {
+    background-color: var(--color-tint-9);
+    border: 1px solid var(--color-tint-7);
+    border-top: 0;
+}
+
+.searchFilters .disclosure[open] .button {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0; 
+}
+
+.facet {
+    margin-top: .5em;
 }
 
 /* Facets and filters - implements collapsible section with trees, simple ul's or forms */
@@ -96,11 +111,11 @@
     width: 100%;
     padding: .4em;
     color: var(--color-dark);
-    background-color: var(--color-tint-8);
-    border: 1px solid var(--color-tint-6);
+    background-color: var(--color-tint-9);
+    border: 1px solid var(--color-tint-7);
 }
 .facetHeader button:hover {
-    background-color: var(--color-tint-7);
+    background-color: var(--color-tint-8);
 }
 .facetHeader button[aria-expanded="true"] {
     border-bottom-left-radius: 0;
@@ -144,135 +159,10 @@ li[aria-expanded="true"] > .facetItem-header {
     background-color: rgb(230, 230, 230);
 }
 
-
-
-/* List-view */
-.listitem {
-    display: grid;
-    grid-template-columns: minmax(6em, auto) 1fr;
-    /* grid-template-rows: auto; */
-    gap: .6em;
-    padding-top: .5em;
-    padding-bottom: .5em;
-    /* border: 1px solid transparent; */
-    border-bottom: 1px solid var(--color-lightgray);
-}
-@media (min-width: 45em) {
-    .listitem {
-        padding: .5em;
-    }
-}
-.listitem:hover {
-    background-color: var(--color-tint-9);
-}
-
-.listitem-image {
-    grid-row: 1;
-    /* grid-column: 1; */
-}
-.listitem-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.listitem-heading {
-    grid-row: 1;
-    /* grid-column: 2; */
-    font-weight: bold;
-    margin: 0 0 .4em;
-}
-.listitem-summary {
-    margin: 0;
-    font-size: 90%;
-}
-.listitem-definitions {
-    grid-row: 2;
-    grid-column: 1/ span 2;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: min-content 1fr;
-    column-gap: .6em;
-    align-items: center;
-}
-.listitem-definitions dt {
-    grid-column: 1;
-    margin: 0 0 .2em;
-    padding: 0;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: .7em;
-    color: #424242;
-}
-.listitem-definitions dd {
-    grid-column: 2;
-    margin: 0 0 .4em;
-    padding: 0;
-    font-size: .8em;
-}
-
-/* Gallery-view */
-/* https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/ */
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1em;
-    font-size: 85%;
-}
-.galleryItem {
-    display: grid;
-    grid-template-rows: 80% 20%;
-    height: 300px;
-    position: relative;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    text-decoration: none;
-}
-.galleryItem:active,
-.galleryItem:focus {
-    outline: 2px solid var(--color-dark);
-}
-.galleryImage img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.galleryLabel {
-    background-color: rgb(232, 232, 232);
-    padding: .5em .8em;
-}
-.galleryDescription {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /* height: 100%;
-    width: 100%; */
-    margin: 0;
-    padding: 1em;
-    background-color: var(--color-dark);
-    color: var(--color-light);
-    opacity: 0;
-    transition: 500ms;
-    overflow-y: scroll;
-}
-.galleryDescription h4 {
-    margin: 0 0 .4em;
-    color: var(--color-light);
-}
-
-.galleryItem:hover .galleryDescription,
-.galleryItem:active .galleryDescription,
-.galleryItem.active .galleryDescription {
-    opacity: .9;
-}
-
-@media (min-width: 45em) {
+@media (min-width: 50em) {
     .searchPage {
         display: grid;
-        grid-template-columns: 18em auto;
+        grid-template-columns: 17em auto;
         grid-template-rows: repeat(2, min-content) 1fr;
         column-gap: 2em;
     }
@@ -289,22 +179,14 @@ li[aria-expanded="true"] > .facetItem-header {
     }
     .searchPagination {
         grid-column: 2;
-        padding-left: .5em; /* to align vertically with listitems */
         /* grid-row: 2; */
     }
     .searchOptions {
         grid-column: 2;
-        padding-left: .5em; /* to align vertically with listitems */
         /* grid-row: 3; */
     }
     .searchResults {
         grid-column: 2;
-        /* grid-row: 4;     */
+        /* grid-row: 4; */
     }
-}
-
-.searchNumber,
-.searchSort,
-.searchViews {
-    position: relative;
 }

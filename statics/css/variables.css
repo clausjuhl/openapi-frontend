@@ -2,6 +2,8 @@
     --bg-color-header: #2d3748;
     --bg-color-footer: grey;
     /* Basic font colors */
+    /* --link-color:  rgb(3, 102, 214); */
+    --link-color: rgb(0, 0, 238);
     --color-light: #f7fafc;
     --color-dark: #2d3748;
     /* Grays from No Style System */
