@@ -5,6 +5,8 @@ from starlette.requests import Request
 
 templates = Jinja2Templates(directory="templates")
 # templates.env.filters['marked'] = marked_filter
+templates.env.trim_blocks = True
+templates.env.lstrip_blocks = True
 
 
 def render(

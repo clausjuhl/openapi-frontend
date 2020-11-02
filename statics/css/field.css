@@ -19,6 +19,28 @@
     flex-grow: 10;
     flex-shrink: 1;
     flex-basis: 50ch;
-    padding-top: .2em;
-    padding-bottom: .8em;
+    margin-top: .2em;
+    margin-bottom: .8em;
+}
+
+.media--reverse {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    align-items: baseline;    
+}
+.media {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+.media-object {
+    flex-grow: 10;
+    flex-shrink: 1; /* default */
+    width: 20ch;
+    margin-right: .8em;
+}
+.media-body {
+    flex-grow: 10;
+    flex-shrink: 1; /* default */
+    flex-basis: 20ch;
 }

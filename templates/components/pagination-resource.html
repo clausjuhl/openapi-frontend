@@ -2,21 +2,13 @@
 <nav class="resource-pagination" aria-label="Paginering">
     <div>
         {% if prev_item %}
-            <a class="" href="/resources/records/{{prev_item}}">
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M9.78 12.78a.75.75 0 01-1.06 0L4.47 8.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L6.06 8l3.72 3.72a.75.75 0 010 1.06z"></path></svg>
-                <span>Forrige</span><span class="sr-only">resultat</span>
-            </a>
+            <a class="link prev" href="/resources/records/{{prev_item}}"><span>Forrige</span><span class="sr-only">resultat</span></a>
         {% endif %}
         {% if next_item %}
-            <a class="" href="/resources/records/{{next_item}}">
-                <span>Næste</span><span class="sr-only">resultat</span>
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"></path></svg>
-            </a>
+            <a class="link next" href="/resources/records/{{next_item}}"><span>Næste</span><span class="sr-only">resultat</span></a>
         {% endif %}
     </div>
     {% if current_search %}
-        <a class="" href="/search?{{current_search}}">
-            <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M9.78 12.78a.75.75 0 01-1.06 0L4.47 8.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L6.06 8l3.72 3.72a.75.75 0 010 1.06z"></path></svg>            
-            <span>Til søgeresultatet</span></a>
-    {% endif %}
+        <div><a class="link" href="/search?{{current_search}}">Til søgeresultatet</a></div>    
+        {% endif %}
 </nav>
