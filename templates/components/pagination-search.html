@@ -1,0 +1,14 @@
+<nav class="pagination" aria-label="Pagination">
+    <a class="btn" {% if first %}href="/search?{{first}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Første side">
+        <span class="pagination-icon" aria-hidden="true"><<</span>
+    </a>
+    <a class="btn" {% if previous %}href="/search?{{previous}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Forrige side">
+        <span class="pagination-icon" aria-hidden="true"><</span>
+    </a>
+    <a class="btn" {% if next %}href="/search?{{next}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Næste side">
+        <span class="pagination-icon" aria-hidden="true">></span>
+    </a>
+    <a class="btn" {% if last %}href="/search?{{last}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Sidste side">
+        <span class="pagination-icon" aria-hidden="true">>></span>
+    </a>
+</nav>

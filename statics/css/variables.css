@@ -1,6 +1,7 @@
 :root {
     --bg-color-header: #2d3748;
-    --bg-color-footer: grey;
+    --bg-color-footer: #5f5f5f;
+    --bg-color-hover: #e9e9e9;
     /* Basic font colors */
     /* --link-color:  rgb(3, 102, 214); */
     --link-color: rgb(0, 0, 238);

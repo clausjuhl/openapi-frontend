@@ -96,6 +96,7 @@ async def resource(req: Request):
             context["current_search"] = traverse.get("cur_results")
 
         context["resource"] = format_record(resp.get("data"))
+
         if collection and collection in ["creators", "collectors"]:
             collection = resource.get("domain")
         context["collection"] = collection

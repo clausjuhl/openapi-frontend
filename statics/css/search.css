@@ -1,11 +1,68 @@
+.searchPage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: .5em .7em 2em .7em;
+}
 .searchPage h2 {
     font-size: 1.3em;
 }
 
-.searchPagination {
+.searchToolbar {
     display: flex;
+    flex-wrap: wrap-reverse;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #e2e2e2;
+}
+.searchToolbar .search-actions {
+    display: flex;
+    flex-grow: 1;
+    padding: .4em 0;
+    padding-left: .7em;
+    min-width: 18em;
+}
+.searchToolbar .search-actions a {
+    display: flex;
+    align-items: center;
+    padding: 0 .5em;
+    border-right: 1px solid #e2e2e2;
+}
+.searchToolbar .search-views {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 .7em;
+}
+.searchToolbar .search-pagination {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    padding: .5em 0;
+    padding-right: .7em;
+    min-width: 18em;
+    background-color: var(--color-tint-8);
+}
+@media (min-width: 46em) {
+    .searchToolbar .search-pagination {
+        background-color: transparent;
+    }
+}
+
+.searchPagination {
+    display: flex;
+    /* flex-wrap: wrap-reverse; */
+    justify-content: space-between;
+    align-items: center;
+    /* row-gap: .5em; */
+    margin-bottom: .5em;
+}
+.searchPagination nav,
+.searchPagination-counter {
+    display: flex;
+    flex-grow: 1;
+}
+.searchPagination nav {
+    justify-content: flex-end;
 }
 
 /* Child of .searchPagination, also has class .btn */
@@ -24,6 +81,7 @@
 .searchOptions {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
     padding: .5em .3em;
     background-color: whitesmoke;
@@ -32,15 +90,14 @@
 }
 .searchOptions-links {
     display: flex;
-    column-gap: .4em;
+    flex-grow: 1;
 }
-.searchOptions-links a {
-    display: flex;
-    align-items: center;
-}
+
 /* Child of .searchOptions */
 .searchOptions-menus {
     display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
     align-items: center;
     column-gap: .4em;
 }
@@ -84,6 +141,9 @@
 .searchFilters .disclosure[open] .button {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0; 
+}
+.searchFilters .disclosure .title {
+    font-size: 1em;
 }
 
 .facet {
@@ -162,6 +222,7 @@ li[aria-expanded="true"] > .facetItem-header {
         grid-template-rows: repeat(2, min-content) 1fr;
         column-gap: 2em;
     }
+    .searchfilters,
     .searchFilters {
         grid-column: 1;
         grid-row: 1 / 4;

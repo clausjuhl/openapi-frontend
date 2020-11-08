@@ -1,3 +1,68 @@
+{% macro get_interval(r) %}
+    {% set temp_from = r.date_from.replace("-", "") %}
+    {% set temp_to = r.date_to.replace("-", "") %}
+
+    {% if temp_from|length == 4 %}
+        {% set from = temp_from + "0101" %}
+    {% elif temp_from|length == 6 %}
+        {% set from = temp_from + "01" %}
+    {% else %}
+        {% set from = temp_from %}
+    {% endif %}
+
+    {% if temp_to|length == 4 %}
+        {% set to = temp_to + "1231" %}
+    {% elif temp_to|length == 6 %}
+        {% if temp_to[4:6] in ["01", "03", "05", "07", "08", "10", "12"] %}
+            {% set to = temp_to + "31" %}
+        {% elif temp_to[4:6] in ["04", "06", "09", "11"] %}
+            {% set to = temp_to + "30" %}
+        {% else %}
+            {% set to = temp_to + "28" %}
+        {% endif %}
+    {% else %}
+        {% set to = temp_to %}
+    {% endif %}
+
+    {% set months = {
+        "01": "januar",
+        "02": "februar",
+        "03": "marts",
+        "04": "april",
+        "05": "maj",
+        "06": "juni",
+        "07": "juli",
+        "08": "august",
+        "09": "september",
+        "10": "oktober",
+        "11": "november",
+        "12": "december"
+    } %}
+
+    {% if from %}
+        {% if to %}
+            {% if to == from %}
+                <span>{{ from[6:]|int|string }}. {{ months.get(from[4:6]) }} {{from[0:4]}}</span>
+            {% elif from[0:7] == to[0:7] %}
+                <span>{{ months.get(from[5:7]) }} {{ from[0:4]}}</span>
+            {% elif (from[0:4] == to[0:4]) and (from[4:] == '0101') %}
+                <span>{{ from[0:4] }}</span>
+            {% elif from[4:] == '0101' and (to[4:] == '1231') %}
+                <span>{{ from[0:4] }} - {{ to[0:4] }}</span>
+            {% else %}
+                <span>{{ from[6:]|int|string }}. {{ months.get(from[4:6]) }} {{from[0:4]}} -</span>
+                <span>{{ to[6:]|int|string }}. {{ months.get(to[4:6]) }} {{to[0:4]}}</span>
+            {% endif %}
+        {% else %}
+            <span>{{ from[6:]|int|string }}. {{ months.get(from[4:6]) }} {{from[0:4]}} -</span>
+        {% endif %}
+    {% elif to %}
+        <span>~ {{ to[6:]|int|string }}. {{ months.get(to[4:6]) }} {{to[0:4]}}</span>
+    {% else %}
+        <span>Udateret</span>
+    {% endif %}
+{%- endmacro %}
+
 
 {% macro iterate_dict(dict_) %}
     <dl>
@@ -30,6 +95,7 @@
     {% endfor %}
 {%-endmacro %}
 
+
 {#
 {% macro iterate_dict(dict_) %}
     {% for key, value in dict_.items() %}
@@ -49,6 +115,7 @@
         </li>
     {% endfor %}
 {% endmacro %}
+
 
 {% macro iterate_list(list_) %}
     {% for idx in list_ %}

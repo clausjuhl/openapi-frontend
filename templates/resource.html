@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% import "macros.html" as macros %}
+{% from "macros.html" import get_interval %}
 
 {% set pageclass = "resourcepage" %}
 
@@ -13,28 +13,6 @@
 {% if r.representations %}
     {% set record_type = r.representations.get('record_type') %}
 {% endif %}
-{% if r.date_from %}
-    {% if r.date_to %}
-        {% if r.date_to == r.date_from %}
-            {% set date = r.date_from %}
-        {% elif r.date_from[0:7] == r.date_to[0:7] %}
-            {% set date = r.date_from[0:7] %}
-        {% elif r.date_from[0:4] == r.date_to[0:4] and (r.date_from[5:10] == '01-01') %}
-            {% set date = r.date_from[0:4] %}
-        {% elif r.date_from[5:10] == '01-01' and (r.date_to[5:10] == '12-31') %}
-            {% set date = r.date_from[0:4] + "-" + r.date_to[0:4] %}
-        {% else %}
-            {% set date = r.date_from + "-" + r.date_to %}
-        {% endif %}
-    {% else %}
-        {% set date = r.date_from + "-" %}
-    {% endif %}
-{% elif r.date_to %}
-    {% set date = "~" + r.date_to %}
-{% else %}
-    {% set date = Udateret %}
-{% endif %}
-
 
 {# Determine title #}
 {% if collection in ['people', 'organisations', 'events', 'locations', 'objects', 'collections'] %}
@@ -66,558 +44,573 @@
 
 {% block content %}
 <article class="resource" aria-labelledby="resource-title">
-    <div class="resource-hero">
-        <div class="resource-representation">
-            {% if r.portrait and legal_id == 1 and contractual_id > 2 %}
-                {% if availability_id == 4 or request.session.get('is_employee') %}
-                    {% if r.representations and record_type == 'video' %}
-                        <div class="resource-video">
-                            <a href="https://vimeo.com/{{r.representations.get('vimeo_id')}}">
-                                <img class="resource-portrait" src="{{r.portrait}}"/>
-                            </a>
-                        </div>
-                    {% elif r.representations and record_type == 'image' %}
-                        <div class="resource-image">
-                            <a href="{{r.representations.get('large_image')}}" aria-label="Hent stort billede af materialet">
-                                <img class="resource-portrait" src="{{r.portrait}}"/>
-                            </a>
-                        </div>
-                    {% elif r.representations and record_type == 'web_document' %}
-                        <div class="resource-document">
-                            <a href="{{r.representations.get('web_document_url')}}" aria-label="Hent web-dokumentet">
-                                <img class="resource-portrait" src="{{r.portrait}}"/>
-                            </a>
-                        </div>
-                        <p>Klik på billedet for at hente pdf-dokumentet.</p>
+    <div class="resource-toolbar">
+        <div class="resource-toolbar-inner">
+            <div class="resource-actions">
+                <!-- <svg><use href="{{ url_for('static', path='/fonts/svgs.svg#print') }}"></use></svg> -->
+                <a href="#" title="Gem materialet">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill-rule="evenodd" d="M5 3.75C5 2.784 5.784 2 6.75 2h10.5c.966 0 1.75.784 1.75 1.75v17.5a.75.75 0 01-1.218.586L12 17.21l-5.781 4.625A.75.75 0 015 21.25V3.75zm1.75-.25a.25.25 0 00-.25.25v15.94l5.031-4.026a.75.75 0 01.938 0L17.5 19.69V3.75a.25.25 0 00-.25-.25H6.75z"></path>
+                    </svg></a>
+                <a href="#" title="Sæt materialet på huskelisten">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill-rule="evenodd" d="M12 .25a.75.75 0 01.673.418l3.058 6.197 6.839.994a.75.75 0 01.415 1.279l-4.948 4.823 1.168 6.811a.75.75 0 01-1.088.791L12 18.347l-6.117 3.216a.75.75 0 01-1.088-.79l1.168-6.812-4.948-4.823a.75.75 0 01.416-1.28l6.838-.993L11.328.668A.75.75 0 0112 .25zm0 2.445L9.44 7.882a.75.75 0 01-.565.41l-5.725.832 4.143 4.038a.75.75 0 01.215.664l-.978 5.702 5.121-2.692a.75.75 0 01.698 0l5.12 2.692-.977-5.702a.75.75 0 01.215-.664l4.143-4.038-5.725-.831a.75.75 0 01-.565-.41L12 2.694z"></path>
+                    </svg></a>
+                <a href="#" title="Print siden">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M11.25 9.331V.75a.75.75 0 011.5 0v8.58l1.949-2.11A.75.75 0 1115.8 8.237l-3.25 3.52a.75.75 0 01-1.102 0l-3.25-3.52A.75.75 0 119.3 7.22l1.949 2.111z"></path>
+                        <path fill-rule="evenodd" d="M2.5 3.75a.25.25 0 01.25-.25h5.5a.75.75 0 100-1.5h-5.5A1.75 1.75 0 001 3.75v11.5c0 .966.784 1.75 1.75 1.75h6.204c-.171 1.375-.805 2.652-1.77 3.757A.75.75 0 007.75 22h8.5a.75.75 0 00.565-1.243c-.964-1.105-1.598-2.382-1.769-3.757h6.204A1.75 1.75 0 0023 15.25V3.75A1.75 1.75 0 0021.25 2h-5.5a.75.75 0 000 1.5h5.5a.25.25 0 01.25.25v11.5a.25.25 0 01-.25.25H2.75a.25.25 0 01-.25-.25V3.75zM10.463 17c-.126 1.266-.564 2.445-1.223 3.5h5.52c-.66-1.055-1.098-2.234-1.223-3.5h-3.074z"></path>
+                    </svg></a>
+                <a href="#" title="Del siden">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill-rule="evenodd" d="M20 5.5a3.5 3.5 0 01-6.062 2.385l-5.112 3.021a3.497 3.497 0 010 2.188l5.112 3.021a3.5 3.5 0 11-.764 1.29l-5.112-3.02a3.5 3.5 0 110-4.77l5.112-3.021v.001A3.5 3.5 0 1120 5.5zm-1.5 0a2 2 0 11-4 0 2 2 0 014 0zM5.5 14a2 2 0 100-4 2 2 0 000 4zm13 4.5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg></a>
+                <a href="#" title="Gem materialet">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill-rule="evenodd" d="M5 3.75C5 2.784 5.784 2 6.75 2h10.5c.966 0 1.75.784 1.75 1.75v17.5a.75.75 0 01-1.218.586L12 17.21l-5.781 4.625A.75.75 0 015 21.25V3.75zm1.75-.25a.25.25 0 00-.25.25v15.94l5.031-4.026a.75.75 0 01.938 0L17.5 19.69V3.75a.25.25 0 00-.25-.25H6.75z"></path>
+                    </svg></a>
+                <a href="#" title="Sæt materialet på huskelisten">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill-rule="evenodd" d="M12 .25a.75.75 0 01.673.418l3.058 6.197 6.839.994a.75.75 0 01.415 1.279l-4.948 4.823 1.168 6.811a.75.75 0 01-1.088.791L12 18.347l-6.117 3.216a.75.75 0 01-1.088-.79l1.168-6.812-4.948-4.823a.75.75 0 01.416-1.28l6.838-.993L11.328.668A.75.75 0 0112 .25zm0 2.445L9.44 7.882a.75.75 0 01-.565.41l-5.725.832 4.143 4.038a.75.75 0 01.215.664l-.978 5.702 5.121-2.692a.75.75 0 01.698 0l5.12 2.692-.977-5.702a.75.75 0 01.215-.664l4.143-4.038-5.725-.831a.75.75 0 01-.565-.41L12 2.694z"></path>
+                    </svg></a>
+            </div>
+            <div class="resource-toc">
+                <details class="disclosure dropdown">
+                    <summary class="flex singleline">
+                        <span class="title">
+                            <span class="sr-only">Indholdsfortegnelse</span>
+                            <span aria-hidden="true">Indhold</span>
+                        </span>
+                        <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
+                    </summary>
+                    <div class="content right singleline">
+                        <ul>
+                            <li><a href="#resource-title">Titel</a></li>
+                            <li><a href="#description">Beskrivelse</a></li>
+                            {% if r.desc_data %}
+                                <li><a href="#descriptiondata">Beskrivelsesdata</a></li>
+                            {% endif %}
+                            {% if r.locations or r.people or r.events or r.organisations or r.objects %}
+                                <li><a href="#relations">Relationer</a></li>
+                            {% endif %}
+                            <li><a href="#rights">Rettigheder</a></li>
+                            <li><a href="#availability">Tilgængelighed</a></li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+            {% if prev_item or next_item %}
+                <div class="resource-navigation">
+                    {% include "components/pagination-resource.html" %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="resource-wrapper">
+        <div class="resource-hero">
+            <div class="resource-representation">
+                {% if r.portrait and legal_id == 1 and contractual_id > 2 %}
+                    {% if availability_id == 4 or request.session.get('is_employee') %}
+                        {% if r.representations and record_type == 'video' %}
+                            <div class="resource-video">
+                                <a href="https://vimeo.com/{{r.representations.get('vimeo_id')}}">
+                                    <img class="resource-portrait" src="{{r.portrait}}"/>
+                                </a>
+                            </div>
+                        {% elif r.representations and record_type == 'image' %}
+                            <div class="resource-image">
+                                <a href="{{r.representations.get('large_image')}}" aria-label="Hent stort billede af materialet">
+                                    <img class="resource-portrait" src="{{r.portrait}}"/>
+                                </a>
+                            </div>
+                        {% elif r.representations and record_type == 'web_document' %}
+                            <div class="resource-document">
+                                <a href="{{r.representations.get('web_document_url')}}" aria-label="Hent web-dokumentet">
+                                    <img class="resource-portrait" src="{{r.portrait}}"/>
+                                </a>
+                            </div>
+                            <p>Klik på billedet for at hente pdf-dokumentet.</p>
+                        {% endif %}
+                    {% else %}
+                        <p>Låseikon</p>
+                        <p>Materialet kan ses på læsesalen.</p>
                     {% endif %}
                 {% else %}
-                    <p>Låseikon</p>
-                    <p>Materialet kan ses på læsesalen.</p>
+                    <p>Ikon som repræsenterer materialet</p>
                 {% endif %}
-            {% else %}
-                <p>Ikon som repræsenterer materialet</p>
+                {% if r.latitude %}
+                    <div class="resource-map">
+                        <img src="https://api.mapbox.com/styles/v1/cjk/ckg7ka2cv34n419nr8os076f3/static/pin-m-circle+7da2ca({{r.longitude}},{{r.latitude}})/{{r.longitude}},{{r.latitude}},17/640x640@2x?access_token=pk.eyJ1IjoiY2prIiwiYSI6ImNqZDdmanYzaDBjNnUzNHA1d2xldWZ4NjMifQ.53Ja6IuQ88Vr3UhrV2Ybmg">
+                        <span class="align-right" style="font-size:75%">
+                            © <a href='https://www.mapbox.com/about/maps/'>Mapbox</a>
+                            © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="resource-core">
+                <h1 id="resource-title">{{label}}</h1>
+                <ul aria-label="Hovedinformation">
+                    {% if r.collectors %}
+                    <li>
+                        <div class="field">
+                            <span class="field-key" aria-hidden="true">Arkivskaber</span>
+                            <div class="field-value">
+                                {% for item in r.collectors %}
+                                    <details class="disclosure dropdown">
+                                        <summary class="flex singleline" aria-haspopup="true">
+                                            <span class="title"><span class="sr-only">Arkivskaber.</span>{{item.label}}</span>
+                                            <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
+                                        </summary>
+                                        <div class="content">
+                                            <a href="/search?{{item.new_link}}">Læs mere om {{item.label}}</a>
+                                            <a href="/search?{{item.new_link}}">Find alle materialer med denne arkivskaber</a>
+                                        </div>
+                                    </details>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                    {% endif %}
+
+                    <li>
+                        <div class="field">
+                            <span class="field-key" aria-hidden="true">Materialetype</span>
+                            <div class="field-value">
+                            {% for hierarchy in r.content_types %}
+                                <div>
+                                {% for item in hierarchy %}
+                                    {% if not loop.first %}<span role="separator">/</span>{% endif -%}
+                                    <a class="link" href="/search?{{item.new_link}}"><span class="sr-only">Materialetype.</span>{{ item.label }}</a>
+                                {%- endfor %}
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+
+                    {% if r.creators %}
+                        <li>
+                            <div class="field">
+                                <span class="field-key" aria-hidden="true">Kreativt ophav</span>
+                                <div class="field-value">
+                                    {% for item in r.creators %}
+                                        {% if item.id == 109847 %} {# ukendt skaber #}
+                                            <span class="sr-only">Kreativt ophav.</span>
+                                            {{item.label}}
+                                        {% else %}
+                                            <details class="disclosure dropdown">
+                                                <summary class="flex singleline" aria-haspopup="true">
+                                                    <span class="title"><span class="sr-only">Kreativt ophav.</span>{{item.label}}</span>
+                                                    <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
+                                                </summary>
+                                                <div class="content">
+                                                    <a href="/search?{{item.new_link}}">Læs mere om {{item.label}}</a>
+                                                    <a href="/search?{{item.new_link}}">Find alle materialer med denne kreative skaber</a>
+                                                </div>
+                                            </details>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </li>
+                    {% endif %}
+
+                    <li>
+                        <div class="field">
+                            <span class="field-key" aria-hidden="true">Datering</span>
+                            <span class="field-value"><span class="sr-only">Datering.</span>{{ get_interval(r) }}</span>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="field">
+                            <span class="field-key" aria-hidden="true">Kurator</span>
+                            <div class="field-value">
+                                {% for item in r.curators %}
+                                    <a  class="link" href="/search?{{item.new_link}}"><span class="sr-only">Kurator.</span>{{item.label}}</a>
+                                {% endfor %}
+                            </div>
+                        </div>    
+                    </li>
+
+                    <li>
+                        <div class="field">
+                            <span class="field-key" aria-hidden="true">Arkiv ID</span>
+                            <span class="field-value"><span class="sr-only">Arkiv ID.</span>{{r.id}}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        {# Description #}
+        <h2 id="description">Beskrivelse</h2>
+        <ul aria-labelledby="description">
+            {% if r.title and r.title != title %}
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Titel</span>
+                    <span class="field-value"><span class="sr-only">Titel.</span>{{title}}</span>
+                </div>
+            </li>
             {% endif %}
-            {% if r.latitude %}
-                <div class="resource-map">
-                    <img src="https://api.mapbox.com/styles/v1/cjk/ckg7ka2cv34n419nr8os076f3/static/pin-m-circle+7da2ca({{r.longitude}},{{r.latitude}})/{{r.longitude}},{{r.latitude}},17/640x640@2x?access_token=pk.eyJ1IjoiY2prIiwiYSI6ImNqZDdmanYzaDBjNnUzNHA1d2xldWZ4NjMifQ.53Ja6IuQ88Vr3UhrV2Ybmg">
-                    <span class="align-right" style="font-size:75%">
-                        © <a href='https://www.mapbox.com/about/maps/'>Mapbox</a>
-                        © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>
+
+            {% if r.heading and r.heading != title %}
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Overskrift</span>
+                    <span class="field-value"><span class="sr-only">Overskrift.</span>{{r.heading}}</span>
+                </div>
+            </li>
+            {% endif %}
+
+            {% if r.summary and r.summary != title %}
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Abstrakt</span>
+                    <span class="field-value"><span class="sr-only">Abstrakt.</span>{{r.summary}}</span>
+                </div>
+            </li>
+            {% endif %}
+
+            {% if r.description and r.description != title %}
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Beskrivelse</span>
+                    <span class="field-value"><span class="sr-only">Beskrivelse.</span>{{r.description}}</span>
+                </div>
+            </li>
+            {% endif %}
+
+            {% if r.desc_notes %}
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Deskriptiv note</span>
+                    <span class="field-value"><span class="sr-only">Deskriptiv note.</span>{{r.desc_notes}}</span>
+                </div>
+            </li>
+            {% endif %}
+
+            {% if r.collection %}
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Samling</span>
+                    <span class="field-value">
+                        <a class="link" href="/search?{{r.collection.get('new_link')}}">
+                            <span class="sr-only">Samling.</span>
+                            <span>{{ r.collection.get('label') }}</span></a>
                     </span>
                 </div>
+            </li>
             {% endif %}
-        </div>
-        <div class="resource-toolbar {% if prev_item or next_item %}media--reverse{% else %}media{% endif %}">
-            {% if prev_item or next_item %}            
-                <div class="media-object">
-            {% else %}
-                <div class="media-body">
-            {% endif %}
-                    <div class="resouce-actions">
-                        <a href="#">
-                            <span class="sr-only">Print siden</span>
-                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path d="M11.25 9.331V.75a.75.75 0 011.5 0v8.58l1.949-2.11A.75.75 0 1115.8 8.237l-3.25 3.52a.75.75 0 01-1.102 0l-3.25-3.52A.75.75 0 119.3 7.22l1.949 2.111z"></path>
-                                <path fill-rule="evenodd" d="M2.5 3.75a.25.25 0 01.25-.25h5.5a.75.75 0 100-1.5h-5.5A1.75 1.75 0 001 3.75v11.5c0 .966.784 1.75 1.75 1.75h6.204c-.171 1.375-.805 2.652-1.77 3.757A.75.75 0 007.75 22h8.5a.75.75 0 00.565-1.243c-.964-1.105-1.598-2.382-1.769-3.757h6.204A1.75 1.75 0 0023 15.25V3.75A1.75 1.75 0 0021.25 2h-5.5a.75.75 0 000 1.5h5.5a.25.25 0 01.25.25v11.5a.25.25 0 01-.25.25H2.75a.25.25 0 01-.25-.25V3.75zM10.463 17c-.126 1.266-.564 2.445-1.223 3.5h5.52c-.66-1.055-1.098-2.234-1.223-3.5h-3.074z"></path>
-                            </svg></a>
-                        <a href="#">
-                            <span class="sr-only">Del siden</span>
-                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path fill-rule="evenodd" d="M20 5.5a3.5 3.5 0 01-6.062 2.385l-5.112 3.021a3.497 3.497 0 010 2.188l5.112 3.021a3.5 3.5 0 11-.764 1.29l-5.112-3.02a3.5 3.5 0 110-4.77l5.112-3.021v.001A3.5 3.5 0 1120 5.5zm-1.5 0a2 2 0 11-4 0 2 2 0 014 0zM5.5 14a2 2 0 100-4 2 2 0 000 4zm13 4.5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg></a>
-                        <a href="#">
-                            <span class="sr-only">Gem materialet</span>
-                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path fill-rule="evenodd" d="M5 3.75C5 2.784 5.784 2 6.75 2h10.5c.966 0 1.75.784 1.75 1.75v17.5a.75.75 0 01-1.218.586L12 17.21l-5.781 4.625A.75.75 0 015 21.25V3.75zm1.75-.25a.25.25 0 00-.25.25v15.94l5.031-4.026a.75.75 0 01.938 0L17.5 19.69V3.75a.25.25 0 00-.25-.25H6.75z"></path>
-                            </svg></a>
-                        <a href="#">
-                            <span class="sr-only">Sæt materialet på huskelisten</span>
-                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path fill-rule="evenodd" d="M12 .25a.75.75 0 01.673.418l3.058 6.197 6.839.994a.75.75 0 01.415 1.279l-4.948 4.823 1.168 6.811a.75.75 0 01-1.088.791L12 18.347l-6.117 3.216a.75.75 0 01-1.088-.79l1.168-6.812-4.948-4.823a.75.75 0 01.416-1.28l6.838-.993L11.328.668A.75.75 0 0112 .25zm0 2.445L9.44 7.882a.75.75 0 01-.565.41l-5.725.832 4.143 4.038a.75.75 0 01.215.664l-.978 5.702 5.121-2.692a.75.75 0 01.698 0l5.12 2.692-.977-5.702a.75.75 0 01.215-.664l4.143-4.038-5.725-.831a.75.75 0 01-.565-.41L12 2.694z"></path>
-                            </svg></a>
-                    </div>
-                    <div class="resource-toc">
-                        <details class="disclosure dropdown">
-                            <summary class="singleline">
-                                <span class="title">
-                                    <span class="sr-only">Indholdsfortegnelse</span>
-                                    <span aria-hidden="true">Indhold</span>
-                                </span>
-                                <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
-                            </summary>
-                            <div class="content">
-                                Her kommer Indholdsfortegnelsen...
-                            </div>
-                        </details>
+
+            {% if r.series %}
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Serie</span>
+                    <div class="field-value">
+                        {% for item in r.series %}
+                            {% if not loop.first %}<span role="separator">/</span>{% endif -%}
+                            <a class="link" href="/search?{{item.new_link}}"><span class="sr-only">Serie.</span><span>{{ item.label }}</span></a>
+                        {%- endfor %}
                     </div>
                 </div>
-            {% if prev_item or next_item %}   
-                <div class="media-body">{% include "components/pagination-resource.html" %}</div>
+            </li>
             {% endif %}
-        </div>
- 
-        <div class="resource-core">
-            <h1 id="resource-title">{{label}}</h1>
-            <ul aria-label="Hovedinformation">
-                {% if r.collectors %}
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Arkivskaber</span>
-                        <div class="field-value">
-                            {% for item in r.collectors %}
-                                <details class="disclosure dropdown">
-                                    <summary class="inline" aria-haspopup="true">
-                                        <span class="title"><span class="sr-only">Arkivskaber.</span>{{item.label}}</span>
-                                        <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
-                                    </summary>
-                                    <div class="content">
-                                        <a href="/search?{{item.new_link}}">Læs mere om {{item.label}}</a>
-                                        <a href="/search?{{item.new_link}}">Find alle materialer med denne arkivskaber</a>
-                                    </div>
-                                </details>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </li>
-                {% endif %}
 
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Materialetype</span>
-                        <div class="field-value">
-                        {% for hierarchy in r.content_types %}
+            {% if r.collection_tags and r.collection %}
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Samlingstags</span>
+                    <div class="field-value">
+                        {% for item in r.collection_tags recursive %}
+                            {% set child = item.path|length > item.label|length %}
+                                {% if child %}<span role="separator">/</span>{% endif -%}
+                                <a class="link" href="/search?{{r.collection.get('new_link')}}&collection_tags={{item.path|urlencode}}"><span class="sr-only">Samlingstags.</span><span>{{ item.label }}</span></a>
+                                {% if item.children %}{{ loop( item.children ) }}{% endif -%}
+                        {%- endfor %}
+                    </div>
+                </div>
+            </li>
+            {% endif %}
+
+            {% if r.subjects %}
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Emner</span>
+                    <div class="field-value">
+                        {% for hierarchy in r.subjects %}
                             <div>
-                            {% for item in hierarchy %}
-                                {% if not loop.first %}<span role="separator">/</span>{% endif -%}
-                                <a class="link" href="/search?{{item.new_link}}"><span class="sr-only">Materialetype.</span>{{ item.label }}</a>
-                            {%- endfor %}
+                                {% for item in hierarchy %}
+                                    {% if not loop.first %}<span role="separator">/</span>{% endif -%}
+                                    <a class="link" href="/search?{{item.new_link}}"><span class="sr-only">Emner.</span><span>{{ item.label }}</span></a>
+                                {%- endfor %}
                             </div>
                         {% endfor %}
                         </div>
-                    </div>
-                </li>
+                </div>
+            </li>
+            {% endif %}
+        </ul>
 
-                {% if r.creators %}
+        {# Descriptiondata #}
+        {% if r.desc_data %}
+            <h2 id="descriptiondata">Beskrivelsesdata</h2>
+            <ul aria-labelledby="descriptiondata">
+                <li>
+                    {% for k, v in r.desc_data.items() %}
+                        <div class="field">
+                        {# Sejrssedler-undtagelse #}     
+                        {% if k == "source" and r.collection and r.collection.get('id') == 1 %}
+                            <span class="field-key" aria-hidden="true">
+                                <span class="sr-only">Original kilde.</span>
+                                <span>original kilde</span>
+                            </span>
+                        {% else %}
+                            <span class="field-key">
+                                <span class="sr-only">{{k}}.</span>
+                                <span>{{k}}</span>
+                            </span>
+                        {% endif %}
+                            <span class="field-value">{{v}}</span>
+                        </div>
+                    {% endfor %}
+                </li>
+            </ul>
+        {% endif %}
+
+        {# Relations #}
+        {% if r.locations or r.people or r.events or r.organisations or r.objects %}
+            <h2 id="relations">Relationer</h2>
+            <ul>
+                {% if r.locations %}
                     <li>
                         <div class="field">
-                            <span class="field-key" aria-hidden="true">Kreativt ophav</span>
+                            <span class="field-key" aria-hidden="true">Steder</span>
                             <div class="field-value">
-                                {% for item in r.creators %}
-                                    {% if item.id == 109847 %} {# ukendt skaber #}
-                                        <span class="sr-only">Kreativt ophav.</span>
-                                        {{item.label}}
-                                    {% else %}
-                                        <details class="disclosure dropdown">
-                                            <summary class="inline" aria-haspopup="true">
-                                                <span class="title"><span class="sr-only">Kreativt ophav.</span>{{item.label}}</span>
-                                                <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
-                                            </summary>
-                                            <div class="content">
-                                                <a href="/search?{{item.new_link}}">Læs mere om {{item.label}}</a>
-                                                <a href="/search?{{item.new_link}}">Find alle materialer med denne kreative skaber</a>
-                                            </div>
-                                        </details>
-                                    {% endif %}
+                                {% for item in r.locations %}
+                                    <div>
+                                        <a class="link" href="/search?{{item.new_link}}">
+                                            <span class="sr-only">Steder.</span>
+                                            <span>{{item.label}}</span>
+                                        </a>
+                                    </div>
                                 {% endfor %}
                             </div>
                         </div>
                     </li>
                 {% endif %}
 
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Datering</span>
-                        <span class="field-value"><span class="sr-only">Datering.</span>{{date}}</span>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Kurator</span>
-                        <div class="field-value">
-                            {% for item in r.curators %}
-                                <a  class="link" href="/search?{{item.new_link}}"><span class="sr-only">Kurator.</span>{{item.label}}</a>
-                            {% endfor %}
+                {% if r.people %}
+                    <li>
+                        <div class="field">
+                            <span class="field-key" aria-hidden="true">Personer</span>
+                            <div class="field-value">
+                                {% for item in r.people %}
+                                    <div>
+                                        <a class="link" href="/search?{{item.new_link}}">
+                                            <span class="sr-only">Personer.</span>{{item.label}}</a>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>    
-                </li>
+                    </li>
+                {% endif %}
 
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Arkiv ID</span>
-                        <span class="field-value"><span class="sr-only">Arkiv ID.</span>{{r.id}}</span>
-                    </div>
-                </li>
+                {% if r.events %}
+                    <li>
+                        <div class="field">
+                            <span class="field-key" aria-hidden="true">Begivenheder</span>
+                            <div class="field-value">
+                                {% for item in r.events %}
+                                    <div>
+                                        <a class="link" href="/search?{{item.new_link}}">
+                                            <span class="sr-only">Begivenheder.</span>{{item.label}}</a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+
+                {% if r.organisations %}
+                    <li>
+                        <div class="field">
+                            <span class="field-key" aria-hidden="true">Organisationer</span>
+                            <div class="field-value">
+                                {% for item in r.organisations %}
+                                    <div>
+                                        <a class="link" href="/search?{{item.new_link}}">
+                                            <span class="sr-only">Organisationer.</span>
+                                            <span>{{item.label}}</span>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+
+                {% if r.objects %}
+                    <li>
+                        <div class="field">
+                            <span class="field-key" aria-hidden="true">Objekter</span>
+                            <div class="field-value">
+                                {% for item in r.objects %}
+                                    <div>
+                                        <a class="link" href="/search?{{item.new_link}}">
+                                            <span class="sr-only">Objekter.</span>{{item.label}}</a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
             </ul>
-        </div>
-    </div>
-
-    {# Description #}
-    <h2 id="description">Beskrivelse</h2>
-    <ul aria-labelledby="description">
-        {% if r.title and r.title != title %}
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Titel</span>
-                <span class="field-value"><span class="sr-only">Titel.</span>{{title}}</span>
-            </div>
-        </li>
         {% endif %}
 
-        {% if r.heading and r.heading != title %}
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Overskrift</span>
-                <span class="field-value"><span class="sr-only">Overskrift.</span>{{r.heading}}</span>
-            </div>
-        </li>
-        {% endif %}
-
-        {% if r.summary and r.summary != title %}
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Abstrakt</span>
-                <span class="field-value"><span class="sr-only">Abstrakt.</span>{{r.summary}}</span>
-            </div>
-        </li>
-        {% endif %}
-
-        {% if r.description and r.description != title %}
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Beskrivelse</span>
-                <span class="field-value"><span class="sr-only">Beskrivelse.</span>{{r.description}}</span>
-            </div>
-        </li>
-        {% endif %}
-
-        {% if r.desc_notes %}
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Deskriptiv note</span>
-                <span class="field-value"><span class="sr-only">Deskriptiv note.</span>{{r.desc_notes}}</span>
-            </div>
-        </li>
-        {% endif %}
-
-        {% if r.collection %}
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Samling</span>
-                <span class="field-value">
-                    <a class="link" href="/search?{{r.collection.get('new_link')}}">
-                        <span class="sr-only">Samling.</span>
-                        <span>{{ r.collection.get('label') }}</span></a>
-                </span>
-            </div>
-        </li>
-        {% endif %}
-
-        {% if r.series %}
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Serie</span>
-                <div class="field-value">
-                    {% for item in r.series %}
-                        {% if not loop.first %}<span role="separator">/</span>{% endif -%}
-                        <a class="link" href="/search?{{item.new_link}}"><span class="sr-only">Serie.</span><span>{{ item.label }}</span></a>
-                    {%- endfor %}
-                </div>
-            </div>
-        </li>
-        {% endif %}
-
-        {% if r.collection_tags and r.collection %}
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Samlingstags</span>
-                <div class="field-value">
-                    {% for item in r.collection_tags recursive %}
-                        {% set child = item.path|length > item.label|length %}
-                            {% if child %}<span role="separator">/</span>{% endif -%}
-                            <a class="link" href="/search?{{r.collection.get('new_link')}}&collection_tags={{item.path|urlencode}}"><span class="sr-only">Samlingstags.</span><span>{{ item.label }}</span></a>
-                            {% if item.children %}{{ loop( item.children ) }}{% endif -%}
-                    {%- endfor %}
-                </div>
-            </div>
-        </li>
-        {% endif %}
-
-        {% if r.subjects %}
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Emner</span>
-                <div class="field-value">
-                    {% for hierarchy in r.subjects %}
-                        <div>
-                            {% for item in hierarchy %}
-                                {% if not loop.first %}<span role="separator">/</span>{% endif -%}
-                                <a class="link" href="/search?{{item.new_link}}"><span class="sr-only">Emner.</span><span>{{ item.label }}</span></a>
-                            {%- endfor %}
-                        </div>
-                    {% endfor %}
-                    </div>
-            </div>
-        </li>
-        {% endif %}
-    </ul>
-
-    {# Descriptiondata #}
-    {% if r.desc_data %}
-        <h2 id="descriptiondata">Beskrivelsesdata</h2>
-        <ul aria-labelledby="descriptiondata">
+        {# Rights #}
+        <h2 id="rights">Rettigheder og aftaler</h2>
+        <ul>
             <li>
-                {% for k, v in r.desc_data.items() %}
-                    <div class="field">
-                    {# Sejrssedler-undtagelse #}     
-                    {% if k == "source" and r.collection and r.collection.get('id') == 1 %}
-                        <span class="field-key" aria-hidden="true">
-                            <span class="sr-only">Original kilde.</span>
-                            <span>original kilde</span>
-                        </span>
-                    {% else %}
-                        <span class="field-key">
-                            <span class="sr-only">{{k}}.</span>
-                            <span>{{k}}</span>
-                        </span>
-                    {% endif %}
-                        <span class="field-value">{{v}}</span>
-                    </div>
-                {% endfor %}
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Ophavsret</span>
+                    <span class="field-value">
+                        <span class="sr-only">Ophavsret.</span>
+                        {{r.copyright_status.get('label')}}
+                        {% if copyright_id == 1 %}
+                            <p>
+                                <span>Materialet har ikke værkshøjde og er derfor ikke beskyttet af ophavsret.</span>
+                                <span> Der er dermed heller ingen ophavsretslige begrænsninger på gengivelse og publicering af dette materiale.</span>
+                            </p>
+                        {% elif copyright_id == 2 %}
+                            <p>
+                                <span>Materialet er i offentlig eje, da ophavsretten er udløbet.</span>
+                                <span> Der er dermed heller ingen ophavsretslige begrænsninger på gengivelse og publicering af dette materiale.</span>
+                            </p>
+                        {% elif copyright_id == 3 %}
+                            <p>
+                                <span>Materialet er frigivet af alle ophavsretsholdere til offentlig eje.</span>
+                                <span> Der er dermed heller ingen ophavsretslige begrænsninger på gengivelse og publicering af dette materiale.</span>
+                            </p>
+                        {% elif copyright_id == 4 %}
+                            <p>
+                                <p>Materialet er under ophavsret, men udgives efter aftale under en <a href="https://creativecommons.org/licenses/by/4.0/deed.da">Creative Commons Navngivelse licens</a>.</p>
+                                <p>Materialet må derfor gerne gengives og publiceres, så længe man på passende vis krediterer både ophavsmanden/-kvinden og AarhusArkivet.dk</p>
+                            </p>
+                        {% elif copyright_id == 5 %}
+                            <p>
+                                <p>Materialet er under ophavsret, men udgives efter aftale under en <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.da">Creative Commons Navngivelse Ikke-Kommerciel licens</a>.</p>
+                                <p>Materialet må kun gengives og publiceres i ikke-kommercielle sammenhænge, og under forudsætning af en passende kreditering af både ophavsmanden/-kvinden og AarhusArkivet.dk. Dette udelukker publicering på sociale platforme som Facebook og Instagram.</p>
+                            </p>
+                        {% elif copyright_id == 6 %}
+                            <p>
+                                <span>Ophavsretsaftalen kræver alle rettigheder forbeholdt.</span>
+                                <span> Materialet må derfor hverken gengives eller publiceres andetsteds.</span>
+                            </p>
+                        {% elif copyright_id == 7 %}
+                            <p>
+                                <span>En eller flere nødvendige ophavsretsaftaler mangler, ofte på grund af ukendte skabere eller rettighedshavere.</span>
+                                <span> Materialet må derfor hverken gengives eller publiceres andetsteds.</span>
+                                <span class="identify-request">Stadsarkivet modtager gerne oplysninger, som kan hjælpe med at identificere den hidtil ukendte ophavsmand/-kvinde.</span>
+                            </p>
+                        {% elif copyright_id == 8 %}
+                            <p>
+                                <span>Vi har endnu ikke undersøgt materialets ophavsretslige forhold.</span>
+                                <span> Materialet må derfor hverken gengives eller publiceres andetsteds.</span>
+                                <span class="identify-request">Stadsarkivet modtager gerne oplysninger, som kan hjælpe med at identificere den hidtil ukendte ophavsmand/-kvinde.</span>
+                            </p>
+                        {% elif copyright_id == 9 %}
+                            <p>
+                                <span>Materialets ophavsretslige status er undersøgt, men stadig uafklaret.</span>
+                                <span> Materialet må derfor hverken gengives eller publiceres andetsteds.</span>
+                                <span class="identify-request">Stadsarkivet modtager gerne oplysninger, som kan hjælpe med at identificere den hidtil ukendte ophavsmand/-kvinde.</span>
+                            </p>
+                        {% endif %}
+                    </span>
+                </div>
+            </li>
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Aftaleforhold</span>
+                    <span class="field-value">
+                        <span class="sr-only">Aftaleforhold.</span>
+                        {% if contractual_id == 1 %}
+                            Materialet er utilgængeligt. Ifølge aftale.
+                        {% elif contractual_id == 2 %}
+                            Materialet er kun tilgængeligt gennem ansøgning. Ifølge aftale.
+                        {% elif contractual_id == 3 %}
+                            Materialet må kun ses på læsesalen. Ifølge aftale.
+                        {% elif contractual_id == 4 %}
+                            {% set creators = {'pp': False} %}
+
+                            {% if r.creators %}
+                                {% for i in r.creators %}
+                                    {% if i.id == 108691 %}
+                                        {% if creators.update({'pp': True}) %}{% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if creators.pp %}
+                                Materialet må kun offentliggøres på Aarhus Stadsarkivs hjemmesider. Ifølge aftale.
+                            {% else %}
+                                Materialet må offentliggøres på internettet. Ifølge aftale.
+                            {% endif %}
+                        {% else %}
+                            Materialet er ikke begrænset af kontraktuelle klausuler.
+                        {% endif %}
+                    </span>
+                </div>
+            </li>
+            <li>
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Lovgivning</span>
+                    <span class="field-value">
+                        <span class="sr-only">Lovgivning.</span>
+                        {% if legal_id == 1 %}
+                            Materialet er ikke underlagt andre juridiske begrænsninger af tilgængeligheden.
+                        {% elif legal_id == 2 %}
+                            Materialet er utilgængeligt ifølge persondatalovgivningen.
+                        {% elif legal_id == 3 %}
+                            Materialet er utilgængeligt ifølge arkivlovgivningen.
+                        {% elif legal_id == 4 %}
+                            Materialet er utilgængeligt som følge af særlige juridiske forhold.
+                        {% endif %}
+                    </span>
+                </div>
+            </li>
+            <li>
+            {% if r.rights_notes %}
+                <div class="field">
+                    <span class="field-key" aria-hidden="true">Rettighedsnoter</span>
+                    <span class="field-value">
+                        <span class="sr-only">Rettighedsnoter.</span>
+                        <span>{{r.rights_notes}}</span>
+                    </span>
+                </div>
+            {% endif %}
             </li>
         </ul>
-    {% endif %}
 
-    {# Relations #}
-    {% if r.locations or r.people or r.events or r.organisations or r.objects %}
-        <h2 id="relations">Relationer</h2>
-        <ul>
-            {% if r.locations %}
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Steder</span>
-                        <div class="field-value">
-                            {% for item in r.locations %}
-                                <div>
-                                    <a class="link" href="/search?{{item.new_link}}">
-                                        <span class="sr-only">Steder.</span>
-                                        <span>{{item.label}}</span>
-                                    </a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </li>
+        {# Availability and re-use #}
+        <h2 id="availability">Tilgængelighed</h2>
+        <p>
+            {% if legal_id > 1 or contractual_id == 1 %}
+                Materialet er utilgængeligt som følge af nævnte juridiske forhold.
+            {% elif contractual_id == 2 %}
+                Materialet er kun tilgængeligt gennem ansøgning.
+            {% elif availability_id == 2 %}
+                Materialet skal bestilles hjem til læsesalen, før det kan beses.
+            {% elif availability_id == 3 %}
+                Materialet er tilgængeligt på læsesalen. Der kræves ikke forudgående bestilling for at se materialer på læsesalen. Man skal blot møde op i åbningstiderne.
+            {% else %}
+                Materialet er online her på Aarhusarkivet.dk, men det er det enkelte materiales ophavsretslige status, der fastsætter, hvad et givent materiale videre må bruges til.
             {% endif %}
-
-            {% if r.people %}
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Personer</span>
-                        <div class="field-value">
-                            {% for item in r.people %}
-                                <div>
-                                    <a class="link" href="/search?{{item.new_link}}">
-                                        <span class="sr-only">Personer.</span>{{item.label}}</a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </li>
-            {% endif %}
-
-            {% if r.events %}
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Begivenheder</span>
-                        <div class="field-value">
-                            {% for item in r.events %}
-                                <div>
-                                    <a class="link" href="/search?{{item.new_link}}">
-                                        <span class="sr-only">Begivenheder.</span>{{item.label}}</a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </li>
-            {% endif %}
-
-            {% if r.organisations %}
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Organisationer</span>
-                        <div class="field-value">
-                            {% for item in r.organisations %}
-                                <div>
-                                    <a class="link" href="/search?{{item.new_link}}">
-                                        <span class="sr-only">Organisationer.</span>
-                                        <span>{{item.label}}</span>
-                                    </a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </li>
-            {% endif %}
-
-            {% if r.objects %}
-                <li>
-                    <div class="field">
-                        <span class="field-key" aria-hidden="true">Objekter</span>
-                        <div class="field-value">
-                            {% for item in r.objects %}
-                                <div>
-                                    <a class="link" href="/search?{{item.new_link}}">
-                                        <span class="sr-only">Objekter.</span>{{item.label}}</a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </li>
-            {% endif %}
-        </ul>
-    {% endif %}
-
-    {# Rights #}
-    <h2 id="rights">Rettigheder og aftaler</h2>
-    <ul>
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Ophavsret</span>
-                <span class="field-value">
-                    <span class="sr-only">Ophavsret.</span>
-                    {{r.copyright_status.get('label')}}
-                    {% if copyright_id == 1 %}
-                        <p>
-                            <span>Materialet har ikke værkshøjde og er derfor ikke beskyttet af ophavsret.</span>
-                            <span> Der er dermed heller ingen ophavsretslige begrænsninger på gengivelse og publicering af dette materiale.</span>
-                        </p>
-                    {% elif copyright_id == 2 %}
-                        <p>
-                            <span>Materialet er i offentlig eje, da ophavsretten er udløbet.</span>
-                            <span> Der er dermed heller ingen ophavsretslige begrænsninger på gengivelse og publicering af dette materiale.</span>
-                        </p>
-                    {% elif copyright_id == 3 %}
-                        <p>
-                            <span>Materialet er frigivet af alle ophavsretsholdere til offentlig eje.</span>
-                            <span> Der er dermed heller ingen ophavsretslige begrænsninger på gengivelse og publicering af dette materiale.</span>
-                        </p>
-                    {% elif copyright_id == 4 %}
-                        <p>
-                            <p>Materialet er under ophavsret, men udgives efter aftale under en <a href="https://creativecommons.org/licenses/by/4.0/deed.da">Creative Commons Navngivelse licens</a>.</p>
-                            <p>Materialet må derfor gerne gengives og publiceres, så længe man på passende vis krediterer både ophavsmanden/-kvinden og AarhusArkivet.dk</p>
-                        </p>
-                    {% elif copyright_id == 5 %}
-                        <p>
-                            <p>Materialet er under ophavsret, men udgives efter aftale under en <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.da">Creative Commons Navngivelse Ikke-Kommerciel licens</a>.</p>
-                            <p>Materialet må kun gengives og publiceres i ikke-kommercielle sammenhænge, og under forudsætning af en passende kreditering af både ophavsmanden/-kvinden og AarhusArkivet.dk. Dette udelukker publicering på sociale platforme som Facebook og Instagram.</p>
-                        </p>
-                    {% elif copyright_id == 6 %}
-                        <p>
-                            <span>Ophavsretsaftalen kræver alle rettigheder forbeholdt.</span>
-                            <span> Materialet må derfor hverken gengives eller publiceres andetsteds.</span>
-                        </p>
-                    {% elif copyright_id == 7 %}
-                        <p>
-                            <span>En eller flere nødvendige ophavsretsaftaler mangler, ofte på grund af ukendte skabere eller rettighedshavere.</span>
-                            <span> Materialet må derfor hverken gengives eller publiceres andetsteds.</span>
-                            <span class="identify-request">Stadsarkivet modtager gerne oplysninger, som kan hjælpe med at identificere den hidtil ukendte ophavsmand/-kvinde.</span>
-                        </p>
-                    {% elif copyright_id == 8 %}
-                        <p>
-                            <span>Vi har endnu ikke undersøgt materialets ophavsretslige forhold.</span>
-                            <span> Materialet må derfor hverken gengives eller publiceres andetsteds.</span>
-                            <span class="identify-request">Stadsarkivet modtager gerne oplysninger, som kan hjælpe med at identificere den hidtil ukendte ophavsmand/-kvinde.</span>
-                        </p>
-                    {% elif copyright_id == 9 %}
-                        <p>
-                            <span>Materialets ophavsretslige status er undersøgt, men stadig uafklaret.</span>
-                            <span> Materialet må derfor hverken gengives eller publiceres andetsteds.</span>
-                            <span class="identify-request">Stadsarkivet modtager gerne oplysninger, som kan hjælpe med at identificere den hidtil ukendte ophavsmand/-kvinde.</span>
-                        </p>
-                    {% endif %}
-                </span>
-            </div>
-        </li>
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Aftaleforhold</span>
-                <span class="field-value">
-                    <span class="sr-only">Aftaleforhold.</span>
-                    {% if contractual_id == 1 %}
-                        Materialet er utilgængeligt. Ifølge aftale.
-                    {% elif contractual_id == 2 %}
-                        Materialet er kun tilgængeligt gennem ansøgning. Ifølge aftale.
-                    {% elif contractual_id == 3 %}
-                        Materialet må kun ses på læsesalen. Ifølge aftale.
-                    {% elif contractual_id == 4 %}
-                        {% set creators = {'pp': False} %}
-
-                        {% if r.creators %}
-                            {% for i in r.creators %}
-                                {% if i.id == 108691 %}
-                                    {% if creators.update({'pp': True}) %}{% endif %}
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-
-                        {% if creators.pp %}
-                            Materialet må kun offentliggøres på Aarhus Stadsarkivs hjemmesider. Ifølge aftale.
-                        {% else %}
-                            Materialet må offentliggøres på internettet. Ifølge aftale.
-                        {% endif %}
-                    {% else %}
-                        Materialet er ikke begrænset af kontraktuelle klausuler.
-                    {% endif %}
-                </span>
-            </div>
-        </li>
-        <li>
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Lovgivning</span>
-                <span class="field-value">
-                    <span class="sr-only">Lovgivning.</span>
-                    {% if legal_id == 1 %}
-                        Materialet er ikke underlagt andre juridiske begrænsninger af tilgængeligheden.
-                    {% elif legal_id == 2 %}
-                        Materialet er utilgængeligt ifølge persondatalovgivningen.
-                    {% elif legal_id == 3 %}
-                        Materialet er utilgængeligt ifølge arkivlovgivningen.
-                    {% elif legal_id == 4 %}
-                        Materialet er utilgængeligt som følge af særlige juridiske forhold.
-                    {% endif %}
-                </span>
-            </div>
-        </li>
-        <li>
-        {% if r.rights_notes %}
-            <div class="field">
-                <span class="field-key" aria-hidden="true">Rettighedsnoter</span>
-                <span class="field-value">
-                    <span class="sr-only">Rettighedsnoter.</span>
-                    <span>{{r.rights_notes}}</span>
-                </span>
-            </div>
-        {% endif %}
-        </li>
-    </ul>
-
-    {# Availability and re-use #}
-    <h2 id="availability">Tilgængelighed</h2>
-    <p>
-        {% if legal_id > 1 or contractual_id == 1 %}
-            Materialet er utilgængeligt som følge af nævnte juridiske forhold.
-        {% elif contractual_id == 2 %}
-            Materialet er kun tilgængeligt gennem ansøgning.
-        {% elif availability_id == 2 %}
-            Materialet skal bestilles hjem til læsesalen, før det kan beses.
-        {% elif availability_id == 3 %}
-            Materialet er tilgængeligt på læsesalen. Der kræves ikke forudgående bestilling for at se materialer på læsesalen. Man skal blot møde op i åbningstiderne.
-        {% else %}
-            Materialet er online her på Aarhusarkivet.dk, men det er det enkelte materiales ophavsretslige status, der fastsætter, hvad et givent materiale videre må bruges til.
-        {% endif %}
-    </p>
-
+        </p>
+    </div>
     {% if user %}
         {% set already = r.id in (user.get("bookmarks") or []) %}
         <button data-resource-id="{{r.id}}" class="js-only bookmark-handler{% if already %} hide{% endif %}" data-action="create-bookmark">Bogmærk</button>

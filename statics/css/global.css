@@ -121,6 +121,9 @@ button {
     cursor: pointer;
 }
 
+p {
+    margin: 0;
+}
 /* button:focus {
     outline: 0;
     box-shadow: 0 0 1px 4px var(--color-green-dark);
@@ -139,16 +142,16 @@ span[role="separator"] {
     height: 1em;
 }
 
-#main {
-    /* margin: 0 auto;
-    max-width: 1280px; */
+/* #main {
+    margin: 0 auto;
+    max-width: 1280px;
     padding: 1.2em;
 }
 @media (min-width: 45em) {
     main {
         padding: 2em;
     }
-}
+} */
 
 /* Mostly from https://primer.style/css/components/buttons */
 .btn {

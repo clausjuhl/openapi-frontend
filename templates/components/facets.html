@@ -60,130 +60,174 @@
     </details>
 {% endfor %}
 
+<details class="disclosure facet">
+    <summary class="flex button">
+        <h4 id="facetHeader-date" class="title">Datering</h4>
+        <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
+    </summary>
+    <div class="content">
+        <form class="" method="get" action="/search" aria-describedby="facetHeader-date">
+            <div>
+                <label for="year_from" class="cell">Tidligste dato</label>
+                <input type="number" name="year_from" value="{% if date_from %}{{date_from[0:4]}}{% endif %}" placeholder="1600" min="1500" max="2018" aria-describedby="dateFromHelp">
+                <span>-</span>
+                <input type="number" name="month_from" value="{% if date_from %}{{date_from[4:6]|int}}{% endif %}" placeholder="01" min="1" max="12">
+                <span>-</span>
+                <input type="number" name="day_from" value="{% if date_from %}{{date_from[6:8]|int}}{% endif %}" placeholder="01" min="1" max="31">
+            </div>
+            <p class="help-text" id="dateFromHelp">Indtast minimum et fire-cifret årstal</p>
+        
+            <div>
+                <label for="year_to" class="cell">Seneste dato</label>
+                <input type="number" name="year_to" value="{% if date_to %}{{date_to[0:4]}}{% endif %}" placeholder="2017" min="1500" max="2018" aria-describedby="dateToHelp">
+                <span>-</span>
+                <input type="number" name="month_to" value="{% if date_to %}{{date_to[4:6]|int}}{% endif %}" placeholder="12" min="1" max="12">
+                <span>-</span>
+                <input type="number" name="day_to" value="{% if date_to %}{{date_to[6:8]|int}}{% endif %}" placeholder="31" min="1" max="31">
+            </div>
+            <p class="help-text" id="dateToHelp">Indtast minimum et fire-cifret årstal</p>
+        
+            {% if params %}
+                {% for tup in params %}
+                    {% if tup[0] != 'start' %}<input type="hidden" name="{{tup[0]}}" value="{{tup[1]}}">{% endif %}
+                {% endfor %}
+            {% endif %}
+        
+            {# TODO: If all date-fields are empty, submit must be disabled #}
+            {% if not (date_from or date_to) %}
+                <button type="submit">Søg</button>
+            {% else %}
+                <button type="submit">Opdatér</button>
+            {% endif %}
+        </form>
+    </div>
+</details>
+
+
+
 {#
-{% for k ,v in facets.items() %}
-    <h4 id="facetHeader-{{k}}" class="facetHeader" data-collapsible-header>{{ facet_labels.get(k) }}</h4>
-    {% if k in ['subjects', 'content_types'] %}
-        <ul class="collapsible-panel facetPanel" aria-labelledby="facetHeader-{{k}}" role="tree">
-            {% for item in v recursive %}
-                {% if item.remove_link %}
-                <li role="none">
-                    <a class="facetItem-header" href="/search?{{item.remove_link}}" role="treeitem">
-                        <span>{{item.label}}</span><span>X</span>
-                    </a>
-                {% elif item.add_link %}
-                    {% if item.children %}
-                    <li role="treeitem" aria-expanded="false">
-                        <span class="facetItem-header">{{item.label}}</span>
-                        <ul role="group">
-                            <li role="none">
-                                <a class="facetItem-header" href="/search?{{item.add_link}}" role="treeitem">
-                                    <span>Vælg alt herunder</span><span>({{item.count}})</span>
-                                </a>
-                            </li>
-                            {{ loop( item.children ) }}
-                        </ul>
-                    {% else %}
-                    <li role="none">
-                        <a class="facetItem-header" href="/search?{{item.add_link}}" role="treeitem">
-                            <span>{{item.label}}</span><span>({{item.count}})</span>
-                        </a>
-                    {% endif %}
-                {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <ul class="collapsible-panel facetPanel" aria-labelledby="facetHeader-{{k}}">
-            {% for item in v %}
-                <li>
-                {% if item.remove_link %}
-                    <a class="facetItem-header" href="/search?{{item.remove_link}}">
-                        <span>{{item.label}}</span><span>X</span>
-                    </a>
-                {% elif item.add_link %}
-                    <a class="facetItem-header" href="/search?{{item.add_link}}">
-                        <span>{{item.label}}</span><span>({{item.count}})</span>
-                    </a>
-                {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endfor %}
-#}
-{#
-<ul class="facetList" aria-labelledby="facetContainer-heading" role="tree">
     {% for k ,v in facets.items() %}
-        <li role="treeitem" aria-expanded="false">
-            <span>{{ facet_labels.get(k) }}</span>
-            <ul role="group">
+        <h4 id="facetHeader-{{k}}" class="facetHeader" data-collapsible-header>{{ facet_labels.get(k) }}</h4>
+        {% if k in ['subjects', 'content_types'] %}
+            <ul class="collapsible-panel facetPanel" aria-labelledby="facetHeader-{{k}}" role="tree">
                 {% for item in v recursive %}
                     {% if item.remove_link %}
-                    <li>
-                        <a href="/search?{{item.remove_link}}" role="treeitem">
-                            <span>{{item.label}} X</span>
+                    <li role="none">
+                        <a class="facetItem-header" href="/search?{{item.remove_link}}" role="treeitem">
+                            <span>{{item.label}}</span><span>X</span>
                         </a>
                     {% elif item.add_link %}
                         {% if item.children %}
                         <li role="treeitem" aria-expanded="false">
-                            {{item.label}}
+                            <span class="facetItem-header">{{item.label}}</span>
                             <ul role="group">
-                                <li>
-                                    <a href="/search?{{item.add_link}}" role="treeitem">
-                                        <span>Vælg alt herunder ({{item.count}})</span>
+                                <li role="none">
+                                    <a class="facetItem-header" href="/search?{{item.add_link}}" role="treeitem">
+                                        <span>Vælg alt herunder</span><span>({{item.count}})</span>
                                     </a>
                                 </li>
                                 {{ loop( item.children ) }}
                             </ul>
                         {% else %}
-                        <li>
-                            <a href="/search?{{item.add_link}}" role="treeitem">
-                                <span>{{item.label}} ({{item.count}})</span>
+                        <li role="none">
+                            <a class="facetItem-header" href="/search?{{item.add_link}}" role="treeitem">
+                                <span>{{item.label}}</span><span>({{item.count}})</span>
                             </a>
                         {% endif %}
                     {% endif %}
                     </li>
                 {% endfor %}
             </ul>
-        </li>
+        {% else %}
+            <ul class="collapsible-panel facetPanel" aria-labelledby="facetHeader-{{k}}">
+                {% for item in v %}
+                    <li>
+                    {% if item.remove_link %}
+                        <a class="facetItem-header" href="/search?{{item.remove_link}}">
+                            <span>{{item.label}}</span><span>X</span>
+                        </a>
+                    {% elif item.add_link %}
+                        <a class="facetItem-header" href="/search?{{item.add_link}}">
+                            <span>{{item.label}}</span><span>({{item.count}})</span>
+                        </a>
+                    {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     {% endfor %}
-</ul>
 #}
-
-{# Datefilter #}
-<h4 id="facetHeader-date" class="facetHeader" data-collapsible-header>Datering</h4>
-<form class="collapsible-panel facetPanel" method="get" action="/search" aria-describedby="facetHeader-date">
-    <div>
-        <label for="year_from" class="cell">Tidligste dato</label>
-        <input type="number" name="year_from" value="{% if date_from %}{{date_from[0:4]}}{% endif %}" placeholder="1600" min="1500" max="2018" aria-describedby="dateFromHelp">
-        <span>-</span>
-        <input type="number" name="month_from" value="{% if date_from %}{{date_from[4:6]|int}}{% endif %}" placeholder="01" min="1" max="12">
-        <span>-</span>
-        <input type="number" name="day_from" value="{% if date_from %}{{date_from[6:8]|int}}{% endif %}" placeholder="01" min="1" max="31">
-    </div>
-    <p class="help-text" id="dateFromHelp">Indtast minimum et fire-cifret årstal</p>
-
-    <div>
-        <label for="year_to" class="cell">Seneste dato</label>
-        <input type="number" name="year_to" value="{% if date_to %}{{date_to[0:4]}}{% endif %}" placeholder="2017" min="1500" max="2018" aria-describedby="dateToHelp">
-        <span>-</span>
-        <input type="number" name="month_to" value="{% if date_to %}{{date_to[4:6]|int}}{% endif %}" placeholder="12" min="1" max="12">
-        <span>-</span>
-        <input type="number" name="day_to" value="{% if date_to %}{{date_to[6:8]|int}}{% endif %}" placeholder="31" min="1" max="31">
-    </div>
-    <p class="help-text" id="dateToHelp">Indtast minimum et fire-cifret årstal</p>
-
-    {% if params %}
-        {% for tup in params %}
-            {% if tup[0] != 'start' %}<input type="hidden" name="{{tup[0]}}" value="{{tup[1]}}">{% endif %}
+{#
+    <ul class="facetList" aria-labelledby="facetContainer-heading" role="tree">
+        {% for k ,v in facets.items() %}
+            <li role="treeitem" aria-expanded="false">
+                <span>{{ facet_labels.get(k) }}</span>
+                <ul role="group">
+                    {% for item in v recursive %}
+                        {% if item.remove_link %}
+                        <li>
+                            <a href="/search?{{item.remove_link}}" role="treeitem">
+                                <span>{{item.label}} X</span>
+                            </a>
+                        {% elif item.add_link %}
+                            {% if item.children %}
+                            <li role="treeitem" aria-expanded="false">
+                                {{item.label}}
+                                <ul role="group">
+                                    <li>
+                                        <a href="/search?{{item.add_link}}" role="treeitem">
+                                            <span>Vælg alt herunder ({{item.count}})</span>
+                                        </a>
+                                    </li>
+                                    {{ loop( item.children ) }}
+                                </ul>
+                            {% else %}
+                            <li>
+                                <a href="/search?{{item.add_link}}" role="treeitem">
+                                    <span>{{item.label}} ({{item.count}})</span>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
         {% endfor %}
-    {% endif %}
+    </ul>
+#}
+{# Datefilter
+    <h4 id="facetHeader-date" class="facetHeader" data-collapsible-header>Datering</h4>
+    <form class="collapsible-panel facetPanel" method="get" action="/search" aria-describedby="facetHeader-date">
+        <div>
+            <label for="year_from" class="cell">Tidligste dato</label>
+            <input type="number" name="year_from" value="{% if date_from %}{{date_from[0:4]}}{% endif %}" placeholder="1600" min="1500" max="2018" aria-describedby="dateFromHelp">
+            <span>-</span>
+            <input type="number" name="month_from" value="{% if date_from %}{{date_from[4:6]|int}}{% endif %}" placeholder="01" min="1" max="12">
+            <span>-</span>
+            <input type="number" name="day_from" value="{% if date_from %}{{date_from[6:8]|int}}{% endif %}" placeholder="01" min="1" max="31">
+        </div>
+        <p class="help-text" id="dateFromHelp">Indtast minimum et fire-cifret årstal</p>
 
-    {# TODO: If all date-fields are empty, submit must be disabled #}
-    {% if not (date_from or date_to) %}
-        <button type="submit">Søg</button>
-    {% else %}
-        <button type="submit">Opdatér</button>
-    {% endif %}
-</form>
+        <div>
+            <label for="year_to" class="cell">Seneste dato</label>
+            <input type="number" name="year_to" value="{% if date_to %}{{date_to[0:4]}}{% endif %}" placeholder="2017" min="1500" max="2018" aria-describedby="dateToHelp">
+            <span>-</span>
+            <input type="number" name="month_to" value="{% if date_to %}{{date_to[4:6]|int}}{% endif %}" placeholder="12" min="1" max="12">
+            <span>-</span>
+            <input type="number" name="day_to" value="{% if date_to %}{{date_to[6:8]|int}}{% endif %}" placeholder="31" min="1" max="31">
+        </div>
+        <p class="help-text" id="dateToHelp">Indtast minimum et fire-cifret årstal</p>
+
+        {% if params %}
+            {% for tup in params %}
+                {% if tup[0] != 'start' %}<input type="hidden" name="{{tup[0]}}" value="{{tup[1]}}">{% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if not (date_from or date_to) %}
+            <button type="submit">Søg</button>
+        {% else %}
+            <button type="submit">Opdatér</button>
+        {% endif %}
+    </form>
+#}

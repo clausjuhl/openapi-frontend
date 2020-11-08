@@ -15,8 +15,8 @@
     <div class="active-filter">
         <p class="filter-title">{{ filter_labels.get(f.key) or f.key }}</p>
         <details class="disclosure">
-            <summary class="flex button" aria-haspopup="true">
-                <h4 id="facetHeader-{{f.key}}" class="title singleline">
+            <summary class="flex button singleline" aria-haspopup="true">
+                <h4 id="facetHeader-{{f.key}}" class="title">
                     <span>
                     {% if f.key == 'date_from' %}
                         {% if f.value[-1:-5] == '0101' %}
@@ -69,6 +69,6 @@
     </div>
 {% endfor %}
 
-<p>
+<div>
     <a href="/search">Ryd alle aktive filtre</a>
-</p>
+</div>
