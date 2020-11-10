@@ -43,10 +43,13 @@ async def search(req: Request):
 
     # enables (and resets) traversal TODO: Remember to remove again
     req.session["traverse"] = {
-        "next_results": resp.get("next"),
-        "prev_results": resp.get("previous"),
         "cur_results": req.url.query,
         "cur_ids": [int(d.get("id")) for d in resp.get("result")],
+        "total": resp.get("total"),
+        # "size": resp.get("size"),
+        "start": resp.get("start"),
+        "next_results": resp.get("next"),
+        "prev_results": resp.get("prev"),
     }
 
     context.update(resp)

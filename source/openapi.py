@@ -452,7 +452,7 @@ def list_resources(query_params: QueryParams = None):
         rm_tup = ("start", str(start))
         if start > 0:
             resp["first"] = _urlencode(params, remove=rm_tup)
-            resp["previous"] = _urlencode(
+            resp["prev"] = _urlencode(
                 params, remove=rm_tup, insert=("start", start - size)
             )
 

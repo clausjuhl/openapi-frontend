@@ -1,14 +1,23 @@
 <nav class="pagination" aria-label="Pagination">
-    <a class="btn" {% if first %}href="/search?{{first}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Første side">
-        <span class="pagination-icon" aria-hidden="true"><<</span>
-    </a>
-    <a class="btn" {% if previous %}href="/search?{{previous}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Forrige side">
-        <span class="pagination-icon" aria-hidden="true"><</span>
-    </a>
-    <a class="btn" {% if next %}href="/search?{{next}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Næste side">
-        <span class="pagination-icon" aria-hidden="true">></span>
-    </a>
-    <a class="btn" {% if last %}href="/search?{{last}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Sidste side">
-        <span class="pagination-icon" aria-hidden="true">>></span>
-    </a>
+    <a class="first" {% if first %}href="/search?{{first}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Første side">
+        <svg>
+            <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-left') }}"></use>
+        </svg></a>    
+    <a class="prev" {% if prev %}href="/search?{{prev}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Forrige side">
+        <svg>
+            <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-left') }}"></use>
+        </svg></a>
+    {% if total > 10000 %}
+        <span>Over 10.000 resultater...</span>
+    {% else %}
+        <span>{{start + 1}} - {% if (start + size) > total %}{{total}}{% else %}{{start + size}}{% endif %} af {{total}} <span class="sr-only">resultater</span></span>
+    {% endif %}
+    <a class="next" {% if next %}href="/search?{{next}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Næste side">
+        <svg>
+            <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-right') }}"></use>
+        </svg></a>
+    <a class="last" {% if last %}href="/search?{{last}}"{% else %}href="#" aria-disabled="true"{% endif %} title="Sidste side">
+        <svg>
+            <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-right') }}"></use>
+        </svg></a>
 </nav>

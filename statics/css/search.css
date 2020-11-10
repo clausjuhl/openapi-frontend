@@ -1,3 +1,4 @@
+/* Alle content wrapped in padding */
 .searchPage {
     max-width: 1200px;
     margin: 0 auto;
@@ -12,13 +13,13 @@
     flex-wrap: wrap-reverse;
     justify-content: space-between;
     align-items: center;
+    column-gap: 2.2em;
     border-bottom: 1px solid #e2e2e2;
 }
+/* SVG-iconlist */
 .searchToolbar .search-actions {
     display: flex;
     flex-grow: 1;
-    padding: .4em 0;
-    padding-left: .7em;
     min-width: 18em;
 }
 .searchToolbar .search-actions a {
@@ -27,57 +28,47 @@
     padding: 0 .5em;
     border-right: 1px solid #e2e2e2;
 }
+.searchToolbar .search-actions a:first-child {
+    border-left: 1px solid #e2e2e2;
+}
+
+/* "Visning"-disclosure */
 .searchToolbar .search-views {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
-    padding: 0 .7em;
 }
-.searchToolbar .search-pagination {
+.searchToolbar .search-views summary {
+    padding: .2em;
+    color: var(--link-color);
+}
+.searchToolbar .search-views .title {
+    /* Override h3-defaults */
+    font-size: 1em;
+    color: var(--link-color);
+}
+/* Pagination */
+.searchToolbar .search-pagination-wrapper {
     display: flex;
     flex-grow: 1;
     justify-content: flex-end;
+    /* align-items: center; */
     padding: .5em 0;
-    padding-right: .7em;
     min-width: 18em;
-    background-color: var(--color-tint-8);
+    /* background-color: var(--color-tint-8); */
 }
+/* .searchToolbar .search-pagination svg {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+} */
 @media (min-width: 46em) {
     .searchToolbar .search-pagination {
-        background-color: transparent;
+        /* background-color: transparent; */
     }
 }
 
-.searchPagination {
-    display: flex;
-    /* flex-wrap: wrap-reverse; */
-    justify-content: space-between;
-    align-items: center;
-    /* row-gap: .5em; */
-    margin-bottom: .5em;
-}
-.searchPagination nav,
-.searchPagination-counter {
-    display: flex;
-    flex-grow: 1;
-}
-.searchPagination nav {
-    justify-content: flex-end;
-}
-
-/* Child of .searchPagination, also has class .btn */
-.pagination a {
-    width: 1.2em;
-    margin-left: .3em;
-    text-align: center;
-}
-.pagination a[aria-disabled="true"] {
-    color: var(--color-tint-6);
-    border: 1px solid;
-    cursor: initial;
-    text-decoration: none;
-}
-
+/* 
 .searchOptions {
     display: flex;
     justify-content: space-between;
@@ -91,7 +82,7 @@
 .searchOptions-links {
     display: flex;
     flex-grow: 1;
-}
+} */
 
 /* Child of .searchOptions */
 .searchOptions-menus {

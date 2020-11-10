@@ -1,0 +1,18 @@
+.pagination {
+    display: flex;
+    align-items: center;
+}
+.pagination svg {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+.pagination a {
+    padding: .5em .7em;
+    text-align: center;
+}
+.pagination a[aria-disabled="true"] {
+    color: var(--color-tint-6);
+    cursor: initial;
+    text-decoration: none;
+}

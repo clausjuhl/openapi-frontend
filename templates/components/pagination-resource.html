@@ -1,29 +1,14 @@
 {# Pagination element for resource-pages #}
-<nav class="resource-pagination" aria-label="Paginering">
-        <a class="prev" {% if prev_item %}href="/resources/records/{{prev_item}}"{% else %}href="#" aria-disabled="true"{% endif %}>
+<nav class="pagination" aria-label="Pagination">
+        <a class="prev" {% if prev %}href="/resources/records/{{prev}}"{% else %}href="#" aria-disabled="true"{% endif %}>
             <svg>
                 <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-left') }}"></use>
             </svg></a>
-        <span>555 af 2232</span>
-        <a class="next" {% if next_item %}href="/resources/records/{{next_item}}"{% else %}href="#" aria-disabled="true"{% endif %}>
+        <span>{{cur_counter}} af {{total}}, start={{request.session.traverse.start}}</span>
+        <a class="next" {% if next %}href="/resources/records/{{next}}"{% else %}href="#" aria-disabled="true"{% endif %}>
             <svg>
                 <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-right') }}"></use>
             </svg></a>
         <span role="separator">|</span>
         <a class="" href="/search?{{current_search}}">Resultatliste</a>
 </nav>
-{#
-<nav class="resource-pagination" aria-label="Paginering">
-    <div>
-        <a class="prev" {% if prev_item %}href="/resources/records/{{prev_item}}"{% else %}href="#" aria-disabled="true"{% endif %}>
-            <svg>
-                <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-left') }}"></use>
-            </svg></a>
-        <a class="next" {% if next_item %}href="/resources/records/{{next_item}}"{% else %}href="#" aria-disabled="true"{% endif %}>
-            <svg>
-                <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-right') }}"></use>
-            </svg></a>
-    </div>
-    <div><a href="/search?{{current_search}}">Resultatlisten</a></div>    
-</nav>
-#}
