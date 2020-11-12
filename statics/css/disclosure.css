@@ -22,11 +22,11 @@
 }
 
 /* text-part of summary */
-.disclosure summary.singleline .title {
+/* .disclosure summary.singleline .title {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
+} */
 /* icon-part of summary */
 .disclosure .icon {
     fill: currentColor;

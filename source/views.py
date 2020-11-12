@@ -1,3 +1,4 @@
+from starlette.datastructures import MultiDict, QueryParams
 from starlette.requests import Request
 from starlette.responses import FileResponse, JSONResponse
 
@@ -41,16 +42,33 @@ async def search(req: Request):
         context["errors"] = resp.get("errors")
         return render("error.html", context)
 
-    # enables (and resets) traversal TODO: Remember to remove again
-    req.session["traverse"] = {
-        "cur_results": req.url.query,
-        "cur_ids": [int(d.get("id")) for d in resp.get("result")],
-        "total": resp.get("total"),
-        # "size": resp.get("size"),
-        "start": resp.get("start"),
-        "next_results": resp.get("next"),
-        "prev_results": resp.get("prev"),
-    }
+    # enables (and resets) traversal
+    if resp.get("size") > 1 and resp.get("result"):
+        ses = req.session
+        params = MultiDict(req.query_params)
+        params.pop("start", None)
+        cur_search = QueryParams(params).__str__()
+
+        if ses.get("traverse") and cur_search == ses["traverse"].get(
+            "cur_search"
+        ):
+            pass
+        else:
+            ses["traverse"] = {}
+            ses["traverse"]["total"] = resp.get("total")
+            ses["traverse"]["size"] = resp.get("size")
+            ses["traverse"]["cur_search"] = cur_search
+            ses["traverse"]["batches"] = {}
+
+        start = str(resp.get("start", 0))
+        ses["traverse"]["start"] = int(start)
+
+        if start not in ses["traverse"]["batches"]:
+            ses["traverse"]["batches"][start] = [
+                int(d.get("id")) for d in resp.get("result")
+            ]
+
+        ses["traverse"]["cur_ids"] = ses["traverse"]["batches"].get(start)
 
     context.update(resp)
     return render("search.html", context)

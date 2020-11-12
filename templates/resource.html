@@ -611,6 +611,17 @@
             {% endif %}
         </p>
     </div>
+
+    {% if prev or next %}
+        <div class="resource-toolbar">
+            <div class="resource-toolbar-inner">
+                <div class="resource-navigation">
+                    {% include "components/pagination-resource.html" %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
     {% if user %}
         {% set already = r.id in (user.get("bookmarks") or []) %}
         <button data-resource-id="{{r.id}}" class="js-only bookmark-handler{% if already %} hide{% endif %}" data-action="create-bookmark">Bogmærk</button>

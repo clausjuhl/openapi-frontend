@@ -6,8 +6,8 @@
     align-items: baseline;
 }
 .field-key {
-    flex-grow: 0; /* default */
-    flex-shrink: 1; /* default */
+        /* flex-grow: 0;
+        flex-shrink: 1; */
     width: 16ch;
     overflow-x: hidden;
     text-transform: uppercase;
@@ -16,9 +16,9 @@
     margin-right: .8em;
 }
 .field-value {
-    flex-grow: 10;
+    /* flex-grow: 10;
     flex-shrink: 1;
-    flex-basis: 50ch;
+    flex-basis: 50ch; */
     margin-top: .2em;
     margin-bottom: .8em;
 }

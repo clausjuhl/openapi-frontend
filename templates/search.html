@@ -20,7 +20,7 @@
 
     <section id="searchfilters" class="searchfilters" aria-labelledby="searchfilters-header">
         <details class="disclosure">
-            <summary id="" class="flex button" aria-haspopup="true">
+            <summary id="searchfilters-summary" class="flex button" aria-haspopup="true">
                 <h2 id="searchfilters-header" class="title">Søgefiltre <span aria-hidden="true">{% if filters %}({{filters|length}}){% endif %}</span></h2>
                 <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
             </summary>
@@ -246,15 +246,16 @@
                 {% endfor %}
                 </div>
             {% endif %}
-
-            {% if next or previous %}
-                {% include 'components/pagination-search.html' %}
-            {% endif %}
         {% else %}
             <div class="zeroHits">
                 {% include 'components/zero-hits.html' %}
             </div>
         {% endif %}
     </section>
+    {% if next or previous %}
+        <div class="pagination-footer">
+            {% include 'components/pagination-search.html' %}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

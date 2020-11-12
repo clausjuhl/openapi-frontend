@@ -1,5 +1,7 @@
 from urllib.parse import urlencode
 
+from starlette.datastructures import QueryParams
+
 from source.settings import QUERY_PARAMS
 
 
@@ -127,3 +129,10 @@ def format_record(record):
             result[key] = value
 
     return result
+
+
+def generate_url(start: int, q_str: QueryParams = None) -> str:
+    if q_str:
+        return f"{str(q_str)}&start={start}"
+    else:
+        return f"?start={start}"

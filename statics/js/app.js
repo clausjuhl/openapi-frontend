@@ -6,4 +6,5 @@ window.addEventListener('load', function () {
             document.getElementById(id_).focus();
         })
     }
+    document.querySelector("#searchfilters-details").setAttribute("open", "open");
 });

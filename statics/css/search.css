@@ -20,8 +20,16 @@
 .searchToolbar .search-actions {
     display: flex;
     flex-grow: 1;
-    min-width: 18em;
+    min-width: 11em;
 }
+@media (min-width: 30em) {
+    /* expand width to same as .search-pagination-wrapper 
+    on large screen to center .search-views */
+    .searchToolbar .search-actions {
+        /* min-width: 18em; */
+    }
+}
+
 .searchToolbar .search-actions a {
     display: flex;
     align-items: center;
@@ -57,16 +65,22 @@
     min-width: 18em;
     /* background-color: var(--color-tint-8); */
 }
+
+/* Pagination in footer */
+.pagination-footer .pagination{
+    justify-content: flex-end;
+}
 /* .searchToolbar .search-pagination svg {
     width: 1em;
     height: 1em;
     vertical-align: middle;
 } */
-@media (min-width: 46em) {
+
+/* @media (min-width: 46em) {
     .searchToolbar .search-pagination {
-        /* background-color: transparent; */
+        background-color: transparent;
     }
-}
+} */
 
 /* 
 .searchOptions {
@@ -135,6 +149,9 @@
 }
 .searchFilters .disclosure .title {
     font-size: 1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .facet {
@@ -218,7 +235,8 @@ li[aria-expanded="true"] > .facetItem-header {
         grid-column: 1;
         grid-row: 1 / 4;
     }
-    #searchFilters-header {
+    /* js handles the open-attribute on the details-tag */
+    .js #searchfilters-summary {
         display: none;
     }
     .searchAdvanced {

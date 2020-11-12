@@ -4,7 +4,7 @@
             <svg>
                 <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-left') }}"></use>
             </svg></a>
-        <span>{{cur_counter}} af {{total}}, start={{request.session.traverse.start}}</span>
+        <span>{{cur_counter}} af {{total}}</span>
         <a class="next" {% if next %}href="/resources/records/{{next}}"{% else %}href="#" aria-disabled="true"{% endif %}>
             <svg>
                 <use href="{{ url_for('static', path='/fonts/svgs.svg#chevron-right') }}"></use>

@@ -24,12 +24,12 @@
     display: flex;
     flex-grow: 1;
     /* padding: .4em 0; */
-    min-width: 18em;
+    min-width: 17em;
 }
 .resource-actions a {
     display: flex;
     align-items: center;
-    padding: 0 .5em;
+    padding: .5em;
     border-right: 1px solid #e2e2e2;
 }
 .resource-actions a:first-child {
@@ -50,7 +50,7 @@
     flex-grow: 1;
     justify-content: flex-end;
     padding: .5em 0;
-    min-width: 18em;
+    min-width: 17em;
     background-color: var(--color-tint-8);
 }
 @media (min-width: 46em) {
@@ -108,16 +108,20 @@
     border: 1px solid lightgray;
     border-radius: 2px;
     padding: .2em .4em;
-    width: max-content;
+    /* width: max-content; */
 }
 .resource .field summary:hover {
     background-color: #e9e9e9;
+}
+.resource .field .disclosure .title {
+    padding-right: .5em;
+    border-right: 1px solid lightgray;
 }
 .resource .field-value > div {
     margin-bottom: .3em;
 }
 .resource-core .field-value {
-    flex-basis: 20ch;
+    /* flex-basis: 20ch; */
 }
 
 /* HEADINGS */
