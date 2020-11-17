@@ -25,7 +25,7 @@
     <div class="listitem-heading">
         {% if record.label %}
             <h3 class="listitem-label">
-                <a href="/resources/records/{{record.id}}">
+                <a class="link" href="/resources/records/{{record.id}}">
                     {# <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med overskriften.&nbsp;</span> #}
                     {{record.label|truncate(200)}}
                 </a>
@@ -35,21 +35,21 @@
             {% endif %}
         {% elif record.summary %}
             <h3 class="listitem-summary">
-                <a href="/resources/records/{{record.id}}">
+                <a class="link" href="/resources/records/{{record.id}}">
                     {# <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelse.&nbsp;</span> #}
                     {{record.summary|truncate(300)}}
                 </a>
             </h3>
         {% elif record.desc_notes %}
             <h3 class="listitem-summary">    
-                <a href="/resources/records/{{record.id}}">
+                <a class="link" href="/resources/records/{{record.id}}">
                     {# <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede med følgende beskrivelsesnote.&nbsp;</span> #}
                     {{record.desc_notes|truncate(300)}}
                 </a>
             </h3>
         {% else %}
             <h3 class="listitem-summary">
-                <a href="/resources/records/{{record.id}}">
+                <a class="link" href="/resources/records/{{record.id}}">
                     {# <span class="sr-only">Søgeresultat {{loop.index}} ud af {{size|string}}. Billede.&nbsp;</span> #}
                     <span>Materialet er ikke beskrevet</span>
                 </a>

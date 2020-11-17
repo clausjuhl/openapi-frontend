@@ -1,23 +1,13 @@
 {# Filter-list #}
 
-{#
-    <svg class="icon">
-        <use xlink:href="/static/images/sprites.svg#icon-angle-down"></use>
-    </svg>
-    <svg class="icon">
-        <use xlink:href="/static/images/sprites.svg#icon-angle-up"></use>
-    </svg>
-#}
-
 {% set filter_labels ={"availability": "Tilgængelighed", "usability": "Brugbarhed", "content_types": "Materialetype", "subjects": "Emne", "collection": "Samling"} %}
 
 {% for f in filters %}
-    <div class="active-filter">
-        <p class="filter-title">{{ filter_labels.get(f.key) or f.key }}</p>
-        <details class="disclosure">
-            <summary class="flex button singleline" aria-haspopup="true">
-                <h4 id="facetHeader-{{f.key}}" class="title">
-                    <span>
+    <div class="activeFilter">
+        <p class="activeFilter-title">{{ filter_labels.get(f.key) or f.key }}</p>
+        <details class="disclosure filter">
+            <summary aria-haspopup="true">
+                <h4 id="activefilterHeader-{{f.key}}" class="filter-title">
                     {% if f.key == 'date_from' %}
                         {% if f.value[-1:-5] == '0101' %}
                             {{f.value[0:4]}} og senere
@@ -37,38 +27,48 @@
                             {{f.value}}
                         {% endif %}
                     {% endif %}
-                    </span>
                 </h4>
-                <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
+                <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path>
+                </svg>
             </summary>
-            <div class="content">
+            <div class="filterPanel">
                 {# Present on all filters #}
-                <a class="facetItem-header" href="/search?{{f.remove_link}}">Fjern filteret fra søgningen</a>
-
+                <span class="filterItem">
+                    <a class="filterItem-link" href="/search?{{f.remove_link}}">Fjern filteret fra søgningen</a>
+                </span>
                 {# Present on all id-based queryparams #}
                 {% if f.invert_link and f.key not in ['date_from', 'date_to', 'series'] %}
-                    <a class="facetItem-header" href="/search?{{f.invert_link}}">Vend til {% if f.negated%}positivt{% else%}negativt{% endif %} filter</a>
+                    <span class="filterItem">
+                        <a class="filterItem-link" href="/search?{{f.invert_link}}">Vend til {% if f.negated%}positivt{% else%}negativt{% endif %} filter</a>
+                    </span>
                 {% endif %}
         
                 {# Present on some people and organisations #}
                 {% if f.creator_link %}
-                    <a class="facetItem-header" href="/search?{{f.creator_link}}">Søg som kreativt ophav</a>
+                    <span class="filterItem">
+                        <a class="filterItem-link" href="/search?{{f.creator_link}}">Søg som kreativt ophav</a>
+                    </span>
                 {% endif %}
         
                 {# Present on some people and organisations #}
                 {% if f.collector_link %}
-                    <a class="facetItem-header" href="/search?{{f.collector_link}}">Søg som arkivskaber</a>
+                    <span class="filterItem">
+                        <a class="filterItem-link" href="/search?{{f.collector_link}}">Søg som arkivskaber</a>
+                    </span>
                 {% endif %}
         
                 {# If more than one filter #}
                 {% if filters|length() > 1 and f.key != 'series' %}
-                    <a class="facetItem-header" href="/search?{{f.key}}={{f.value}}">Ny søgning med kun dette filter</a>
+                    <span class="filterItem">
+                        <a class="filterItem-link" href="/search?{{f.key}}={{f.value}}">Ny søgning med kun dette filter</a>
+                    </span>
                 {% endif %}
             </div>
         </details>
     </div>
 {% endfor %}
 
-<div>
+<div class="activeFilter-removeAll">
     <a href="/search">Ryd alle aktive filtre</a>
 </div>

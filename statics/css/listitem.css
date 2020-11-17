@@ -19,8 +19,11 @@
 .listitem-heading {
     grid-row: 1;
 }
-    .listitem-summary,
-    .listitem-label {
+    h3.listitem-summary {
+        font-size: 1em;
+        font-weight: normal;
+    }
+    h3.listitem-label {
         font-size: 1.1em;
         font-weight: normal;
     }

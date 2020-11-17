@@ -1,16 +1,23 @@
 /* the details-wrapper */
 .disclosure {
-    display: block;
     position: relative;
 }
 
-/* summary */
+/* Summary */
 .disclosure summary {
     cursor: pointer;
     list-style: none; /* hide triangle */
 }
 .disclosure summary::-webkit-details-marker {
     display: none; /* hide triangle for chrome */
+}
+
+/* Summary-styles */
+.disclosure summary.button {
+    border: 1px solid var(--color-tint-7);
+    border-radius: 3px;
+    padding: .3em .7em;
+    appearance: none;
 }
 .disclosure summary.flex {
     display: flex;
@@ -20,46 +27,28 @@
 .disclosure summary.inline {
     display: inline-block;
 }
-
-/* text-part of summary */
-/* .disclosure summary.singleline .title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-} */
-/* icon-part of summary */
-.disclosure .icon {
+/* Icon-part of summary */
+.disclosure summary .icon {
     fill: currentColor;
     margin-left: .25em;
     /* Prevent shrinking when text in the span inside button is overflowing */
     flex-shrink: 0;
 }
-.disclosure[open] .icon {
+.disclosure[open] > summary > .icon {
     transform: rotate(180deg);
 }
-/* button-like summary */
-.disclosure .button {
-    border: 1px solid var(--color-tint-7);
-    border-radius: 3px;
-    padding: .3em .7em;
-    appearance: none;
-}
-.disclosure .button:focus {
-    outline: 1px dotted transparent;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 3px rgba(3,102,214,0.3);
-}
 
-/* Disclosure-content */
+
+/**********
+* Content *
+***********/
 
 /* elements inside content */
-.disclosure .content a {
+.disclosure .contentItem {
     display: block;
-    padding: .25em .5em .25em 1em;
-    /* color: rgb(34, 34, 236); */
 }
-.disclosure .content.singleline a,
-.disclosure .content.singleline span {
+
+.disclosure .singleline .contentItem {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

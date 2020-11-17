@@ -1,13 +1,25 @@
-/* Alle content wrapped in padding */
+/*********
+* LAYOUT *
+*********/
 .searchPage {
     max-width: 1200px;
     margin: 0 auto;
     padding: .5em .7em 2em .7em;
 }
+/* pad bottom necessary for small screens, no influence on large */
+#searchfilters {
+    padding-bottom: 1em;
+}
+/***********
+* HEADINGS *
+***********/
 .searchPage h2 {
     font-size: 1.3em;
 }
 
+/**********
+* TOOLBAR *
+**********/
 .searchToolbar {
     display: flex;
     flex-wrap: wrap-reverse;
@@ -22,14 +34,6 @@
     flex-grow: 1;
     min-width: 11em;
 }
-@media (min-width: 30em) {
-    /* expand width to same as .search-pagination-wrapper 
-    on large screen to center .search-views */
-    .searchToolbar .search-actions {
-        /* min-width: 18em; */
-    }
-}
-
 .searchToolbar .search-actions a {
     display: flex;
     align-items: center;
@@ -55,195 +59,31 @@
     font-size: 1em;
     color: var(--link-color);
 }
-/* Pagination */
+/* Pagination-block wrapper */
 .searchToolbar .search-pagination-wrapper {
     display: flex;
     flex-grow: 1;
     justify-content: flex-end;
-    /* align-items: center; */
-    padding: .5em 0;
     min-width: 18em;
-    /* background-color: var(--color-tint-8); */
 }
 
 /* Pagination in footer */
-.pagination-footer .pagination{
+.pagination-footer .pagination {
     justify-content: flex-end;
 }
-/* .searchToolbar .search-pagination svg {
-    width: 1em;
-    height: 1em;
-    vertical-align: middle;
-} */
 
-/* @media (min-width: 46em) {
-    .searchToolbar .search-pagination {
-        background-color: transparent;
-    }
-} */
-
-/* 
-.searchOptions {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: .5em .3em;
-    background-color: whitesmoke;
-    border-top: 1px solid beige;
-    border-bottom: 1px solid beige;
-}
-.searchOptions-links {
-    display: flex;
-    flex-grow: 1;
-} */
-
-/* Child of .searchOptions */
-.searchOptions-menus {
-    display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
-    align-items: center;
-    column-gap: .4em;
-}
-
-.searchOptions-menus h3 {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    font-size: 1em;
-    font-weight: 400;
-}
-
-.searchOptions-list a {
-    display: block;
-    padding: .3em;
-    border-bottom: 1px solid rgb(240, 240, 240);
-    background-color: rgb(245, 245, 245);
-}
-
-.searchOptions-list a:not([aria-current="page"]):hover {
-    background-color: rgb(235, 235, 235);
-}
-.searchOptions-list a:focus,
-.searchOptions-list a:active {
-    outline: 1px solid;
-}
-
-/* Facets and filters as details */
-.searchFilters .filter-title {
-    margin: .8em 0 0;
-    text-transform: uppercase;
-    font-weight: 400;
-    font-size: 85%;
-}
-.searchFilters .disclosure .content {
-    background-color: var(--color-tint-9);
-    border: 1px solid var(--color-tint-7);
-    border-top: 0;
-}
-
-.searchFilters .disclosure[open] .button {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0; 
-}
-.searchFilters .disclosure .title {
-    font-size: 1em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.facet {
-    margin-top: .5em;
-}
-
-/* Facets and filters - implements collapsible section with trees, simple ul's or forms */
-.facets-header {
-    font-size: 1.3em;
-    margin: 0 0 .4em;
-    border-bottom: 1px solid;
-}
-
-.facetHeader {
-    padding: 0;
-    margin: .5em 0 0;
-}
-
-/* The button is added by js */
-.facetHeader button {
-    width: 100%;
-    padding: .4em;
-    color: var(--color-dark);
-    background-color: var(--color-tint-9);
-    border: 1px solid var(--color-tint-7);
-}
-.facetHeader button:hover {
-    background-color: var(--color-tint-8);
-}
-.facetHeader button[aria-expanded="true"] {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0; 
-}
-
-/* Facet-panel only styled if js */
-.facetPanel {
-    background-color: var(--color-lightergray);
-    border-left: 1px solid var(--color-lightgray);
-    border-right: 1px solid var(--color-lightgray);
-    border-bottom: 1px solid var(--color-lightgray);
-}
-.facetPanel a {
-    color: rgb(34, 34, 236);
-}
-/* FacetItem is  */
-.facetItem-header {
-    padding: .3em;
-    border-bottom: 1px solid rgb(240, 240, 240);
-    background-color: rgb(245, 245, 245);
-}
-/* facetItems as link always contain left text and right numbers or X */
-a.facetItem-header {
-    display: flex;
-    justify-content: space-between;
-}
-
-/* Indent sub-trees */
-ul[role="group"] .facetItem-header {
-    padding-left: .6em;
-}
-.facetItem-header:hover {
-    background-color: rgb(235, 235, 235);
-}
-.facetItem-header:focus,
-.facetItem-header:active {
-    outline: 1px solid;
-}
-li[aria-expanded="true"] > .facetItem-header {
-    background-color: rgb(230, 230, 230);
-}
-
-@media (min-width: 50em) {
+@media (min-width: 46em) {
     .searchPage {
         display: grid;
         grid-template-columns: 17em auto;
         grid-template-rows: repeat(2, min-content) 1fr;
         column-gap: 2em;
     }
-    .searchfilters,
-    .searchFilters {
+    #filterSection {
         grid-column: 1;
         grid-row: 1 / 4;
     }
-    /* js handles the open-attribute on the details-tag */
-    .js #searchfilters-summary {
-        display: none;
-    }
-    .searchAdvanced {
-        grid-column: 2;
-        /* grid-row: 1; */
-    }
-    .searchPagination {
+    #toolbarSection {
         grid-column: 2;
         /* grid-row: 2; */
     }

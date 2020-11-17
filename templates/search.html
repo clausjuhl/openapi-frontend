@@ -9,48 +9,26 @@
 {% block content %}
 <div class="searchPage">
 
-{# NOT IMPLEMENTED YET 
-    <section class="searchAdvanced" aria-labelledby="searchAdvanced-header">
-        <h2 id="searchAdvanced-header" data-collapsible-header>Avanceret søgning</h2>
-        <div>
-            <p>This is the place for the advanced searchform</p>
-        </div>
-    </section>
-#}
-
-    <section id="searchfilters" class="searchfilters" aria-labelledby="searchfilters-header">
-        <details class="disclosure">
-            <summary id="searchfilters-summary" class="flex button" aria-haspopup="true">
-                <h2 id="searchfilters-header" class="title">Søgefiltre <span aria-hidden="true">{% if filters %}({{filters|length}}){% endif %}</span></h2>
+    <section id="filterSection" class="searchfilters" aria-labelledby="filterSection-header">
+        <details id="filterSection-details" class="disclosure">
+            <summary class="flex button" aria-haspopup="true">
+                <h2 id="filterSection-header" class="title">Søgefiltre <span aria-hidden="true">{% if filters %}({{filters|length}}){% endif %}</span></h2>
                 <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
             </summary>
-            <div class="content">
+            <div>
                 {% if filters %}
-                    <h3 class="activefilters-heading">Aktive søgefiltre</h3>
+                    <h3 class="filterSection-heading">Aktive søgefiltre</h3>
                     {% include 'components/filters.html' %}
                 {% endif %}
-                <h3 class="facets-heading">Søgefiltre</h3>
+                <h3 class="filterSection-heading">Søgefiltre</h3>
                 {% include 'components/facets.html' %}
             </div>
         </details>
     </section>
 
-{#
-    <section id="filterregion" class="searchFilters" aria-labelledby="searchFilters-header">
-        <h2 id="searchFilters-header" class="js-until-45" data-collapsible-header>Søgefiltre <span aria-hidden="true">{% if filters %}({{filters|length}}){% endif %}</span></h2>
-        <div id="searchFilters-section">
-            {% if filters %}
-                <h3 class="facets-header">Aktive søgefiltre</h3>
-                {% include 'components/filters.html' %}
-            {% endif %}
-            <h3 class="facets-header">Søgefiltre</h3>
-            {% include 'components/facets.html' %}
-        </div>
-    </section>
-#}
-
     {% if result %}
-        <div class="searchToolbar">
+        <section id="toolbarSection" class="searchToolbar" aria-labelledby="toolbarSection-header">
+            <h2 id="toolbarSection-header" class="sr-only">Toolbar</h2>
             <nav class="search-actions" aria-label="Search Actions">
                 <a href="#">
                     <span class="sr-only">Print søgningen</span>
@@ -118,7 +96,7 @@
             <div class="search-pagination-wrapper">
                 {% include 'components/pagination-search.html' %}
             </div>
-        </div>
+        </section>
     {% endif %}
 
 
