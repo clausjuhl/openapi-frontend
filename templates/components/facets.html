@@ -77,34 +77,34 @@
         </svg>
     </summary>
     <div class="filterPanel">
-        <form method="get" action="/search" aria-describedby="filterHeader-date">
-            <div>
-                <label for="year_from" class="cell">Tidligste dato</label>
-                <input type="number" name="year_from" value="{% if date_from %}{{date_from[0:4]}}{% endif %}" placeholder="1600" min="1500" max="2018" aria-describedby="dateFromHelp">
-                <span>-</span>
-                <input type="number" name="month_from" value="{% if date_from %}{{date_from[4:6]|int}}{% endif %}" placeholder="01" min="1" max="12">
-                <span>-</span>
-                <input type="number" name="day_from" value="{% if date_from %}{{date_from[6:8]|int}}{% endif %}" placeholder="01" min="1" max="31">
-            </div>
-            <p class="help-text" id="dateFromHelp">Indtast minimum et fire-cifret årstal</p>
-        
-            <div>
-                <label for="year_to" class="cell">Seneste dato</label>
-                <input type="number" name="year_to" value="{% if date_to %}{{date_to[0:4]}}{% endif %}" placeholder="2017" min="1500" max="2018" aria-describedby="dateToHelp">
-                <span>-</span>
-                <input type="number" name="month_to" value="{% if date_to %}{{date_to[4:6]|int}}{% endif %}" placeholder="12" min="1" max="12">
-                <span>-</span>
-                <input type="number" name="day_to" value="{% if date_to %}{{date_to[6:8]|int}}{% endif %}" placeholder="31" min="1" max="31">
-            </div>
-            <p class="help-text" id="dateToHelp">Indtast minimum et fire-cifret årstal</p>
-        
+        <form id="dateForm" class="dateForm" method="get" action="/search" aria-describedby="filterHeader-date">
+            <fieldset id="date-from-fieldset" class="field">
+                <legend>
+                    <span>Tidligste dato </span>
+                    <span class="pattern-hint">(ÅÅÅÅ-MM-DD)</span>
+                </legend>
+                <div id="date-from-wrapper">
+                    <label for="date-from"></label>
+                    <input id="date-from" type="text" name="date-from" pattern="^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]$" value="{% if date_from %}{{date_from}}{% endif %}">
+                </div>
+            </fieldset>
+            <fieldset id="date-to-fieldset" class="field">
+                <legend>
+                    <span>Seneste dato </span>
+                    <span class="pattern-hint">(ÅÅÅÅ-MM-DD)</span>
+                </legend>
+                <div id="date-to-wrapper">
+                    <label for="date-to"></label>
+                    <input id="date-to" type="text" name="date-to" pattern="^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]$" value="{% if date_to %}{{date_to}}{% endif %}">
+                </div>
+            </fieldset>
+     
             {% if params %}
                 {% for tup in params %}
-                    {% if tup[0] != 'start' %}<input type="hidden" name="{{tup[0]}}" value="{{tup[1]}}">{% endif %}
+                    {% if tup[0] not in ['date_from', 'date_to', 'start'] %}<input type="hidden" name="{{tup[0]}}" value="{{tup[1]}}">{% endif %}
                 {% endfor %}
             {% endif %}
-        
-            {# TODO: If all date-fields are empty, submit must be disabled #}
+
             {% if not (date_from or date_to) %}
                 <button type="submit">Søg</button>
             {% else %}
@@ -113,58 +113,3 @@
         </form>
     </div>
 </details>
-
-
-{#
-    {% for k ,v in facets.items() %}
-        <h4 id="facetHeader-{{k}}" class="facetHeader" data-collapsible-header>{{ facet_labels.get(k) }}</h4>
-        {% if k in ['subjects', 'content_types'] %}
-            <ul class="collapsible-panel facetPanel" aria-labelledby="facetHeader-{{k}}" role="tree">
-                {% for item in v recursive %}
-                    {% if item.remove_link %}
-                    <li role="none">
-                        <a class="facetItem-header" href="/search?{{item.remove_link}}" role="treeitem">
-                            <span>{{item.label}}</span><span>X</span>
-                        </a>
-                    {% elif item.add_link %}
-                        {% if item.children %}
-                        <li role="treeitem" aria-expanded="false">
-                            <span class="facetItem-header">{{item.label}}</span>
-                            <ul role="group">
-                                <li role="none">
-                                    <a class="facetItem-header" href="/search?{{item.add_link}}" role="treeitem">
-                                        <span>Vælg alt herunder</span><span>({{item.count}})</span>
-                                    </a>
-                                </li>
-                                {{ loop( item.children ) }}
-                            </ul>
-                        {% else %}
-                        <li role="none">
-                            <a class="facetItem-header" href="/search?{{item.add_link}}" role="treeitem">
-                                <span>{{item.label}}</span><span>({{item.count}})</span>
-                            </a>
-                        {% endif %}
-                    {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <ul class="collapsible-panel facetPanel" aria-labelledby="facetHeader-{{k}}">
-                {% for item in v %}
-                    <li>
-                    {% if item.remove_link %}
-                        <a class="facetItem-header" href="/search?{{item.remove_link}}">
-                            <span>{{item.label}}</span><span>X</span>
-                        </a>
-                    {% elif item.add_link %}
-                        <a class="facetItem-header" href="/search?{{item.add_link}}">
-                            <span>{{item.label}}</span><span>({{item.count}})</span>
-                        </a>
-                    {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endfor %}
-#}
-

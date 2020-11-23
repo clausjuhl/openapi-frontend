@@ -12,3 +12,64 @@ input:focus + [role="tooltip"] {
 	position: absolute;
 	top: 100%;
 }
+
+fieldset {
+	border: none;
+	padding: 0;
+}
+
+.dateForm {
+	padding: .5em;
+}
+.dateForm .field {
+	margin-bottom: 1em;
+}
+.dateForm label,
+.dateForm legend {
+    font-size: 1em;
+    line-height: 1.25;
+    margin-bottom: .2em;
+    margin-top: .4em;
+    display: block;
+}
+.dateForm legend {
+    font-weight: 700;
+}
+.dateForm .pattern-hint {
+	font-size: 75%;
+}
+.no-js .dateForm .js {
+    display: none;
+}
+.js .dateForm .no-js {
+    display: none;
+}
+
+.dateForm .inputWrapper {
+    display: inline-block;
+}
+.dateForm label {
+    display: block;
+    color: #2d3748;
+}
+.dateForm input {
+    -webkit-appearance: none;
+    border-radius: 0;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: 1.25;
+    padding: .3em;
+    border: 2px solid #718096;
+	-moz-appearance: textfield;
+	margin-right: .5em;
+}
+.dateForm .dayInput,
+.dateForm .monthInput {
+    width: 3em;
+}
+.dateForm .yearInput {
+	width: 4.7em;
+}

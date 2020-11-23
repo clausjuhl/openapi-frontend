@@ -482,6 +482,8 @@ def list_resources(query_params: QueryParams = None):
     resp["start"] = api_resp.get("start")
     resp["size"] = api_resp.get("size")
     resp["sort"] = api_resp.get("sort")
+    resp["date_from"] = api_resp.get("date_from")
+    resp["date_to"] = api_resp.get("date_to")
     resp["result"] = api_resp.get("result")
     # resp["api_response"] = api_resp.get("api_response")
     return resp

@@ -75,26 +75,26 @@
                     </svg></a>
             </div>
             <div class="resource-toc">
-                <details class="disclosure dropdown">
-                    <summary class="flex singleline">
+                <details class="disclosure">
+                    <summary aria-haspopup="true">
                         <span class="title">
                             <span class="sr-only">Indholdsfortegnelse</span>
                             <span aria-hidden="true">Indhold</span>
                         </span>
                         <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
                     </summary>
-                    <div class="content right singleline">
+                    <div class="dropdown-right">
                         <ul>
-                            <li><a href="#resource-title">Titel</a></li>
-                            <li><a href="#description">Beskrivelse</a></li>
+                            <li><a class="tocItem" href="#resource-title">Titel</a></li>
+                            <li><a class="tocItem" href="#description">Beskrivelse</a></li>
                             {% if r.desc_data %}
-                                <li><a href="#descriptiondata">Beskrivelsesdata</a></li>
+                                <li><a class="tocItem" href="#descriptiondata">Beskrivelsesdata</a></li>
                             {% endif %}
                             {% if r.locations or r.people or r.events or r.organisations or r.objects %}
-                                <li><a href="#relations">Relationer</a></li>
+                                <li><a class="tocItem" href="#relations">Relationer</a></li>
                             {% endif %}
-                            <li><a href="#rights">Rettigheder</a></li>
-                            <li><a href="#availability">Tilgængelighed</a></li>
+                            <li><a class="tocItem" href="#rights">Rettigheder</a></li>
+                            <li><a class="tocItem" href="#availability">Tilgængelighed</a></li>
                         </ul>
                     </div>
                 </details>
@@ -158,14 +158,18 @@
                             <span class="field-key" aria-hidden="true">Arkivskaber</span>
                             <div class="field-value">
                                 {% for item in r.collectors %}
-                                    <details class="disclosure dropdown">
-                                        <summary class="flex singleline" aria-haspopup="true">
+                                    <details class="disclosure">
+                                        <summary aria-haspopup="true">
                                             <span class="title"><span class="sr-only">Arkivskaber.</span>{{item.label}}</span>
                                             <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
                                         </summary>
-                                        <div class="content">
-                                            <a href="/search?{{item.new_link}}">Læs mere om {{item.label}}</a>
-                                            <a href="/search?{{item.new_link}}">Find alle materialer med denne arkivskaber</a>
+                                        <div class="dropdown-right">
+                                            <span class="fieldItem">
+                                                <a href="/search?{{item.new_link}}">Læs mere om {{item.label}}</a>
+                                            </span>
+                                            <span class="fieldItem">
+                                                <a href="/search?{{item.new_link}}">Find alle materialer med denne arkivskaber</a>
+                                            </span>
                                         </div>
                                     </details>
                                 {% endfor %}
@@ -200,14 +204,18 @@
                                             <span class="sr-only">Kreativt ophav.</span>
                                             {{item.label}}
                                         {% else %}
-                                            <details class="disclosure dropdown">
-                                                <summary class="flex singleline" aria-haspopup="true">
+                                            <details class="disclosure">
+                                                <summary aria-haspopup="true">
                                                     <span class="title"><span class="sr-only">Kreativt ophav.</span>{{item.label}}</span>
                                                     <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
                                                 </summary>
-                                                <div class="content">
-                                                    <a href="/search?{{item.new_link}}">Læs mere om {{item.label}}</a>
-                                                    <a href="/search?{{item.new_link}}">Find alle materialer med denne kreative skaber</a>
+                                                <div class="dropdown-right">
+                                                    <span class="fieldItem">
+                                                        <a href="/search?{{item.new_link}}">Læs mere om {{item.label}}</a>
+                                                    </span>
+                                                    <span class="fieldItem">
+                                                        <a href="/search?{{item.new_link}}">Find alle materialer med denne kreative skaber</a>
+                                                    </span>
                                                 </div>
                                             </details>
                                         {% endif %}

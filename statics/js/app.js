@@ -1,7 +1,6 @@
-function test_searchfilters() {
+function test_searchfilters(details) {
     // Open filtersections root-"details"-tag in grid-view (min 46em)
     // Hide filtersections "summary"-tag when in grid-view
-    let details = document.querySelector("#filterSection-details");
     let summary = details.firstElementChild;
 
     if (window.matchMedia(`(min-width: 46em)`).matches) {
@@ -24,10 +23,11 @@ window.addEventListener('load', function () {
             document.getElementById(id_).focus();
         })
     }
-    test_searchfilters();
+    window.filterSectionDetails = document.querySelector("#filterSection-details");
+    if (filterSectionDetails) { test_searchfilters(filterSectionDetails); }
 });
 
 // Resize
 window.addEventListener('resize', function () {
-    test_searchfilters();
+    if (filterSectionDetails) { test_searchfilters(filterSectionDetails); }
 });

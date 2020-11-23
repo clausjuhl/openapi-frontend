@@ -4,10 +4,8 @@
   <h2>Error</h2>
   <dl>
   {% for error in errors %}
-      <dt>Fejlkode:</dt>
-      <dd>{{error.code}}</dd>
-      <dt>Beskrivelse:</dt>
-      <dd>{{error.detail}}</dd>
+      <dt>Fejl:</dt>
+      <dd>{{error}}</dd>
   {% endfor %}
   </dl>
 {% endblock %}

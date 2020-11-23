@@ -63,6 +63,26 @@
     {% endif %}
 {%- endmacro %}
 
+{% macro get_date(date) %}
+    {% set months = {
+        "01": "januar",
+        "02": "februar",
+        "03": "marts",
+        "04": "april",
+        "05": "maj",
+        "06": "juni",
+        "07": "juli",
+        "08": "august",
+        "09": "september",
+        "10": "oktober",
+        "11": "november",
+        "12": "december"
+    } %}
+
+    <span>{{ date[6:]|int|string }}. {{ months.get(date[4:6]) }} {{date[0:4]}}</span>
+
+ {%- endmacro %}
+
 
 {% macro iterate_dict(dict_) %}
     <dl>
