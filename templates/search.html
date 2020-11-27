@@ -3,7 +3,7 @@
 {# Vars used by zeroHits-component #}
 {% set vars = {"date_from_dict": False, "date_to_dict": False} %}
 
-{% set title = "Søgeresultat | AarhusArkivet" %}
+{% set pagetitle = "Søgeresultat | AarhusArkivet" %}
 {% set pageclass = "searchpage" %}
 
 {% block content %}
@@ -17,11 +17,15 @@
             </summary>
             <div>
                 {% if filters %}
-                    <h3 class="filterSection-heading">Aktive søgefiltre</h3>
-                    {% include 'components/filters.html' %}
+                    <div class="activeFilters">
+                        <h3 class="filterSection-heading">Aktive søgefiltre</h3>
+                        {% include 'components/filters.html' %}
+                    </div>
                 {% endif %}
-                <h3 class="filterSection-heading">Søgefiltre</h3>
-                {% include 'components/facets.html' %}
+                <div class="facets">
+                    <h3 class="filterSection-heading">Søgefiltre</h3>
+                    {% include 'components/facets.html' %}
+                </div>
             </div>
         </details>
     </section>
@@ -54,18 +58,18 @@
             </nav>
 
             <nav class="search-views" aria-label="Search views">
-                <details class="disclosure dropdown">
+                <details class="disclosure">
                     <summary class="flex" aria-haspopup="true">
                         <h3 class="title">Visning</h3>
                         <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path></svg>
                     </summary>
-                    <div class="content right singleline">
+                    <div class="dropdown-right">
                         {% if size_list %}
                             {% for s in size_list %}
                                 {% if s.selected %}
-                                    <a class="contentItem" href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}} per side</a>
+                                    <a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}} per side</a>
                                 {% else %}
-                                    <a class="contentItem" href="/search?{{s.link}}">{{s.label}} per side</a>
+                                    <a href="/search?{{s.link}}">{{s.label}} per side</a>
                                 {% endif %}
                             {% endfor %}
                             <hr>
@@ -73,9 +77,9 @@
                         {% if sort_list %}
                             {% for s in sort_list %}
                                 {% if s.selected %}
-                                    <a class="contentItem" href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}}</a>
+                                    <a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}}</a>
                                 {% else %}
-                                    <a class="contentItem" href="/search?{{s.link}}">{{s.label}}</a>
+                                    <a href="/search?{{s.link}}">{{s.label}}</a>
                                 {% endif %}
                             {% endfor %}
                             <hr>
@@ -83,9 +87,9 @@
                         {% if view_list %}
                             {% for s in view_list %}
                                 {% if s.selected %}
-                                    <a class="contentItem" href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}}</a>
+                                    <a href="{{request.url}}" aria-current="page" aria-disabled="true">{{s.label}}</a>
                                 {% else %}
-                                    <a class="contentItem" href="/search?{{s.link}}">{{s.label}}</a>
+                                    <a href="/search?{{s.link}}">{{s.label}}</a>
                                 {% endif %}
                             {% endfor %}
                         {% endif %}

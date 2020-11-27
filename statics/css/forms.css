@@ -47,6 +47,7 @@ fieldset {
 
 .dateForm .inputWrapper {
     display: inline-block;
+    margin-right: .7em;
 }
 .dateForm label {
     display: block;
@@ -64,11 +65,10 @@ fieldset {
     padding: .3em;
     border: 2px solid #718096;
 	-moz-appearance: textfield;
-	margin-right: .5em;
 }
 .dateForm .dayInput,
 .dateForm .monthInput {
-    width: 3em;
+    width: 3.1em;
 }
 .dateForm .yearInput {
 	width: 4.7em;

@@ -1,4 +1,5 @@
-new Autocomplete('#globalSearchform', {
+new Autocomplete('#autocomplete', {
+
   // Search function can return a promise
   // which resolves with an array of results.
   search: input => {
@@ -20,20 +21,44 @@ new Autocomplete('#globalSearchform', {
 
   // Control the rendering of result items.
   // Let's show the title and snippet
-  renderResult: (result, props) => `
+  renderResult: (r, props) => {
+    const domains = {
+      "locations": "sted",
+      "people": "person",
+      "organisations": "organisation",
+      "objects": "objekt",
+      "events": "begivenhed"
+    };
+    let sub_string = domains[r.domain];
+    if (sub_string) {
+      let sub_array = r.sub_display.split(",");
+      r.sub_display = sub_array.filter((i) => i.toLowerCase() !== sub_string).join(",");
+    }
+    return `
     <li ${props}>
-      <div class="resource-label">
-        ${result.display}
-      </div>
-      <div class="resource-snippet">
-        ${result.sub_display}
-      </div>
+        <a class="autocomplete-result-link" href="/search?${r.domain}=${r.id}">
+          <span class="autocomplete-result-label">${r.display}</span>
+          <span class="autocomplete-result-sublabel">${r.sub_display}</span>
+        </a>
     </li>
-  `,
+  `},
+
+  // What  is to be displayed in input-field before submission
   getResultValue: result => result.display,
 
-  // Open the selected article in a new window
+  // Add domain and id to a hidden fields name and value-attributes
+  // remove name from input-field to keep it from being submittet
   onSubmit: result => {
-    window.open(`https://www.aarhusarkivet.dk/${result.domain}/${result.id}`);
+    if (result) {
+      let f = document.querySelector("#autocomplete");
+      let hiddenField = document.createElement('input');
+      hiddenField.setAttribute("type", "hidden");
+      hiddenField.setAttribute("name", result.domain);
+      hiddenField.value = result.id;
+      f.appendChild(hiddenField);
+
+      let i = document.querySelector("input[name='q']");
+      i.removeAttribute("name");
+    }
   }
 });

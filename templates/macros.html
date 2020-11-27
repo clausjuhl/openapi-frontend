@@ -80,10 +80,10 @@
     } %}
 
     <span>{{ date[6:]|int|string }}. {{ months.get(date[4:6]) }} {{date[0:4]}}</span>
-
  {%- endmacro %}
 
 
+{# ITERATE DICTIONARY #}
 {% macro iterate_dict(dict_) %}
     <dl>
     {% for key, value in dict_.items() %}

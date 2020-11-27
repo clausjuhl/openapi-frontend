@@ -1,115 +1,158 @@
-{# Facet-tree.
-   Implements W3s treeView: https://www.w3.org/TR/wai-aria-practices-1.2/#TreeView
-#}
-
 {% set facet_labels = {"availability": "Tilgængelighed", "usability": "Brugbarhed", "content_types": "Materialetype", "subjects": "Emner", "collection": "Samlinger"} %}
 
 {% for k ,v in facets.items() %}
+    {% if v %}
+        <details class="disclosure filter">
+            <summary aria-haspopup="true">
+                <h4 id="filterHeader-{{k}}" class="filter-title">{{ facet_labels.get(k) }}</h4>
+                <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path>
+                </svg>
+            </summary>
+            <div class="filterPanel">
+                {% for item in v recursive %}
+                    {% if item.remove_link %}
+                        <span class="filterItem">
+                            <a class="filterItem-link" href="/search?{{item.remove_link}}">{{item.label}}</a>
+                            <span class="filterItem-remove">X</span>
+                        </span>
+                    {% elif item.add_link %}
+                        {% if item.children %}
+                            <details class="disclosure subfilter">
+                                <summary aria-haspopup="true">
+                                    <h4 class="filter-title">{{ item.label }}</h4>
+                                    <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path>
+                                    </svg>
+                                </summary>
+                                <div class="subfilterPanel">                              
+                                    <span class="filterItem">
+                                        <a class="filterItem-link" href="/search?{{item.add_link}}">Vælg alt herunder</a>
+                                        <span class="filterItem-count">({{item.count}})</span>
+                                    </span>
+                                    {{ loop( item.children ) }}
+                                </div>
+                            </details>
+                        {% else %}
+                            <span class="filterItem">
+                                <a class="filterItem-link" href="/search?{{item.add_link}}">{{item.label}}</a>
+                                <span class="filterItem-count">({{item.count}})</span>
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                    </li>
+                {% endfor %}
+            </div>
+        </details>
+    {% else %}
+        <div class="filter-inactive">
+            <h4 class="filter-title">{{ facet_labels.get(k) }}</h4>
+        </div>
+    {% endif %}
+{% endfor %}
+
+{% if result or date_from or date_to %}
     <details class="disclosure filter">
         <summary aria-haspopup="true">
-            <h4 id="filterHeader-{{k}}" class="filter-title">{{ facet_labels.get(k) }}</h4>
+            <h4 id="filterHeader-date" class="filter-title">Datering</h4>
             <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                 <path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path>
             </svg>
         </summary>
         <div class="filterPanel">
-            {% if k in ['subjects', 'content_types'] %}
-                <ul aria-labelledby="filterHeader-{{k}}" role="tree">
-                    {% for item in v recursive %}
-                        {% if item.remove_link %}
-                        <li role="none">
-                            <span class="filterItem">
-                                <a class="filterItem-link" href="/search?{{item.remove_link}}" role="treeitem" title="{{item.label}}">{{item.label}}</a>
-                                <span class="filterItem-remove">X</span>
-                            </span>
-                        {% elif item.add_link %}
-                            {% if item.children %}
-                            <li role="treeitem" aria-expanded="false">
-                                <span class="filterItem">
-                                    <span class="filterItem-label">{{item.label}}</span>
-                                </span>
-                                <ul class="filterList" role="group">
-                                    <li role="none">
-                                        <span class="filterItem">
-                                            <a class="filterItem-link" href="/search?{{item.add_link}}" role="treeitem">Vælg alt herunder</a>
-                                            <span class="filterItem-count">({{item.count}})</span>
-                                        </span>
-                                    </li>
-                                    {{ loop( item.children ) }}
-                                </ul>
-                            {% else %}
-                            <li role="none">
-                                <span class="filterItem">
-                                    <a class="filterItem-link" href="/search?{{item.add_link}}" role="treeitem" title="{{item.label}}">{{item.label}}</a>
-                                    <span class="filterItem-count">({{item.count}})</span>
-                                </span>
-                            {% endif %}
-                        {% endif %}
-                        </li>
+            <form id="dateForm" class="dateForm" method="get" action="/search" aria-describedby="filterHeader-date">
+                <fieldset id="date-from-fieldset" class="field">
+                    <legend>
+                        <span>Tidligste dato </span>
+                        <span class="pattern-hint">(ÅÅÅÅ-MM-DD)</span>
+                    </legend>
+                    <div id="date-from-wrapper">
+                        <label for="date-from"></label>
+                        <input id="date-from" type="text" name="date-from" pattern="^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]$" {% if date_from %}value="{{date_from}}"{% endif %}>
+                    </div>
+                </fieldset>
+                <fieldset id="date-to-fieldset" class="field">
+                    <legend>
+                        <span>Seneste dato </span>
+                        <span class="pattern-hint">(ÅÅÅÅ-MM-DD)</span>
+                    </legend>
+                    <div id="date-to-wrapper">
+                        <label for="date-to"></label>
+                        <input id="date-to" type="text" name="date-to" pattern="^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]$" {% if date_to %}value="{{date_to}}"{% endif %}>
+                    </div>
+                </fieldset>
+        
+                {% if params %}
+                    {% for tup in params %}
+                        {% if tup[0] not in ['date_from', 'date_to', 'start'] %}<input type="hidden" name="{{tup[0]}}" value="{{tup[1]}}">{% endif %}
                     {% endfor %}
-                </ul>
-            {% else %}
-                <div>
-                    {% for item in v %}
-                        {% if item.add_link %}
-                            <span class="filterItem">
-                                <a class="filterItem-link" href="/search?{{item.add_link}}" title="{{item.label}}">{{item.label}}</a>
-                                <span class="filterItem-count">({{item.count}})</span>
-                            </span>
-                        {% else %}
-                            <span class="filterItem">
-                                <a class="filterItem-link" href="/search?{{item.remove_link}}" title="{{item.label}}">{{item.label}}</a>
-                                <span class="filterItem-remove">x</span>
-                            </span>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endif %}
+                {% endif %}
+
+                {% if not (date_from or date_to) %}
+                    <button type="submit">Søg</button>
+                {% else %}
+                    <button type="submit">Opdatér</button>
+                {% endif %}
+            </form>
         </div>
     </details>
-{% endfor %}
-
-<details class="disclosure filter">
-    <summary aria-haspopup="true">
-        <h4 id="filterHeader-date" class="filter-title">Datering</h4>
-        <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-            <path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z"></path>
-        </svg>
-    </summary>
-    <div class="filterPanel">
-        <form id="dateForm" class="dateForm" method="get" action="/search" aria-describedby="filterHeader-date">
-            <fieldset id="date-from-fieldset" class="field">
-                <legend>
-                    <span>Tidligste dato </span>
-                    <span class="pattern-hint">(ÅÅÅÅ-MM-DD)</span>
-                </legend>
-                <div id="date-from-wrapper">
-                    <label for="date-from"></label>
-                    <input id="date-from" type="text" name="date-from" pattern="^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]$" value="{% if date_from %}{{date_from}}{% endif %}">
-                </div>
-            </fieldset>
-            <fieldset id="date-to-fieldset" class="field">
-                <legend>
-                    <span>Seneste dato </span>
-                    <span class="pattern-hint">(ÅÅÅÅ-MM-DD)</span>
-                </legend>
-                <div id="date-to-wrapper">
-                    <label for="date-to"></label>
-                    <input id="date-to" type="text" name="date-to" pattern="^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]$" value="{% if date_to %}{{date_to}}{% endif %}">
-                </div>
-            </fieldset>
-     
-            {% if params %}
-                {% for tup in params %}
-                    {% if tup[0] not in ['date_from', 'date_to', 'start'] %}<input type="hidden" name="{{tup[0]}}" value="{{tup[1]}}">{% endif %}
-                {% endfor %}
-            {% endif %}
-
-            {% if not (date_from or date_to) %}
-                <button type="submit">Søg</button>
-            {% else %}
-                <button type="submit">Opdatér</button>
-            {% endif %}
-        </form>
+{% else %}
+    <div class="filter-inactive">
+        <h4 class="filter-title">Datering</h4>
     </div>
-</details>
+{% endif %}
+
+{# UDKOMMENTERET
+    {% if k in ['subjects', 'content_types'] %}
+        <ul aria-labelledby="filterHeader-{{k}}" role="tree">
+            {% for item in v recursive %}
+                {% if item.remove_link %}
+                <li role="none">
+                    <span class="filterItem">
+                        <a class="filterItem-link" href="/search?{{item.remove_link}}" role="treeitem" title="{{item.label}}">{{item.label}}</a>
+                        <span class="filterItem-remove">X</span>
+                    </span>
+                {% elif item.add_link %}
+                    {% if item.children %}
+                    <li role="treeitem" aria-expanded="false">
+                        <span class="filterItem">
+                            <span class="filterItem-label">{{item.label}}</span>
+                        </span>
+                        <ul class="filterList" role="group">
+                            <li role="none">
+                                <span class="filterItem">
+                                    <a class="filterItem-link" href="/search?{{item.add_link}}" role="treeitem">Vælg alt herunder</a>
+                                    <span class="filterItem-count">({{item.count}})</span>
+                                </span>
+                            </li>
+                            {{ loop( item.children ) }}
+                        </ul>
+                    {% else %}
+                    <li role="none">
+                        <span class="filterItem">
+                            <a class="filterItem-link" href="/search?{{item.add_link}}" role="treeitem" title="{{item.label}}">{{item.label}}</a>
+                            <span class="filterItem-count">({{item.count}})</span>
+                        </span>
+                    {% endif %}
+                {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div>
+            {% for item in v %}
+                {% if item.add_link %}
+                    <span class="filterItem">
+                        <a class="filterItem-link" href="/search?{{item.add_link}}" title="{{item.label}}">{{item.label}}</a>
+                        <span class="filterItem-count">({{item.count}})</span>
+                    </span>
+                {% else %}
+                    <span class="filterItem">
+                        <a class="filterItem-link" href="/search?{{item.remove_link}}" title="{{item.label}}">{{item.label}}</a>
+                        <span class="filterItem-remove">x</span>
+                    </span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+#}

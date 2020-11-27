@@ -304,7 +304,7 @@ def search_records(query_params):
         # Make request to Cloudsearch
         api_response = search_engine.search(**key_args)
 
-        # if id-request to update session-values, return mimimum
+        # if id-request to update session-values, return mimimum content
 
         # Build response
         out = {}

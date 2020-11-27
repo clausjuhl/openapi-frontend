@@ -29,6 +29,7 @@
     h3.listitem-label {
         font-size: 1.1em;
         font-weight: normal;
+        margin-bottom: .3em;
     }
     .listitem-summary a,
     .listitem-label a {
@@ -43,6 +44,7 @@
 /* single metadata-field */
 .listitem-info .media {
     align-items: center;
+    margin-bottom: .4em;
 }
 .listitem-info .media-object {
     /* static width */

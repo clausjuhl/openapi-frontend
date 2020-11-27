@@ -1,3 +1,174 @@
 <div class="zero-hits">
     <h3>Intet resultat</h3>
+    {% if collection_search %}
+        <p>Der er ingen materialer i denne samling, som matcher din søgning.</p>
+    {% else %}
+        <p>Der er ingen materialer, som matcher din søgning.</p>
+    {% endif %}
+    <p>Prøv at udvide søgningen ved at redigere eller fjerne et af de ord, som du har søgt på, eller et af de søgefiltre, du har sat. Du kan også bare <a href="/search" style="border-bottom: 1px solid;">rydde alle søgeord og -filtre</a></p>
+    
+    <h4>Du har søgt efter følgende materialer:</h4>
+    <ul>
+    {% if query %}
+        <li >
+            <span>opfylder følgende fritekst-søgning:</span>
+            <div>
+                <span>"query: " {{ query }}</span>
+                {# {% include 'components/search_form_global.html' %} #}
+            </div>
+            <div>
+                <a class="link" href="/search?{{non_query_params}}">Nulstil dette filter</a>
+            </div>
+        </li>
+    {% endif %}
+
+    {% if filters %}
+        {% for f in filters %}
+
+            {% if f.key == 'date_from' %}
+                {% if vars.update({"date_from_dict": f}) %}{% endif %}
+
+            {% elif f.key == 'date_to' %}
+                {% set _dict = f %}
+                {% if vars.update({"date_to_dict": f}) %}{% endif %}
+
+            {% else %}
+                <li>
+                {% if f.key == 'collection' %}
+                    {% if f.negated %}
+                        <div>ikke må være del af <strong>{{f.label}}</strong></div>
+                    {% else %}
+                        <div>er en del af <strong>{{f.label}}</strong></div>
+                    {% endif %}
+
+                {% elif f.key == 'series' %}
+                    {% set levels = f.get('value').split('/') %}
+                    {% if f.negated %}
+                        <div>ikke må være del af arkivserien <strong>{{levels[-1]}}</strong></div>
+                    {% else %}
+                        <div>er en del af arkivserien <strong>{{levels[-1]}}</strong></div>
+                        <div></div>
+                    {% endif %}
+
+                {% elif f.key == 'content_types' %}
+                    {% if f.negated %}
+                        <div>ikke må have materialetypen <strong>{{f.label}}</strong>.</div>
+                    {% else %}
+                        <div>har materialetypen <strong>{{f.label}}</strong>.</div>
+                    {% endif %}
+
+                {% elif f.key == 'subjects' %}
+                    {% if f.negated %}
+                        <div>ikke må have emnet <strong>{{f.label.split('/')[-1]}}</strong>.</div>
+                    {% else %}
+                        <div>har emnet <strong>{{f.label.split('/')[-1]}}</strong>.</div>
+                    {% endif %}
+
+                {% elif f.key == 'availability' %}
+                    {% if f.negated %}
+                        <div>ikke må være <strong>{{f.label}}</strong>.</div>
+                    {% else %}
+                        <div>er tilgængelig <strong>{{f.label}}</strong>.</div>
+                    {% endif %}
+
+                {% elif f.key == 'usability' %}
+                    {% if f.value == '1' %}
+                        {% if f.negated %}
+                            <div><strong>ikke er i offentlig eje.</strong>.</div>
+                        {% else %}
+                            <div><strong>er i offentlig eje</strong>.</div>
+                        {% endif %}
+                    {% elif f.value in ['2', '3'] %}
+                        {% if f.negated %}
+                            <div>ikke må være udgivet under en <strong>{{f.label}}</strong> licens.</div>
+                        {% else %}
+                            <div>er udgivet under en <strong>{{f.label}}</strong> licens.</div>
+                        {% endif %}
+                    {% else %}
+                        {% if f.negated %}
+                            <div>ikke må have <strong>Alle rettigheder forbeholdt</strong>.</div>
+                        {% else %}
+                            <div>har <strong>Alle rettigheder forbeholdt</strong>.</div>
+                        {% endif %}
+                    {% endif %}
+
+                {% elif f.key == 'creators' %}
+                    {% if f.negated %}
+                        <div>ikke må have <strong>{{f.label}}</strong> som kreativt ophav.</div>
+                    {% else %}
+                        <div>har <strong>{{f.label}}</strong> som kreativt ophav.</div>
+                    {% endif %}
+
+                {% elif f.key == 'curators' %}
+                    {% if f.negated %}
+                        <div>ikke må have <strong>{{f.label}}</strong> som kurator.</div>
+                    {% else %}
+                        <div>har <strong>{{f.label}}</strong> som kurator.</div>
+                    {% endif %}
+
+                {% elif f.key == 'collectors' %}
+                    {% if f.negated %}
+                        <div>ikke må have <strong>{{f.label}}</strong> som arkivskaber.</div>
+                    {% else %}
+                        <div>har <strong>{{f.label}}</strong> som arkivskaber.</div>
+                    {% endif %}
+
+                {% elif f.key in ['locations', 'events', 'people', 'organisations'] %}
+                    {% if f.negated %}
+                        <div>ikke må omhandle entiteten <strong>{{f.label}}</strong>.</div>
+                    {% else %}
+                        <div>omhandler entiteten <strong>{{f.label}}</strong>.</div>
+                    {% endif %}
+
+                {% elif f.key == 'registration_id' %}
+                    {% if f.negated %}
+                        <div>ikke må være <strong>{{f.value}}</strong>.</div>
+                    {% else %}
+                        <div>er <strong>{{f.value}}</strong>.</div>
+                    {% endif %}
+                {% endif %}
+
+                {# actions relevant to the different filters #}
+                {% if f.key not in ['date_from', 'date_to'] %}
+                    <div>
+                        <a href="/search?{{f.remove_link}}">Fjern dette filter</a>
+                    </div>
+                {% endif %}
+                
+                {% if f.key in ['locations', 'events', 'people', 'organisations'] %}
+                    <div>
+                        <p><strong>eller</strong> forsøg med fritekstsøgning:</p>
+                        {% set qs = "/search?" + f.remove_link + "&q=" + f.label|urlize(45) %}
+                        <a href="{{qs}}">"{{f.label}}"</a>
+                    </div> 
+                {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if vars.date_from_dict or vars.date_to_dict %}
+            <li>
+            {% if vars.date_from_dict and vars.date_to_dict %}
+                <div>skal være dateret mellem <strong>{{vars.date_from_dict.get('value')[0:4]}}-{{vars.date_from_dict.get('value')[4:6]}}-{{vars.date_from_dict.get('value')[6:8]}}</strong> og <strong>{{vars.date_to_dict.get('value')[0:4]}}-{{vars.date_to_dict.get('value')[4:6]}}-{{vars.date_to_dict.get('value')[6:8]}}</strong></div>
+            {% elif vars.date_from_dict %}
+                <div>tidligst er dateret <strong>{{vars.date_from_dict.get('value')[0:4]}}-{{vars.date_from_dict.get('value')[4:6]}}-{{vars.date_from_dict.get('value')[6:8]}}</strong></div>
+            {% else %}
+                <div>senest er dateret <strong>{{vars.date_to_dict.get('value')[0:4]}}-{{vars.date_to_dict.get('value')[4:6]}}-{{vars.date_to_dict.get('value')[6:8]}}</strong></div>
+            {% endif %}
+
+            {% if vars.date_from_dict %}
+                <div>
+                    <a  href="/search?{{vars.date_from_dict.remove_link}}">Fjern tidligste dato filter</a>
+                </div>
+            {% endif %}
+            {% if vars.date_to_dict %}
+                <div>
+                    <a href="/search?{{vars.date_to_dict.remove_link}}">Fjern seneste dato filter</a>
+                </div>
+            {% endif %}
+            </li>
+        {% endif %}
+
+    {% endif %}
+    </ul>
 </div>

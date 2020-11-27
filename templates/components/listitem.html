@@ -5,6 +5,7 @@
     Params:
     'session' - global context
     'record' - gobal context
+    'content_labels' - global context
     NOT WORKING 'loop' - from the for-loop that iterates the searchresults
 #}
 
@@ -92,14 +93,12 @@
             </li>
             {% endif %}
 
-            {% if record.content_types %}
             <li>
                 <div class="media">
                     <span class="media-object" aria-hidden="true">type</span>
-                    <span class="media-body">{{ record.content_types[0] }}</span>
+                    <span class="media-body">{{ content_labels.get(record.content_types[0], "Materialetypen er ikke afkaret") }}</span>
                 </div>
             </li>
-            {% endif %}
 
             <li>
                 <div class="media">

@@ -3,12 +3,10 @@
 **********/
 .filterSection-heading {
     font-size: 1.25em;
-    margin: .6em 0 .8em 0;
+    margin: .3em 0 .8em 0;
 }
 
-.activeFilters {
-    margin-bottom: .5em;
-}
+.activeFilters,
 .activeFilter {
     margin-bottom: 1em;
 }
@@ -20,37 +18,56 @@
 .activeFilter-removeAll {
     display: flex;
     justify-content: flex-end;
-    padding: .7em 0 .5em 0;
 }
 
 /* Single filter/facet ("details"-tag) */
-.filter {
+.filter,
+.filter-inactive {
     margin-bottom: .5em;
 }
-.filter > summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    appearance: none;
+
+.filter > summary,
+.filter-inactive {
+    /* appearance: none; */
     border: 1px solid var(--color-tint-7);
     border-radius: 3px;
     padding: .3em .5em;
 }
-.filter > summary[aria-expanded="true"] {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0; 
+.subfilter > summary {
+    padding: .3em .5em;
+    border-bottom: 1px solid rgb(240, 240, 240)
 }
-.filter[open] summary,
-.filter summary:hover {
+
+.filter[open] > summary,
+.filter > summary:hover {
     background-color: #e9e9e9;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
-.filter > summary .filter-title {
+
+.subfilter[open] > summary,
+.subfilter > summary:hover {
+    background-color: #f0f0f0;
+}
+
+.filter-title {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 1em;
 }
+.subfilter .filter-title {
+    font-weight: normal;
+}
+.filter-inactive .filter-title {
+    color: var(--color-shade-20);
+}
 
+.subfilterPanel {
+    background-color: white;
+    border-left: 1px solid rgb(245, 245, 245);
+    border-right: 1px solid rgb(245, 245, 245);
+}
 .filterPanel {
     background-color: rgb(245, 245, 245);
     border-left: 1px solid rgb(240, 240, 240);
@@ -65,7 +82,7 @@
     align-items: center;
     column-gap: .5em;
     border-bottom: 1px solid rgb(240, 240, 240);
-    background-color: rgb(245, 245, 245);
+    /* background-color: rgb(245, 245, 245); */
     padding-right: .5em;
 }
 .filterItem:hover {
@@ -89,6 +106,7 @@
 .filterItem-link {
     color: rgb(34, 34, 236);
 }
+.filterItem-remove,
 .filterItem-count {
     font-size: 80%;
 } 
