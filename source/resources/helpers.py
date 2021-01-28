@@ -8,7 +8,8 @@ from source.settings import QUERY_PARAMS
 def format_record(record):
     def _generate_hierarchical_structure(string_list):
         # Takes a list of strings with possible '/' as hierarchical seperators
-        # Returns a dict-structure with 'label', 'path' and possibly 'children'-keys
+        # Returns a dict-structure with 'label', 'path' and possibly
+        # 'children'-keys
 
         def addHierItem(key, hierStruct, hierList, parent):
             if parent != "":

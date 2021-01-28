@@ -116,8 +116,8 @@ def search_records(query_params):
     if q and q.strip():
         # tokens = q.strip().split(' ')
         tokens = q.split(" ")
+        strs = []
         if tokens:
-            strs = []
             phrase = None
             phrase_strs = []
 
@@ -202,7 +202,8 @@ def search_records(query_params):
         if stripped_key == "q":
             continue
 
-        # Leave out non-searchfilters from filterQuery, eg. "size", "direction", "start"
+        # Leave out non-searchfilters from filterQuery, eg. "size",
+        # "direction", "start"
         if not filters[stripped_key].get("search_filter"):
             continue
 

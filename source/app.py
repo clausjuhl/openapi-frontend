@@ -36,5 +36,3 @@ app = Starlette(
     on_startup=[database.connect],
     on_shutdown=[database.disconnect],
 )
-
-# uvicorn  --reload --port 5000 --host 0.0.0.0 --env-file .env source.app:app

@@ -26,7 +26,7 @@ async def _request(method: str, url: str, params: QueryParams = None) -> Dict:
     # syntax-error
     try:
         data = resp.json()
-    except ValueError as e:
+    except ValueError:
         return _error(500, "Unable to parse API-response as json")
 
     # if openaws, payload includes a "status_code"
@@ -60,7 +60,7 @@ def get_request_sync(url: str, params: QueryParams = None) -> Dict:
     # syntax-error
     try:
         data = resp.json()
-    except ValueError as e:
+    except ValueError:
         return _error(500, "Unable to parse API-response as json")
 
     # if openaws, payload includes a "status_code"
