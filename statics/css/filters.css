@@ -47,7 +47,7 @@
 
 .subfilter[open] > summary,
 .subfilter > summary:hover {
-    background-color: #f0f0f0;
+    background-color: #a79999;
 }
 
 .filter-title {
@@ -62,7 +62,9 @@
 .filter-inactive .filter-title {
     color: var(--color-shade-20);
 }
-
+.filterSummary {
+    background-color: #f7f7f7;
+}
 .subfilterPanel {
     background-color: white;
     border-left: 1px solid rgb(245, 245, 245);

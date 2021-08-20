@@ -74,10 +74,10 @@ async def search(req: Request):
     return render("search.html", context)
 
 
-async def video(req: Request):
-    # open does not support async
-    # videofile = open("./statics/video/futurama.mp4", mode="rb")
-    return FileResponse("./statics/video/futurama.mp4", media_type="video/mp4")
+# async def video(req: Request):
+#     # open does not support async
+#     # videofile = open("./statics/video/futurama.mp4", mode="rb")
+#     return FileResponse("./statics/video/futurama.mp4", media_type="video/mp4")
 
 
 async def image(req: Request):

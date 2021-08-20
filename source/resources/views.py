@@ -1,11 +1,16 @@
+from pathlib import Path
+
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response, FileResponse
 from starlette.datastructures import QueryParams
 
 import source.openapi as api
 from source.templates import render
 from source.resources.helpers import format_record, generate_url
 
+CHUNK_SIZE = 1024*1024
+# video_path = Path("./statics/video/exp.mp4")
+video_path = Path(r"https://aarhusstadsarkiv.blob.core.windows.net/test/3%20different%20sound%20modes%20with%20Bi-wire%20speakers.mp4")
 
 async def resource(req: Request):
     context = {"request": req}
@@ -232,3 +237,28 @@ async def resource(req: Request):
         context["collection"] = collection
 
         return render("resource.html", context)
+
+
+async def video(req: Request):
+    context = {"request": req}
+    return render("video.html", context)
+
+
+async def video_file(req: Request):
+    return FileResponse(video_path)
+
+
+async def video_stream(req: Request):
+    range: str = req.headers.get("range", f"0-{CHUNK_SIZE}")
+    start, end = range.replace("bytes=", "").split("-")
+    start = int(start)
+    end = int(end) if end else start + CHUNK_SIZE
+    with open(video_path, "rb") as video:
+        video.seek(start)
+        data = video.read(end - start)
+        filesize = str(video_path.stat().st_size)
+        headers = {
+            'Content-Range': f'bytes {str(start)}-{str(end)}/{filesize}',
+            'Accept-Ranges': 'bytes'
+        }
+        return Response(data, status_code=206, headers=headers, media_type="video/mp4")

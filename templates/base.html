@@ -60,6 +60,7 @@
                             <span class="menuItem">
                                 <a href="/resources/records/191801">Sample Record</a>
                             </span>
+                            {#
                             {% if request.session.get("user") %}
                                 <span class="menuItem">
                                     <a href="{{ url_for('profile') }}">Min side</a>
@@ -69,6 +70,7 @@
                                     <a href="{{ url_for('login') }}">Log ind</a>
                                 </span>
                             {% endif %}
+                            #}
                         </div>
                     </details>
                 </nav>
@@ -82,7 +84,7 @@
         <footer class="globalFooter">
             <div class="globalFooter-inner">
                 <span>Footer</span>
-                {% if request.session and request.session.traverseeeeeeeeee %}
+                {% if request.session and request.session.traverse %}
                     <dl>
                     {% for k, v in request.session.traverse.items() %}
                     <dt>{{k}}</dt><dd>{{v}}</dd>

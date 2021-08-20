@@ -3,6 +3,7 @@
 .sass-cache
 .DS_store
 .mp4
+thumbs.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
