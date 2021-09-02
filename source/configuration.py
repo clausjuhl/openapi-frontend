@@ -1,4 +1,4 @@
-import databases
+# import databases
 
 from starlette.config import Config
 from starlette.datastructures import Secret
@@ -10,10 +10,10 @@ TESTING = config("TESTING", cast=bool, default=False)
 HTTPS_ONLY = config("HTTPS_ONLY", cast=bool, default=False)
 SECRET_KEY = config("SECRET_KEY", cast=str)
 
-DATABASE_URL = config("DATABASE_URL", cast=databases.DatabaseURL)
-TEST_DATABASE_URL = DATABASE_URL.replace(
-    database="test_" + DATABASE_URL.database
-)
+# DATABASE_URL = config("DATABASE_URL", cast=databases.DatabaseURL)
+# TEST_DATABASE_URL = DATABASE_URL.replace(
+#     database="test_" + DATABASE_URL.database
+# )
 
 # OAWS_API_KEY = config("OAWS_API_KEY", cast=Secret)
 
@@ -30,4 +30,5 @@ AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", cast=str, default="")
 AWS_CLOUDSEARCH_ENDPOINT = config("AWS_CLOUDSEARCH_ENDPOINT", cast=str)
 AWS_REGION_NAME = config("AWS_REGION_NAME", cast=str, default="")
 
+# Mapbox
 MAPBOX_ACCESS_KEY = config("MAPBOX_ACCESS_KEY", cast=str, default="")

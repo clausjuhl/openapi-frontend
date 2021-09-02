@@ -7,7 +7,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 # from source.views import error
 from source.routes import routes
-from source.database import database
+# from source.database import database
 from source import configuration
 
 # Middleware
@@ -33,6 +33,6 @@ app = Starlette(
     routes=routes,
     middleware=middleware,
     # exception_handlers=exception_handlers,
-    on_startup=[database.connect],
-    on_shutdown=[database.disconnect],
+    # on_startup=[database.connect],
+    # on_shutdown=[database.disconnect],
 )
