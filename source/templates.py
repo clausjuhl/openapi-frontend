@@ -1,5 +1,7 @@
 from typing import Dict
 
+import jinja2
+
 from starlette.templating import Jinja2Templates
 from starlette.requests import Request
 
@@ -16,9 +18,7 @@ def render(
     headers = dict()
     # criteria = [request.app.debug, False]
     # if not any(criteria):
-    headers[
-        "Strict-Transport-Security"
-    ] = "max-age=63072000; includeSubDomains"
+    headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains"
     headers["X-Content-Type-Options"] = "nosniff"
     headers["X-Frame-Options"] = "DENY"
     headers["X-XSS-Protection"] = "1; mode=block"
