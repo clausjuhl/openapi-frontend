@@ -2,7 +2,7 @@ from starlette.datastructures import MultiDict, QueryParams
 from starlette.requests import Request
 from starlette.responses import FileResponse, JSONResponse
 
-from source.session import generate_session
+# from source.session import generate_session
 from source.templates import render
 import source.openapi as api
 
@@ -49,9 +49,7 @@ async def search(req: Request):
         params.pop("start", None)
         cur_search = QueryParams(params).__str__()
 
-        if ses.get("traverse") and cur_search == ses["traverse"].get(
-            "cur_search"
-        ):
+        if ses.get("traverse") and cur_search == ses["traverse"].get("cur_search"):
             pass
         else:
             ses["traverse"] = {}
@@ -64,9 +62,7 @@ async def search(req: Request):
         ses["traverse"]["start"] = int(start)
 
         if start not in ses["traverse"]["batches"]:
-            ses["traverse"]["batches"][start] = [
-                int(d.get("id")) for d in resp.get("result")
-            ]
+            ses["traverse"]["batches"][start] = [int(d.get("id")) for d in resp.get("result")]
 
         ses["traverse"]["cur_ids"] = ses["traverse"]["batches"].get(start)
 
@@ -81,9 +77,7 @@ async def search(req: Request):
 
 
 async def image(req: Request):
-    return FileResponse(
-        "./statics/images/logo_black.png", media_type="image/png"
-    )
+    return FileResponse("./statics/images/logo_black.png", media_type="image/png")
 
 
 async def clear(req: Request):

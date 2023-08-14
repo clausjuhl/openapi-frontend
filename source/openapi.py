@@ -69,28 +69,21 @@ def list_resources(query_params: QueryParams = None):
                 errors.append({"param": key, "msg": "Invalid query-param"})
                 continue  # no further tests needed
 
-            if negated and not settings.QUERY_PARAMS[stripped_key].get(
-                "negatable"
-            ):
+            if negated and not settings.QUERY_PARAMS[stripped_key].get("negatable"):
                 errors.append({"param": key, "msg": "Param not negatable"})
 
             # Check if non-repeatable stripped_key already exists
             # eg. when using "-usability" and "usability"
-            if stripped_key in stripped_keys and not settings.QUERY_PARAMS[
-                stripped_key
-            ].get("repeatable"):
+            if stripped_key in stripped_keys and not settings.QUERY_PARAMS[stripped_key].get(
+                "repeatable"
+            ):
                 errors.append({"param": key, "msg": "Param not repeatable"})
 
             stripped_keys.append(stripped_key)
 
         # When all stripped_keys are iterated, test for series without collections.
         if "series" in stripped_keys and "collection" not in stripped_keys:
-            errors.append(
-                {
-                    "param": "series",
-                    "msg": "'Series'-key requires a 'collection'-key",
-                }
-            )
+            errors.append({"param": "series", "msg": "'Series'-key requires a 'collection'-key"})
 
         return {"errors": errors}
 
@@ -132,17 +125,13 @@ def list_resources(query_params: QueryParams = None):
             # negative collection-params works like normal param
             if key == "collection" and not negated:
                 new_params = [
-                    (k, v)
-                    for k, v in params
-                    if k not in ["collection", "series", "start"]
+                    (k, v) for k, v in params if k not in ["collection", "series", "start"]
                 ]
                 el["remove_link"] = urlencode(new_params)
             else:
                 new_params = [(k, v) for k, v in params if k not in ["start"]]
                 org_key = "-" + key if negated else key
-                el["remove_link"] = _urlencode(
-                    new_params, remove=(org_key, value)
-                )
+                el["remove_link"] = _urlencode(new_params, remove=(org_key, value))
 
             # Inverse_link
             # If negated, replace with positive, vice versa
@@ -156,21 +145,13 @@ def list_resources(query_params: QueryParams = None):
             else:
                 if key == "collection":
                     new_params = [
-                        (k, v)
-                        for k, v in params
-                        if k not in ["collection", "series", "start"]
+                        (k, v) for k, v in params if k not in ["collection", "series", "start"]
                     ]
-                    el["invert_link"] = _urlencode(
-                        new_params, insert=("-" + key, value)
-                    )
+                    el["invert_link"] = _urlencode(new_params, insert=("-" + key, value))
                 else:
-                    new_params = [
-                        (k, v) for k, v in params if k not in ["start"]
-                    ]
+                    new_params = [(k, v) for k, v in params if k not in ["start"]]
                     el["invert_link"] = _urlencode(
-                        new_params,
-                        insert=("-" + key, value),
-                        remove=(key, value),
+                        new_params, insert=("-" + key, value), remove=(key, value),
                     )
             # Creator and collector links and bools
             if key in ["people", "organisations"]:
@@ -194,9 +175,7 @@ def list_resources(query_params: QueryParams = None):
         # TODO: Does not work when excisting negative filter is set
         # and you click a positive facet: '-usability=4' is set, you click 'usability=2'
         result = {}
-        params = [
-            x for x in params if x[0] != "start"
-        ]  # remove 'start'-param from facet-links
+        params = [x for x in params if x[0] != "start"]  # remove 'start'-param from facet-links
         for facet in facets:
             out = {}
             for b in facets[facet].get("buckets"):
@@ -241,9 +220,7 @@ def list_resources(query_params: QueryParams = None):
                     if params and (
                         current_tuple in params
                     ):  # if the current tuple is in the params
-                        stripped_params = [
-                            x for x in params if x != current_tuple
-                        ]
+                        stripped_params = [x for x in params if x != current_tuple]
                         el["remove_link"] = urlencode(stripped_params)
                     elif params:
                         el["add_link"] = urlencode(params + [current_tuple])
@@ -252,10 +229,7 @@ def list_resources(query_params: QueryParams = None):
 
                     if facet.get("children"):
                         el["children"] = _recurse(
-                            facet_key,
-                            facet.get("children"),
-                            active_facet_values,
-                            params,
+                            facet_key, facet.get("children"), active_facet_values, params,
                         )
                     out.append(el)
             return out
@@ -264,9 +238,7 @@ def list_resources(query_params: QueryParams = None):
         # restructure aws-facets
         active_facets = {}
         for facet in aws_facets:
-            active_facets[facet] = {
-                b.get("value"): b for b in aws_facets[facet].get("buckets")
-            }
+            active_facets[facet] = {b.get("value"): b for b in aws_facets[facet].get("buckets")}
 
         # remove 'start'-param from facet-links, retain all else
         params = [x for x in params if x[0] != "start"]
@@ -275,22 +247,15 @@ def list_resources(query_params: QueryParams = None):
         for k, v in settings.FACETS.items():
             # label = facet.get("label")
             # recursively merge labels and links from total_facets and active_facets
-            result[k] = _recurse(
-                k, v.get("content"), active_facets.get(k), params
-            )
+            result[k] = _recurse(k, v.get("content"), active_facets.get(k), params)
 
-        collection_tuples = [
-            ("collection", key) for key in active_facets["collection"].keys()
-        ]
+        collection_tuples = [("collection", key) for key in active_facets["collection"].keys()]
         # result["collection_tuples"] = collection_tuples
         collection_labels = get_entity_labels(collection_tuples)
         # result["collection_labels"] = collection_labels
 
         result["collection"] = _recurse(
-            "collection",
-            collection_labels.get("data"),
-            active_facets.get("collection"),
-            params,
+            "collection", collection_labels.get("data"), active_facets.get("collection"), params,
         )
         result["collection_labels"] = collection_labels
         return result
@@ -304,16 +269,8 @@ def list_resources(query_params: QueryParams = None):
     def _generate_views(params, view):
         output = []
         views = [
-            {
-                "label": "Listevisning",
-                "value": "list",
-                "icon": "fas fa-list",  # 'view_list'
-            },
-            {
-                "label": "Galleri-visning",
-                "value": "gallery",
-                "icon": "fas fa-th",  # 'view_module'
-            },
+            {"label": "Listevisning", "value": "list", "icon": "fas fa-list",},  # 'view_list'
+            {"label": "Galleri-visning", "value": "gallery", "icon": "fas fa-th",},  # 'view_module'
         ]
 
         if params:
@@ -328,33 +285,21 @@ def list_resources(query_params: QueryParams = None):
             if option.get("value") == view:
                 current["selected"] = True
             else:
-                current["link"] = urlencode(
-                    stripped_params + [("view", option.get("value"))]
-                )
+                current["link"] = urlencode(stripped_params + [("view", option.get("value"))])
             output.append(current)
         return output
 
     def _generate_sorts(params, sort, direction):
         sorts = [
-            {
-                "label": "Ældste dato først",
-                "sort": "date_from",
-                "direction": "asc",
-            },
-            {
-                "label": "Nyeste dato først",
-                "sort": "date_to",
-                "direction": "desc",
-            },
+            {"label": "Ældste dato først", "sort": "date_from", "direction": "asc"},
+            {"label": "Nyeste dato først", "sort": "date_to", "direction": "desc"},
             {"label": "Relevans", "sort": "_score", "direction": "desc"},
         ]
         output = []
 
         if params:
             stripped_params = [
-                (t[0], t[1])
-                for t in params
-                if t[0] not in ["sort", "direction", "start"]
+                (t[0], t[1]) for t in params if t[0] not in ["sort", "direction", "start"]
             ]
         else:
             stripped_params = []
@@ -363,15 +308,12 @@ def list_resources(query_params: QueryParams = None):
             current = {}
             current["icon"] = option.get("icon")
             current["label"] = option.get("label")
-            if (
-                option.get("sort") == sort
-                and option.get("direction") == direction
-            ):
+            if option.get("sort") == sort and option.get("direction") == direction:
                 current["selected"] = True
             else:
                 current["link"] = urlencode(
                     stripped_params
-                    + [
+                    + [  # noqa: W503
                         ("sort", option.get("sort")),
                         ("direction", option.get("direction")),
                     ]
@@ -394,9 +336,7 @@ def list_resources(query_params: QueryParams = None):
             if option == size:
                 current["selected"] = True
             else:
-                current["link"] = urlencode(
-                    stripped_params + [("size", option)]
-                )
+                current["link"] = urlencode(stripped_params + [("size", option)])
             output.append(current)
         return output
 
@@ -446,9 +386,7 @@ def list_resources(query_params: QueryParams = None):
         # Generate content_types-labels
         # content_labels = resp["facets"].pop("content_labels")
         # if content_labels:
-        resp["content_labels"] = _generate_content_labels(
-            resp["facets"].get("content_types")
-        )
+        resp["content_labels"] = _generate_content_labels(resp["facets"].get("content_types"))
 
     # 'non_query_params' is used to generate a remove_link for the q-param
     # on the zero-hits page
@@ -464,31 +402,21 @@ def list_resources(query_params: QueryParams = None):
         rm_tup = ("start", str(start))
         if start > 0:
             resp["first"] = _urlencode(params, remove=rm_tup)
-            resp["prev"] = _urlencode(
-                params, remove=rm_tup, insert=("start", start - size)
-            )
+            resp["prev"] = _urlencode(params, remove=rm_tup, insert=("start", start - size))
 
         if total <= 10000 and (start + size < total):
             last_start = total // size * size
             if last_start == total:
                 last_start = total - size
-            resp["last"] = _urlencode(
-                params, remove=rm_tup, insert=("start", last_start)
-            )
+            resp["last"] = _urlencode(params, remove=rm_tup, insert=("start", last_start))
 
         if (start + size < total) and (start + size <= 10000):
-            resp["next"] = _urlencode(
-                params, remove=rm_tup, insert=("start", start + size)
-            )
+            resp["next"] = _urlencode(params, remove=rm_tup, insert=("start", start + size))
 
     # Proces size, sort, direction and view
     resp["size_list"] = _generate_sizes(params, api_resp["size"])
-    resp["sort_list"] = _generate_sorts(
-        params, api_resp["sort"], api_resp["direction"]
-    )
-    resp["view_list"] = _generate_views(
-        params, query_params.get("view", "list")
-    )
+    resp["sort_list"] = _generate_sorts(params, api_resp["sort"], api_resp["direction"])
+    resp["view_list"] = _generate_views(params, query_params.get("view", "list"))
     resp["view"] = query_params.get("view", "list")
     resp["total"] = api_resp.get("total")
     resp["start"] = api_resp.get("start")
@@ -538,4 +466,3 @@ def list_resources(query_params: QueryParams = None):
 #                 {"code": r.get("status_code"), "msg": r.get("status_msg")}
 #             ]
 #         }
-

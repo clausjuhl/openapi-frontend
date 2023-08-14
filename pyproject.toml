@@ -9,7 +9,7 @@ readme = "README.md"
 homepage = "https://www.aarhusstadsarkiv.dk/"
 
 [tool.poetry.dependencies]
-python = ">=3.7"
+python = ">=3.9"
 starlette = "^0.13.2"
 uvicorn = "^0.11.3"
 aiofiles = "^0.4.0"
@@ -26,9 +26,22 @@ black = "^19.10b0"
 mypy = "^0.770"
 flake8 = "^3.7.9"
 
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.5.0"
+
 [tool.black]
-line-length = 90
+line-length = 100
 exclude = ".venv"
+
+[tool.mypy]
+python_version = 3.9
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+# Because we disallow untyped defs in the main module,
+# check_untyped_defs only has an impact in tests/
+exclude = [".venv"]
+check_untyped_defs = true
 
 [build-system]
 requires = ["poetry>=0.12"]

@@ -8,9 +8,12 @@ import source.openapi as api
 from source.templates import render
 from source.resources.helpers import format_record, generate_url
 
-CHUNK_SIZE = 1024*1024
+CHUNK_SIZE = 1024 * 1024
 # video_path = Path("./statics/video/exp.mp4")
-video_path = Path(r"https://aarhusstadsarkiv.blob.core.windows.net/test/3%20different%20sound%20modes%20with%20Bi-wire%20speakers.mp4")
+video_path = Path(
+    r"https://aarhusstadsarkiv.blob.core.windows.net/test/3%20different%20sound%20modes%20with%20Bi-wire%20speakers.mp4"
+)
+
 
 async def resource(req: Request):
     context = {"request": req}
@@ -54,9 +57,7 @@ async def resource(req: Request):
                     # check if list of prev_ids (start - size) is already in batches
                     if key not in batches:
                         api_resp = api.list_resources(QueryParams(prev_url))
-                        batches[key] = [
-                            int(d.get("id")) for d in api_resp.get("result")
-                        ]
+                        batches[key] = [int(d.get("id")) for d in api_resp.get("result")]
                     traverse["prev_ids"] = batches[key]
                     # traverse["prev_results"] = prev_url
                     context["prev"] = traverse["prev_ids"][-1]
@@ -74,9 +75,7 @@ async def resource(req: Request):
 
                     if key not in batches:
                         api_resp = api.list_resources(QueryParams(next_url))
-                        batches[key] = [
-                            int(d.get("id")) for d in api_resp.get("result")
-                        ]
+                        batches[key] = [int(d.get("id")) for d in api_resp.get("result")]
                     traverse["next_ids"] = batches[key]
                     # traverse["next_results"] = next_url
                     context["next"] = traverse["next_ids"][0]
@@ -258,7 +257,7 @@ async def video_stream(req: Request):
         data = video.read(end - start)
         filesize = str(video_path.stat().st_size)
         headers = {
-            'Content-Range': f'bytes {str(start)}-{str(end)}/{filesize}',
-            'Accept-Ranges': 'bytes'
+            "Content-Range": f"bytes {str(start)}-{str(end)}/{filesize}",
+            "Accept-Ranges": "bytes",
         }
         return Response(data, status_code=206, headers=headers, media_type="video/mp4")

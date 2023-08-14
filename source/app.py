@@ -7,6 +7,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 # from source.views import error
 from source.routes import routes
+
 # from source.database import database
 from source import configuration
 

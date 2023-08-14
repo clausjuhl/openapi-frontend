@@ -3,9 +3,10 @@ from starlette.responses import RedirectResponse, JSONResponse
 from starlette.exceptions import HTTPException
 
 from source.templates import render
-from source import queries
-from source import openapi as api
-from source.queries import update_user
+
+# from source import queries
+# from source import openapi as api
+# from source.queries import update_user
 
 
 async def profile(request: Request):
@@ -32,12 +33,10 @@ async def profile(request: Request):
             # render profile_editor with values and error-messages
             return render("profile_editor.html", context, status_code=400)
 
-        values = {"name": form_values.get("username")}
+        # values = {"name": form_values.get("username")}
         # await queries.update_user(user["openid"], values=values)
         # else redirect to profile-page
-        return RedirectResponse(
-            url=request.url_for("profile"), status_code=303
-        )
+        return RedirectResponse(url=request.url_for("profile"), status_code=303)
 
 
 # async def profile_editor(request: Request):

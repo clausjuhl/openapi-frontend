@@ -73,7 +73,7 @@ def format_record(record):
             for idx in value:
                 item = {}
                 item["label"] = idx
-                item["new_link"] = urlencode({key: _id})
+                item["new_link"] = urlencode({key: _id})  # noqa: F821
                 output.append(item)
             result[key] = output
 
@@ -87,12 +87,12 @@ def format_record(record):
         elif isinstance(value, dict) and key in QUERY_PARAMS:
             # If id-dict
             if value.get("id"):
-                _id = value.get("id")
+                id_ = value.get("id")
                 label = value.get("label")
                 item = {}
                 item["label"] = label
-                item["id"] = _id
-                item["new_link"] = urlencode({key: _id})
+                item["id"] = id_
+                item["new_link"] = urlencode({key: id_})  # noqa: F821
                 result[key] = item
             else:
                 result[key] = value

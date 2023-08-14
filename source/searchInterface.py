@@ -76,9 +76,7 @@ def search_records(query_params):
     # Kwargs to send to all bobo3-cloudsearch-calls.
     key_args = {}
     key_args["queryParser"] = "structured"
-    key_args["queryOptions"] = json.dumps(
-        {"fields": ["label^4", "summary^2", "description"]}
-    )
+    key_args["queryOptions"] = json.dumps({"fields": ["label^4", "summary^2", "description"]})
 
     # Variables
     date_from = query_params.get("date_from")
@@ -155,9 +153,7 @@ def search_records(query_params):
                     if phrase == "positive":
                         strs.append("(phrase '" + " ".join(phrase_strs) + "')")
                     else:
-                        strs.append(
-                            "(not (phrase '" + " ".join(phrase_strs) + "'))"
-                        )
+                        strs.append("(not (phrase '" + " ".join(phrase_strs) + "'))")
                     # Ready for new phrase
                     phrase = None
                     phrase_strs = []
@@ -186,9 +182,7 @@ def search_records(query_params):
     ############
     # FQ-PARAM #
     ############
-    filters_to_query = (
-        []
-    )  # list of query-filters used for key_arg: "filterQuery"
+    filters_to_query = []  # list of query-filters used for key_arg: "filterQuery"
     filters_to_output = []  # list of filters used for gui-template
 
     # Build "filterQuery"-arg
@@ -232,11 +226,7 @@ def search_records(query_params):
                     filter_str = "(not " + filter_str + ")"
                 filters_to_query.append(filter_str)
                 filters_to_output.append(
-                    {
-                        "key": stripped_key,
-                        "value": value,
-                        "negated": stripped_key != key,
-                    }
+                    {"key": stripped_key, "value": value, "negated": stripped_key != key}
                 )
 
             elif key == "date_from":
@@ -269,9 +259,9 @@ def search_records(query_params):
         out = {}
         out["status_code"] = 0  # Needed for SAM
         out["result"] = []
-        if key_args.get("size") + api_response["hits"].get(
-            "start"
-        ) < api_response["hits"].get("found"):
+        if key_args.get("size") + api_response["hits"].get("start") < api_response["hits"].get(
+            "found"
+        ):
             out["next_cursor"] = api_response["hits"].get("cursor")
         for hit in api_response["hits"]["hit"]:
             out["result"].append(hit["id"])
@@ -339,9 +329,7 @@ def search_records(query_params):
             item["collection_id"] = collection_id[0] if collection_id else None
 
             collectors_label = hit["fields"].get("collectors_label")
-            item["collectors_label"] = (
-                collectors_label[0] if collectors_label else None
-            )
+            item["collectors_label"] = collectors_label[0] if collectors_label else None
 
             item["series"] = hit["fields"].get("series")
 

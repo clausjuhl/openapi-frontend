@@ -2,6 +2,7 @@ from starlette.routing import Route, Mount
 
 from source import views
 from source.staticfiles import statics
+
 # from source.auth.routes import routes as auth_routes
 # from source.users.routes import routes as users_routes
 from source.resources.routes import routes as resources_routes

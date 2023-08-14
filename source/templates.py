@@ -1,9 +1,10 @@
 from typing import Dict
 
-import jinja2
+# import jinja2
 
 from starlette.templating import Jinja2Templates
-from starlette.requests import Request
+
+# from starlette.requests import Request
 
 templates = Jinja2Templates(directory="templates")
 # templates.env.filters['marked'] = marked_filter
@@ -11,9 +12,7 @@ templates.env.trim_blocks = True
 templates.env.lstrip_blocks = True
 
 
-def render(
-    template: str, context: Dict, status_code: int = 200
-) -> templates.TemplateResponse:
+def render(template: str, context: Dict, status_code: int = 200) -> templates.TemplateResponse:
 
     headers = dict()
     # criteria = [request.app.debug, False]
@@ -25,6 +24,4 @@ def render(
     # headers[
     #     "Content-Security-Policy"
     # ] = "frame-ancestors 'none'; default-src 'none'; img-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'"
-    return templates.TemplateResponse(
-        template, context, headers=headers, status_code=status_code
-    )
+    return templates.TemplateResponse(template, context, headers=headers, status_code=status_code)

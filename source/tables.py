@@ -10,17 +10,9 @@ bookmarks = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("pk", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column(
-        "user_id",
-        sqlalchemy.ForeignKey("users.openid"),
-        index=True,
-        nullable=False,
+        "user_id", sqlalchemy.ForeignKey("users.openid"), index=True, nullable=False,
     ),
-    sqlalchemy.Column(
-        "created_at",
-        sqlalchemy.DateTime,
-        default=datetime.utcnow,
-        nullable=False,
-    ),
+    sqlalchemy.Column("created_at", sqlalchemy.DateTime, default=datetime.utcnow, nullable=False,),
     sqlalchemy.Column("resource_id", sqlalchemy.String, nullable=False),
 )
 
@@ -30,17 +22,9 @@ searches = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("pk", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column(
-        "user_id",
-        sqlalchemy.ForeignKey("users.openid"),
-        index=True,
-        nullable=False,
+        "user_id", sqlalchemy.ForeignKey("users.openid"), index=True, nullable=False,
     ),
-    sqlalchemy.Column(
-        "created_at",
-        sqlalchemy.DateTime,
-        default=datetime.utcnow,
-        nullable=False,
-    ),
+    sqlalchemy.Column("created_at", sqlalchemy.DateTime, default=datetime.utcnow, nullable=False,),
     sqlalchemy.Column(
         "updated_at",
         sqlalchemy.DateTime,
@@ -57,15 +41,8 @@ users = sqlalchemy.Table(
     "users",
     metadata,
     sqlalchemy.Column("pk", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column(
-        "openid", sqlalchemy.String, index=True, nullable=False, unique=True
-    ),
-    sqlalchemy.Column(
-        "created_at",
-        sqlalchemy.DateTime,
-        default=datetime.utcnow,
-        nullable=False,
-    ),
+    sqlalchemy.Column("openid", sqlalchemy.String, index=True, nullable=False, unique=True),
+    sqlalchemy.Column("created_at", sqlalchemy.DateTime, default=datetime.utcnow, nullable=False,),
     sqlalchemy.Column(
         "updated_at",
         sqlalchemy.DateTime,
@@ -81,12 +58,8 @@ users = sqlalchemy.Table(
         onupdate=datetime.utcnow,
     ),
     sqlalchemy.Column("name", sqlalchemy.String, nullable=False),
-    sqlalchemy.Column(
-        "is_admin", sqlalchemy.Boolean, nullable=False, default=False
-    ),
-    sqlalchemy.Column(
-        "is_employee", sqlalchemy.Boolean, nullable=False, default=False
-    ),
+    sqlalchemy.Column("is_admin", sqlalchemy.Boolean, nullable=False, default=False),
+    sqlalchemy.Column("is_employee", sqlalchemy.Boolean, nullable=False, default=False),
     sqlalchemy.Column("email", sqlalchemy.String, nullable=False),
     sqlalchemy.Column("email_verified", sqlalchemy.Boolean, nullable=False),
 )

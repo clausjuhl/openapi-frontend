@@ -30,9 +30,7 @@ async def login(request):
         "client_id": AUTH0_CLIENT_ID,
         "audience": AUTH0_AUDIENCE,
     }
-    url = URL(f"https://{AUTH0_DOMAIN}/authorize").include_query_params(
-        **params
-    )
+    url = URL(f"https://{AUTH0_DOMAIN}/authorize").include_query_params(**params)
     return RedirectResponse(url=url, status_code=303)
 
 
@@ -43,9 +41,7 @@ async def logout(request):
         "returnTo": request.url_for("home"),
         "client_id": AUTH0_CLIENT_ID,
     }
-    url = URL(f"https://{AUTH0_DOMAIN}/v2/logout").include_query_params(
-        **query_params
-    )
+    url = URL(f"https://{AUTH0_DOMAIN}/v2/logout").include_query_params(**query_params)
     return RedirectResponse(url)
 
 
